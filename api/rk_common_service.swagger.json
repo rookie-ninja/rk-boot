@@ -1,0 +1,526 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/rk_common_service.proto",
+    "version": "version not set"
+  },
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/rk/config": {
+      "get": {
+        "summary": "DumpConfig Stub",
+        "operationId": "RkCommonService_DumpConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/DumpConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/config/{key}": {
+      "get": {
+        "summary": "GetConfig Stub",
+        "operationId": "RkCommonService_GetConfig",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetConfigResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/gc": {
+      "post": {
+        "summary": "GC Stub",
+        "operationId": "RkCommonService_GC",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GCResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GCRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/healthy": {
+      "get": {
+        "summary": "Healthy Stub",
+        "operationId": "RkCommonService_Healthy",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/HealthyResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/info": {
+      "get": {
+        "summary": "Info Stub",
+        "operationId": "RkCommonService_Info",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/InfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/log": {
+      "post": {
+        "summary": "Log Stub",
+        "operationId": "RkCommonService_Log",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LogResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LogRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/ping": {
+      "post": {
+        "summary": "Ping Stub",
+        "operationId": "RkCommonService_Ping",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/PongResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    },
+    "/v1/rk/shutdown": {
+      "post": {
+        "summary": "Shutdown Stub",
+        "operationId": "RkCommonService_Shutdown",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ShutdownResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response",
+            "schema": {
+              "$ref": "#/definitions/runtimeError"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShutdownRequest"
+            }
+          }
+        ],
+        "tags": [
+          "RkCommonService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BasicInfo": {
+      "type": "object",
+      "properties": {
+        "start_time": {
+          "type": "string"
+        },
+        "up_time": {
+          "type": "string"
+        },
+        "realm": {
+          "type": "string"
+        },
+        "region": {
+          "type": "string"
+        },
+        "az": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        },
+        "app_name": {
+          "type": "string"
+        }
+      }
+    },
+    "Config": {
+      "type": "object",
+      "properties": {
+        "config_name": {
+          "type": "string"
+        },
+        "config_pair": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConfigPair"
+          }
+        }
+      }
+    },
+    "ConfigPair": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "DumpConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Config"
+          }
+        }
+      }
+    },
+    "GCRequest": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string"
+        }
+      },
+      "title": "GC request, operator must be set"
+    },
+    "GCResponse": {
+      "type": "object",
+      "properties": {
+        "mem_stats_before": {
+          "$ref": "#/definitions/MemStats"
+        },
+        "mem_stats_after": {
+          "$ref": "#/definitions/MemStats"
+        }
+      },
+      "title": "GC response, memory stats would be returned"
+    },
+    "GRpcInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "gw_info": {
+          "$ref": "#/definitions/GWInfo"
+        },
+        "sw_info": {
+          "$ref": "#/definitions/SWInfo"
+        }
+      }
+    },
+    "GWInfo": {
+      "type": "object",
+      "properties": {
+        "gw_port": {
+          "type": "string"
+        }
+      }
+    },
+    "GetConfigResponse": {
+      "type": "object",
+      "properties": {
+        "config_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Config"
+          }
+        }
+      }
+    },
+    "HealthyResponse": {
+      "type": "object",
+      "properties": {
+        "healthy": {
+          "type": "boolean",
+          "format": "boolean"
+        }
+      }
+    },
+    "InfoResponse": {
+      "type": "object",
+      "properties": {
+        "basic_info": {
+          "$ref": "#/definitions/BasicInfo"
+        },
+        "grpc_info_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GRpcInfo"
+          }
+        },
+        "prom_info": {
+          "$ref": "#/definitions/PromInfo"
+        }
+      }
+    },
+    "LogEntry": {
+      "type": "object",
+      "properties": {
+        "log_name": {
+          "type": "string"
+        },
+        "log_level": {
+          "type": "string"
+        }
+      }
+    },
+    "LogRequest": {
+      "type": "object",
+      "properties": {
+        "entries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LogEntry"
+          }
+        }
+      }
+    },
+    "LogResponse": {
+      "type": "object"
+    },
+    "MemStats": {
+      "type": "object",
+      "properties": {
+        "mem_alloc_mb": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Alloc is bytes of allocated heap objects."
+        },
+        "sys_mem_mb": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Sys is the total bytes of memory obtained from the OS."
+        },
+        "last_gc_timestamp": {
+          "type": "string",
+          "title": "LastGC is the time the last garbage collection finished.\nRepresent as RFC3339 time format"
+        },
+        "num_gc": {
+          "type": "integer",
+          "format": "int64",
+          "description": "NumGC is the number of completed GC cycles."
+        },
+        "num_force_gc": {
+          "type": "integer",
+          "format": "int64",
+          "description": "/ NumForcedGC is the number of GC cycles that were forced by\nthe application calling the GC function."
+        }
+      },
+      "title": "Memory stats"
+    },
+    "PingRequest": {
+      "type": "object"
+    },
+    "PongResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "PromInfo": {
+      "type": "object",
+      "properties": {
+        "port": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "SWInfo": {
+      "type": "object",
+      "properties": {
+        "sw_port": {
+          "type": "string"
+        },
+        "sw_path": {
+          "type": "string"
+        }
+      }
+    },
+    "ShutdownRequest": {
+      "type": "object"
+    },
+    "ShutdownResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "type_url": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "format": "byte"
+        }
+      }
+    },
+    "runtimeError": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+option go_package = "rk-boot/api";
+
+service RkCommonService {
+    // GC Stub
+    rpc GC(GCRequest) returns (GCResponse) {
+        option (google.api.http) = {
+            post: "/v1/rk/gc"
+            body: "*"
+        };
+    };
+
+    // DumpConfig Stub
+    rpc DumpConfig(DumpConfigRequest) returns (DumpConfigResponse) {
+        option (google.api.http) = {
+            get: "/v1/rk/config"
+        };
+    };
+
+    // GetConfig Stub
+    rpc GetConfig(GetConfigRequest) returns (GetConfigResponse) {
+        option (google.api.http) = {
+            get: "/v1/rk/config/{key}"
+        };
+    };
+
+    // Ping Stub
+    rpc Ping(PingRequest) returns (PongResponse) {
+        option (google.api.http) = {
+            post: "/v1/rk/ping"
+            body: "*"
+        };
+    };
+
+    // Log Stub
+    rpc Log(LogRequest) returns (LogResponse) {
+        option (google.api.http) = {
+            post: "/v1/rk/log"
+            body: "*"
+        };
+    };
+
+    // Shutdown Stub
+    rpc Shutdown(ShutdownRequest) returns (ShutdownResponse) {
+        option (google.api.http) = {
+            post: "/v1/rk/shutdown"
+            body: "*"
+        };
+    };
+
+    // Info Stub
+    rpc Info(InfoRequest) returns (InfoResponse) {
+        option (google.api.http) = {
+            get: "/v1/rk/info"
+        };
+    };
+
+    // Healthy Stub
+    rpc Healthy(HealthyRequest) returns (HealthyResponse) {
+        option (google.api.http) = {
+            get: "/v1/rk/healthy"
+        };
+    };
+}
+
+// GC request, operator must be set
+message GCRequest {
+    string operator = 1;
+}
+
+// GC response, memory stats would be returned
+message GCResponse {
+    MemStats mem_stats_before = 1;
+    MemStats mem_stats_after = 2;
+}
+
+// Memory stats
+message MemStats {
+    // Alloc is bytes of allocated heap objects.
+    uint64 mem_alloc_mb = 1;
+
+    // Sys is the total bytes of memory obtained from the OS.
+    uint64 sys_mem_mb = 2;
+
+    // LastGC is the time the last garbage collection finished.
+    // Represent as RFC3339 time format
+    string last_gc_timestamp = 3;
+
+    // NumGC is the number of completed GC cycles.
+    uint32 num_gc = 4;
+
+    /// NumForcedGC is the number of GC cycles that were forced by
+    // the application calling the GC function.
+    uint32 num_force_gc = 5;
+}
+
+message DumpConfigRequest {}
+
+message DumpConfigResponse {
+    repeated Config config_list = 1;
+}
+
+message GetConfigRequest {
+    string key = 1;
+}
+
+message GetConfigResponse {
+    repeated Config config_list = 1;
+}
+
+message Config {
+    string config_name = 1;
+    repeated ConfigPair config_pair = 2;
+}
+
+message ConfigPair {
+    string key = 1;
+    string value = 2;
+}
+
+message HealthyRequest {}
+
+message HealthyResponse {
+    bool healthy = 1;
+}
+
+message Stub {
+    string name = 1;
+    string description = 2;
+    string usage = 3;
+}
+
+message InfoRequest {}
+
+message BasicInfo {
+    string start_time = 1;
+    string up_time = 2;
+    string realm = 3;
+    string region = 4;
+    string az = 5;
+    string domain = 6;
+    string app_name = 7;
+}
+
+message PromInfo {
+    string port = 1;
+    string path = 2;
+}
+
+message SWInfo {
+    string sw_port = 1;
+    string sw_path = 2;
+}
+
+message GWInfo {
+    string gw_port = 1;
+}
+
+message GRpcInfo {
+    string name = 1;
+    string port = 2;
+    GWInfo gw_info = 3;
+    SWInfo sw_info = 4;
+}
+
+message InfoResponse {
+    BasicInfo basic_info = 1;
+    repeated GRpcInfo grpc_info_list = 2;
+    PromInfo prom_info = 3;
+}
+
+message LogRequest {
+    repeated LogEntry entries = 1;
+}
+
+message LogEntry {
+    string log_name = 1;
+    string log_level = 2;
+}
+
+message LogResponse {}
+
+message PingRequest {}
+
+message PongResponse {
+    string message = 1;
+}
+
+message ShutdownRequest {}
+
+message ShutdownResponse {
+    string message = 1;
+}
