@@ -199,5 +199,3 @@ standard.
 <hr>
 
 Released under the [MIT License](LICENSE).
-
-[]: https://github.com/rookie-ninja/rk-cmd
