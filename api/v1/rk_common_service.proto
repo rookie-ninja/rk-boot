@@ -2,7 +2,7 @@ syntax = "proto3";
 
 import "google/api/annotations.proto";
 
-option go_package = "rk-boot/api";
+option go_package = "api/v1/rk_boot_common_v1";
 
 service RkCommonService {
     // GC Stub

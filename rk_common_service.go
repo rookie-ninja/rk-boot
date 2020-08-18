@@ -6,7 +6,7 @@ package rk_boot
 
 import (
 	"context"
-	"github.com/rookie-ninja/rk-boot/api"
+	"github.com/rookie-ninja/rk-boot/api/v1"
 	"github.com/rookie-ninja/rk-interceptor/context"
 	"github.com/spf13/cast"
 	"go.uber.org/zap"
@@ -28,7 +28,7 @@ func NewCommonService() *CommonService {
 }
 
 // GC Stub
-func (service *CommonService) GC(ctx context.Context, request *api.GCRequest) (*api.GCResponse, error) {
+func (service *CommonService) GC(ctx context.Context, request *rk_boot_common_v1.GCRequest) (*rk_boot_common_v1.GCResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 	event := rk_inter_context.GetEvent(ctx)
@@ -43,7 +43,7 @@ func (service *CommonService) GC(ctx context.Context, request *api.GCRequest) (*
 	event.AddFields(memStatsToZapFields("before_", &before)...)
 	event.AddFields(memStatsToZapFields("after_", &before)...)
 
-	res := &api.GCResponse{
+	res := &rk_boot_common_v1.GCResponse{
 		MemStatsBefore: memStatsToPB(&before),
 		MemStatsAfter:  memStatsToPB(&after),
 	}
@@ -52,21 +52,21 @@ func (service *CommonService) GC(ctx context.Context, request *api.GCRequest) (*
 }
 
 // DumpConfig Stub
-func (service *CommonService) DumpConfig(ctx context.Context, request *api.DumpConfigRequest) (*api.DumpConfigResponse, error) {
+func (service *CommonService) DumpConfig(ctx context.Context, request *rk_boot_common_v1.DumpConfigRequest) (*rk_boot_common_v1.DumpConfigResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 
-	configList := make([]*api.Config, 0)
-	res := &api.DumpConfigResponse{ConfigList: configList}
+	configList := make([]*rk_boot_common_v1.Config, 0)
+	res := &rk_boot_common_v1.DumpConfigResponse{ConfigList: configList}
 
 	// rk-configs
 	for k, v := range AppCtx.ListRkConfigs() {
-		configPairs := make([]*api.ConfigPair, 0)
+		configPairs := make([]*rk_boot_common_v1.ConfigPair, 0)
 		for i := range v.GetViper().AllKeys() {
 			viperKey := v.GetViper().AllKeys()[i]
 			viperValue := cast.ToString(v.GetViper().Get(viperKey))
 
-			pair := &api.ConfigPair{
+			pair := &rk_boot_common_v1.ConfigPair{
 				Key:   viperKey,
 				Value: viperValue,
 			}
@@ -74,7 +74,7 @@ func (service *CommonService) DumpConfig(ctx context.Context, request *api.DumpC
 			configPairs = append(configPairs, pair)
 		}
 
-		conf := &api.Config{
+		conf := &rk_boot_common_v1.Config{
 			ConfigName: k,
 			ConfigPair: configPairs,
 		}
@@ -84,12 +84,12 @@ func (service *CommonService) DumpConfig(ctx context.Context, request *api.DumpC
 
 	// viper-configs
 	for k, v := range AppCtx.ListViperConfigs() {
-		configPairs := make([]*api.ConfigPair, 0)
+		configPairs := make([]*rk_boot_common_v1.ConfigPair, 0)
 		for i := range v.AllKeys() {
 			viperKey := v.AllKeys()[i]
 			viperValue := cast.ToString(v.Get(viperKey))
 
-			pair := &api.ConfigPair{
+			pair := &rk_boot_common_v1.ConfigPair{
 				Key:   viperKey,
 				Value: viperValue,
 			}
@@ -97,7 +97,7 @@ func (service *CommonService) DumpConfig(ctx context.Context, request *api.DumpC
 			configPairs = append(configPairs, pair)
 		}
 
-		conf := &api.Config{
+		conf := &rk_boot_common_v1.Config{
 			ConfigName: k,
 			ConfigPair: configPairs,
 		}
@@ -109,36 +109,36 @@ func (service *CommonService) DumpConfig(ctx context.Context, request *api.DumpC
 }
 
 // GetConfig Stub
-func (service *CommonService) GetConfig(ctx context.Context, request *api.GetConfigRequest) (*api.GetConfigResponse, error) {
+func (service *CommonService) GetConfig(ctx context.Context, request *rk_boot_common_v1.GetConfigRequest) (*rk_boot_common_v1.GetConfigResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 
-	configList := make([]*api.Config, 0)
-	res := &api.GetConfigResponse{ConfigList: configList}
+	configList := make([]*rk_boot_common_v1.Config, 0)
+	res := &rk_boot_common_v1.GetConfigResponse{ConfigList: configList}
 
 	for k, v := range AppCtx.ListRkConfigs() {
-		pair := &api.ConfigPair{
+		pair := &rk_boot_common_v1.ConfigPair{
 			Key:   request.Key,
 			Value: cast.ToString(v.Get(request.GetKey())),
 		}
 
-		conf := &api.Config{
+		conf := &rk_boot_common_v1.Config{
 			ConfigName: k,
-			ConfigPair: []*api.ConfigPair{pair},
+			ConfigPair: []*rk_boot_common_v1.ConfigPair{pair},
 		}
 
 		res.ConfigList = append(res.ConfigList, conf)
 	}
 
 	for k, v := range AppCtx.ListViperConfigs() {
-		pair := &api.ConfigPair{
+		pair := &rk_boot_common_v1.ConfigPair{
 			Key:   request.Key,
 			Value: cast.ToString(v.Get(request.GetKey())),
 		}
 
-		conf := &api.Config{
+		conf := &rk_boot_common_v1.Config{
 			ConfigName: k,
-			ConfigPair: []*api.ConfigPair{pair},
+			ConfigPair: []*rk_boot_common_v1.ConfigPair{pair},
 		}
 
 		res.ConfigList = append(res.ConfigList, conf)
@@ -148,11 +148,11 @@ func (service *CommonService) GetConfig(ctx context.Context, request *api.GetCon
 }
 
 // Ping Stub
-func (service *CommonService) Ping(ctx context.Context, request *api.PingRequest) (*api.PongResponse, error) {
+func (service *CommonService) Ping(ctx context.Context, request *rk_boot_common_v1.PingRequest) (*rk_boot_common_v1.PongResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 
-	res := &api.PongResponse{
+	res := &rk_boot_common_v1.PongResponse{
 		Message: "pong",
 	}
 
@@ -160,7 +160,7 @@ func (service *CommonService) Ping(ctx context.Context, request *api.PingRequest
 }
 
 // Log Stub
-func (service *CommonService) Log(ctx context.Context, request *api.LogRequest) (*api.LogResponse, error) {
+func (service *CommonService) Log(ctx context.Context, request *rk_boot_common_v1.LogRequest) (*rk_boot_common_v1.LogResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 	event := rk_inter_context.GetEvent(ctx)
@@ -175,19 +175,19 @@ func (service *CommonService) Log(ctx context.Context, request *api.LogRequest) 
 		event.AddPair(entry.LogName, entry.LogLevel)
 	}
 
-	res := &api.LogResponse{}
+	res := &rk_boot_common_v1.LogResponse{}
 
 	return res, nil
 }
 
 // Shutdown Stub
-func (service *CommonService) Shutdown(ctx context.Context, request *api.ShutdownRequest) (*api.ShutdownResponse, error) {
+func (service *CommonService) Shutdown(ctx context.Context, request *rk_boot_common_v1.ShutdownRequest) (*rk_boot_common_v1.ShutdownResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 	event := rk_inter_context.GetEvent(ctx)
 	event.AddPair("signal", "interrupt")
 
-	res := &api.ShutdownResponse{
+	res := &rk_boot_common_v1.ShutdownResponse{
 		Message: "interrupt",
 	}
 
@@ -197,12 +197,12 @@ func (service *CommonService) Shutdown(ctx context.Context, request *api.Shutdow
 }
 
 // Info Stub
-func (service *CommonService) Info(ctx context.Context, request *api.InfoRequest) (*api.InfoResponse, error) {
+func (service *CommonService) Info(ctx context.Context, request *rk_boot_common_v1.InfoRequest) (*rk_boot_common_v1.InfoResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 	event := rk_inter_context.GetEvent(ctx)
 
-	res := &api.InfoResponse{}
+	res := &rk_boot_common_v1.InfoResponse{}
 
 	boot := AppCtx.ListGRpcEntries()
 
@@ -225,22 +225,22 @@ func (service *CommonService) Info(ctx context.Context, request *api.InfoRequest
 }
 
 // Healthy Stub
-func (service *CommonService) Healthy(ctx context.Context, request *api.HealthyRequest) (*api.HealthyResponse, error) {
+func (service *CommonService) Healthy(ctx context.Context, request *rk_boot_common_v1.HealthyRequest) (*rk_boot_common_v1.HealthyResponse, error) {
 	// Add auto generated request ID
 	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 	event := rk_inter_context.GetEvent(ctx)
 
 	event.AddPair("healthy", "true")
 
-	res := &api.HealthyResponse{
+	res := &rk_boot_common_v1.HealthyResponse{
 		Healthy: true,
 	}
 
 	return res, nil
 }
 
-func fillBasicInfo(res *api.InfoResponse) {
-	basicInfo := &api.BasicInfo{
+func fillBasicInfo(res *rk_boot_common_v1.InfoResponse) {
+	basicInfo := &rk_boot_common_v1.BasicInfo{
 		AppName:   AppCtx.GetAppName(),
 		StartTime: AppCtx.GetStartTime().Format(time.RFC3339),
 		UpTime:    AppCtx.GetUpTime().String(),
@@ -252,31 +252,31 @@ func fillBasicInfo(res *api.InfoResponse) {
 	res.BasicInfo = basicInfo
 }
 
-func fillPromInfo(res *api.InfoResponse) {
+func fillPromInfo(res *rk_boot_common_v1.InfoResponse) {
 	entry := AppCtx.GetPromEntry()
 	if entry == nil {
 		return
 	}
 
-	promInfo := &api.PromInfo{
+	promInfo := &rk_boot_common_v1.PromInfo{
 		Port: strconv.FormatUint(entry.GetPort(), 10),
 		Path: entry.GetPath(),
 	}
 	res.PromInfo = promInfo
 }
 
-func fillGRPCInfo(res *api.InfoResponse) {
-	gRPCInfos := make([]*api.GRpcInfo, 0)
+func fillGRPCInfo(res *rk_boot_common_v1.InfoResponse) {
+	gRPCInfos := make([]*rk_boot_common_v1.GRpcInfo, 0)
 	gRPCEntries := AppCtx.ListGRpcEntries()
 	for i := range gRPCEntries {
 		entry := gRPCEntries[i]
-		gRPCInfo := &api.GRpcInfo{
+		gRPCInfo := &rk_boot_common_v1.GRpcInfo{
 			Name: entry.GetName(),
 			Port: strconv.FormatUint(entry.GetPort(), 10),
 		}
 
 		if entry.GetGWEntry() != nil {
-			gwInfo := &api.GWInfo{
+			gwInfo := &rk_boot_common_v1.GWInfo{
 				GwPort: strconv.FormatUint(entry.GetGWEntry().GetHttpPort(), 10),
 			}
 
@@ -284,7 +284,7 @@ func fillGRPCInfo(res *api.InfoResponse) {
 		}
 
 		if entry.GetSWEntry() != nil {
-			swInfo := &api.SWInfo{
+			swInfo := &rk_boot_common_v1.SWInfo{
 				SwPath: entry.GetSWEntry().GetPath(),
 				SwPort: strconv.FormatUint(entry.GetSWEntry().GetSWPort(), 10),
 			}
@@ -335,8 +335,8 @@ func memStatsToZapFields(prefix string, stats *runtime.MemStats) []zap.Field {
 	return nil
 }
 
-func memStatsToPB(stats *runtime.MemStats) *api.MemStats {
-	pb := api.MemStats{
+func memStatsToPB(stats *runtime.MemStats) *rk_boot_common_v1.MemStats {
+	pb := rk_boot_common_v1.MemStats{
 		MemAllocMb:      bytesToMB(stats.Alloc),
 		SysMemMb:        bytesToMB(stats.Sys),
 		LastGcTimestamp: time.Unix(int64(stats.LastGC)/int64(time.Second), 0).Format(time.RFC3339),

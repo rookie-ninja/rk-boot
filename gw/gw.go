@@ -7,7 +7,7 @@ package rk_gw
 import (
 	"context"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
-	"github.com/rookie-ninja/rk-boot/api"
+	"github.com/rookie-ninja/rk-boot/api/v1"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net/http"
@@ -78,7 +78,7 @@ func NewGRpcGWEntry(opts ...GRpcGWOption) *GRpcGWEntry {
 	}
 
 	if entry.enableCommonService {
-		entry.regFuncs = append(entry.regFuncs, api.RegisterRkCommonServiceHandlerFromEndpoint)
+		entry.regFuncs = append(entry.regFuncs, rk_boot_common_v1.RegisterRkCommonServiceHandlerFromEndpoint)
 	}
 
 	return entry

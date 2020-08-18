@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "proto/hello.proto",
+    "title": "example/api/v1/hello.proto",
     "version": "version not set"
   },
   "consumes": [

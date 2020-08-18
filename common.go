@@ -9,7 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/rookie-ninja/rk-boot/api"
+	"github.com/rookie-ninja/rk-boot/api/v1"
 	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-boot/gw"
 	"github.com/rookie-ninja/rk-boot/prom"
@@ -278,5 +278,5 @@ func getViperConfig(path string, global bool) *viper.Viper {
 
 // Register common service
 func registerRkCommonServiceGRPC(server *grpc.Server) {
-	api.RegisterRkCommonServiceServer(server, NewCommonService())
+	rk_boot_common_v1.RegisterRkCommonServiceServer(server, NewCommonService())
 }

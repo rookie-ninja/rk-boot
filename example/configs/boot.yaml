@@ -5,10 +5,10 @@ event:
   quiet: false
 logger:
   - name: app
-    confPath: "example/configs/app.yaml"
+    confPath: "example/configs/zap-app.yaml"
     forBoot: true
   - name: query
-    confPath: "example/configs/query.yaml"
+    confPath: "example/configs/zap-query.yaml"
     forEvent: true
 config:
   - name: rk-main
@@ -28,7 +28,7 @@ grpc:
       enabled: true
       port: 8090
       path: sw
-      jsonPath: "example/proto/"
+      jsonPath: "example/api/v1"
       insecure: true
       enableCommonService: true
     loggingInterceptor:

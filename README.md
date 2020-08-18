@@ -9,6 +9,20 @@ Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
 - [rk-interceptor](https://github.com/rookie-ninja/rk-interceptor)
 - [rk-prom](https://github.com/rookie-ninja/rk-prom)
 
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [YAML config](#yaml-config)
+  - [Development Status: Stable](#development-status-stable)
+  - [Appendix](#appendix)
+    - [Proto file compilation](#proto-file-compilation)
+  - [Contributing](#contributing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Installation
 `go get -u rookie-ninja/rk-boot`
 
@@ -29,10 +43,10 @@ event:
   quiet: false
 logger:
   - name: app
-    confPath: "example/configs/app.yaml"
+    confPath: "example/configs/zap-app.yaml"
     forBoot: true
   - name: query
-    confPath: "example/configs/query.yaml"
+    confPath: "example/configs/zap-query.yaml"
     forEvent: true
 config:
   - name: rk-main
@@ -52,7 +66,7 @@ grpc:
       enabled: true
       port: 8090
       path: sw
-      jsonPath: "example/proto/"
+      jsonPath: "example/api/v1"
       insecure: true
       enableCommonService: true
     loggingInterceptor:
@@ -69,40 +83,42 @@ prom:
     remoteAddr: xxx
     intervalMS: 2000
     jobName: xxx
-
 ```
 
 ```go
+// Copyright (c) 2020 rookie-ninja
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file.
 package main
 
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/example/proto"
+	"github.com/rookie-ninja/rk-boot/example/api/v1"
 	"google.golang.org/grpc"
 	"time"
 )
 
 func main() {
-    // Init boot with yaml style configuration
 	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/configs/boot.yaml"))
 
-	// register gRpc 
+	// register gRpc
 	boot.GetGRpcEntry("greeter").AddRegFuncs(registerGreeter)
-	boot.GetGRpcEntry("greeter").AddGWRegFuncs(proto.RegisterGreeterHandlerFromEndpoint)
+	boot.GetGRpcEntry("greeter").AddGWRegFuncs(hello_v1.RegisterGreeterHandlerFromEndpoint)
 
 	boot.Bootstrap()
 	boot.Quitter(5 * time.Second)
 }
 
 func registerGreeter(server *grpc.Server) {
-	proto.RegisterGreeterServer(server, &GreeterServer{})
+	hello_v1.RegisterGreeterServer(server, &GreeterServer{})
 }
 
 type GreeterServer struct{}
 
-func (server *GreeterServer) SayHello(ctx context.Context, request *proto.HelloRequest) (*proto.HelloResponse, error) {
-	return &proto.HelloResponse{
+func (server *GreeterServer) SayHello(ctx context.Context, request *hello_v1.HelloRequest) (*hello_v1.HelloResponse, error) {
+	return &hello_v1.HelloResponse{
 		Message: "hello",
 	}, nil
 }
@@ -148,17 +164,28 @@ YAML config Explanation
 | prom.pushGateway.intervalMS | Push job intervals with milliseconds | number |
 | prom.pushGateway.jobName | pushGateway job name | string |
 
-### proto file compilation
+### Development Status: Stable
+
+### Appendix
+#### Proto file compilation
+With rk command line tools.
+Please refer [rk-cmd](https://github.com/rookie-ninja/rk-cmd)
+
+With ptoroc command
 Compile to go file
+```shell script
 protoc -I. -I third-party/googleapis --go_out=plugins=grpc:. --go_opt=paths=source_relative api/*.proto
+```
 
 Compile to gw.go file
+```shell script
 protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. api/*.proto
+```
 
 Compile to gw.go and swagger.json file
+```shell script
 protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. --swagger_out=logtostderr=true:. api/*.proto
-
-### Development Status: Stable
+```
 
 ### Contributing
 We encourage and support an active, healthy community of contributors &mdash;
@@ -172,3 +199,5 @@ standard.
 <hr>
 
 Released under the [MIT License](LICENSE).
+
+[]: https://github.com/rookie-ninja/rk-cmd

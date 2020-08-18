@@ -7,12 +7,12 @@ package main
 import (
 	"context"
 	"encoding/json"
-	rk_context "github.com/rookie-ninja/rk-interceptor/context"
-	"github.com/rookie-ninja/rk-interceptor/example/proto"
-	rk_logging_zap "github.com/rookie-ninja/rk-interceptor/logging/zap"
-	rk_retry "github.com/rookie-ninja/rk-interceptor/retry"
-	rk_logger "github.com/rookie-ninja/rk-logger"
-	rk_query "github.com/rookie-ninja/rk-query"
+	"github.com/rookie-ninja/rk-boot/example/api/v1"
+	"github.com/rookie-ninja/rk-interceptor/context"
+	"github.com/rookie-ninja/rk-interceptor/logging/zap"
+	"github.com/rookie-ninja/rk-interceptor/retry"
+	"github.com/rookie-ninja/rk-logger"
+	"github.com/rookie-ninja/rk-query"
 	"google.golang.org/grpc"
 	"log"
 	"time"
@@ -61,8 +61,8 @@ func main() {
 	// create client interceptor
 	opt := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
-			rk_logging_zap.UnaryClientInterceptor(factory),
-			rk_retry.UnaryClientInterceptor()),
+			rk_inter_logging.UnaryClientInterceptor(factory),
+			rk_inter_retry.UnaryClientInterceptor()),
 		grpc.WithInsecure(),
 		grpc.WithBlock(),
 	}
@@ -75,21 +75,21 @@ func main() {
 	defer conn.Close()
 
 	// create grpc client
-	c := proto.NewGreeterClient(conn)
+	c := hello_v1.NewGreeterClient(conn)
 	// create with rk context
-	ctx, cancel := context.WithTimeout(rk_context.NewContext(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(rk_inter_context.NewContext(), 5*time.Second)
 	defer cancel()
 
 	// add metadata
-	rk_context.AddToOutgoingMD(ctx, "key", "1", "2")
+	rk_inter_context.AddToOutgoingMD(ctx, "key", "1", "2")
 	// add request id
-	rk_context.AddRequestIdToOutgoingMD(ctx)
+	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
 
 	// call server
-	r, err := c.SayHello(ctx, &proto.HelloRequest{Name: "name"})
+	r, err := c.SayHello(ctx, &hello_v1.HelloRequest{Name: "name"})
 
 	// print incoming metadata
-	bytes, _ := json.Marshal(rk_context.GetIncomingMD(ctx))
+	bytes, _ := json.Marshal(rk_inter_context.GetIncomingMD(ctx))
 	println(string(bytes))
 
 	if err != nil {

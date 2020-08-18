@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "api/rk_common_service.proto",
+    "title": "api/v1/rk_common_service.proto",
     "version": "version not set"
   },
   "consumes": [
