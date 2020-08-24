@@ -83,6 +83,19 @@ prom:
     remoteAddr: xxx
     intervalMS: 2000
     jobName: xxx
+proto:
+  source:
+    - api/v1/*.proto
+  import:
+    - third-party/googleapis
+  doc:
+    output: docs
+    name: rk-server-demo
+    type:
+      - html
+      - markdown
+ut:
+  output: docs
 ```
 
 ```go
