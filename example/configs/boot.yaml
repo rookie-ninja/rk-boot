@@ -1,5 +1,5 @@
 ---
-appName: rk-demo
+appName: rk-server
 event:
   format: RK
   quiet: false
@@ -58,3 +58,11 @@ proto:
       - markdown
 ut:
   output: docs
+build:
+  goos: darwin
+  goarch: amd64
+env:
+  REALM: rk
+  DOMAIN: dev
+  REGION: cn-north-pek
+  AZ: cn-north-pek-1
