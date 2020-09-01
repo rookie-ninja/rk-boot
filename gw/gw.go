@@ -6,6 +6,7 @@ package rk_gw
 
 import (
 	"context"
+	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rookie-ninja/rk-boot/api/v1"
 	"go.uber.org/zap"
@@ -106,6 +107,10 @@ func (entry *GRpcGWEntry) GetServer() *http.Server {
 
 func (entry *GRpcGWEntry) Stop(logger *zap.Logger) {
 	if entry.server != nil {
+		if logger == nil {
+			logger = zap.NewNop()
+		}
+
 		logger.Info("stopping gRpc gateway",
 			zap.Uint64("http_port", entry.httpPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort))
@@ -114,6 +119,10 @@ func (entry *GRpcGWEntry) Stop(logger *zap.Logger) {
 }
 
 func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
 	gRPCEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.gRpcPort, 10)
 	httpEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10)
 
@@ -164,6 +173,6 @@ func headMethodHandler(h http.Handler) http.Handler {
 }
 
 func shutdownWithError(err error) {
-	// log it
+	glog.Error(err)
 	os.Exit(1)
 }

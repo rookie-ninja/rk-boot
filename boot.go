@@ -302,6 +302,7 @@ func (boot *Boot) Quitter(draining time.Duration) {
 	for _, entry := range boot.gRpcServerEntry {
 		entry.Stop(boot.bootLogger.With(zap.Any("signal", sig)))
 		entry.StopGW(boot.bootLogger.With(zap.Any("signal", sig)))
+		entry.StopSW(boot.bootLogger.With(zap.Any("signal", sig)))
 	}
 
 	if boot.promEntry != nil {

@@ -7,6 +7,7 @@ package rk_sw
 import (
 	"context"
 	"encoding/json"
+	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rookie-ninja/rk-boot/api/v1"
 	"github.com/rookie-ninja/rk-boot/gw"
@@ -771,8 +772,12 @@ func (entry *SWEntry) GetServer() *http.Server {
 }
 
 func (entry *SWEntry) Stop(logger *zap.Logger) {
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
 	if entry.server != nil {
-		logger.Info("stopping gRpc gateway",
+		logger.Info("stopping swagger",
 			zap.Uint64("sw_port", entry.swPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort),
 			zap.String("sw_path", entry.path))
@@ -781,6 +786,10 @@ func (entry *SWEntry) Stop(logger *zap.Logger) {
 }
 
 func (entry *SWEntry) Start(logger *zap.Logger) {
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
 	// Deal with Path
 	// add "/" at start and end side if missing
 	if !strings.HasPrefix(entry.path, "/") {
@@ -1020,6 +1029,6 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 }
 
 func shutdownWithError(err error) {
-	// log it
+	glog.Error(err)
 	os.Exit(1)
 }

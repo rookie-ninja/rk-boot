@@ -5,6 +5,7 @@
 package rk_grpc
 
 import (
+	"github.com/golang/glog"
 	"github.com/rookie-ninja/rk-boot/gw"
 	"github.com/rookie-ninja/rk-boot/sw"
 	"go.uber.org/zap"
@@ -171,6 +172,10 @@ func (entry *GRpcServerEntry) GetSWEntry() *rk_sw.SWEntry {
 
 func (entry *GRpcServerEntry) Stop(logger *zap.Logger) {
 	if entry.server != nil {
+		if logger == nil {
+			logger = zap.NewNop()
+		}
+
 		logger.Info("stopping gRpc",
 			zap.Uint64("gRpc_port", entry.port),
 			zap.String("name", entry.name))
@@ -182,7 +187,15 @@ func (entry *GRpcServerEntry) StopGW(logger *zap.Logger) {
 	entry.gw.Stop(logger)
 }
 
+func (entry *GRpcServerEntry) StopSW(logger *zap.Logger) {
+	entry.sw.Stop(logger)
+}
+
 func (entry *GRpcServerEntry) Start(logger *zap.Logger) {
+	if logger == nil {
+		logger = zap.NewNop()
+	}
+
 	listener, err := net.Listen("tcp4", ":"+strconv.FormatUint(entry.port, 10))
 	if err != nil {
 		shutdownWithError(err)
@@ -222,6 +235,6 @@ func (entry *GRpcServerEntry) StartSW(logger *zap.Logger) {
 }
 
 func shutdownWithError(err error) {
-	// log it
+	glog.Error(err)
 	os.Exit(1)
 }
