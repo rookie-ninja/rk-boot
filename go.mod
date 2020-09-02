@@ -14,7 +14,7 @@ require (
 	github.com/rookie-ninja/rk-interceptor v1.0.0
 	github.com/rookie-ninja/rk-logger v1.0.3
 	github.com/rookie-ninja/rk-prom v1.0.1
-	github.com/rookie-ninja/rk-query v1.0.4
+	github.com/rookie-ninja/rk-query v1.0.5
 	github.com/spf13/afero v1.3.3 // indirect
 	github.com/spf13/cast v1.3.1
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

@@ -24,7 +24,72 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"os/user"
 	"path"
+)
+
+var (
+	defaultZapConfig = `
+level: info
+development: false
+disableCaller: false
+disableStacktrace: false
+encoding: console
+outputPaths:
+  # Full path or relative path
+  - stdout
+errorOutputPaths:
+  - stderr
+initialFields: {}
+encoderConfig:
+  messageKey: msg
+  levelKey: level
+  timeKey: ts
+  nameKey: logger
+  callerKey: caller
+  stacktraceKey: stacktrace
+  lineEnding: "\n"
+  levelEncoder: capital
+  timeEncoder: iso8601
+  durationEncoder: ""
+  callerEncoder: short
+  nameEncoder: full
+maxsize: 1
+maxage: 7
+maxbackups: 3
+localtime: true
+compress: true
+`
+	defaultZapConfigEvent = `
+---
+level: info
+encoding: console
+outputPaths:
+  - stdout
+errorOutputPaths:
+  - stderr
+initialFields: {}
+encoderConfig:
+  messageKey: msg
+  levelKey: ''
+  nameKey: ''
+  timeKey: ''
+  callerKey: ''
+  stacktraceKey: ''
+  callstackKey: ''
+  errorKey: ''
+  timeEncoder: iso8601
+  fileKey: ''
+  levelEncoder: capital
+  durationEncoder: second
+  callerEncoder: full
+  nameEncoder: full
+maxsize: 1
+maxage: 7
+maxbackups: 3
+localtime: true
+compress: true
+`
 )
 
 func shutdownWithError(err error) {
@@ -69,11 +134,22 @@ func unMarshal(bytes []byte, ext string, target interface{}) {
 }
 
 func getEventFactory(config *bootConfig, logger *zap.Logger) *rk_query.EventFactory {
+	fields := make([]zap.Field, 0)
+
+	// User
+	if u, err := user.Current(); err == nil {
+		fields = append(fields,
+			zap.String("user", u.Username),
+			zap.String("uid", u.Uid),
+			zap.String("gid", u.Gid))
+	}
+
 	return rk_query.NewEventFactory(
 		rk_query.WithAppName(config.AppName),
 		rk_query.WithFormat(rk_query.ToFormat(config.Event.Format)),
 		rk_query.WithQuietMode(config.Event.Quiet),
-		rk_query.WithLogger(logger))
+		rk_query.WithLogger(logger),
+		rk_query.WithFields(fields))
 }
 
 func getLoggers(config *bootConfig) (map[string]*rkLogger, *zap.Logger, *zap.Logger) {

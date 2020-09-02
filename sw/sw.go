@@ -19,6 +19,7 @@ import (
 	"path"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -844,7 +845,7 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 			zap.Uint64("sw_port", entry.swPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort),
 			zap.String("sw_path", entry.path))
-		if err := entry.server.ListenAndServe(); err != nil {
+		if err := entry.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			entry.logger.Error("failed to start swagger",
 				zap.Uint64("gRpc_port", entry.gRpcPort),
 				zap.Uint64("sw_port", entry.swPort),
@@ -1030,5 +1031,5 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 
 func shutdownWithError(err error) {
 	glog.Error(err)
-	os.Exit(1)
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }

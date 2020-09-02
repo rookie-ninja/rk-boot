@@ -6,10 +6,11 @@ package rk_prom
 
 import (
 	"context"
+	"github.com/golang/glog"
 	"github.com/rookie-ninja/rk-prom"
 	"go.uber.org/zap"
 	"net/http"
-	"os"
+	"syscall"
 	"time"
 )
 
@@ -143,6 +144,6 @@ func (entry *PromEntry) Stop(logger *zap.Logger) {
 }
 
 func shutdownWithError(err error) {
-	// log it
-	os.Exit(1)
+	glog.Error(err)
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }

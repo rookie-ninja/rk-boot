@@ -10,11 +10,13 @@ import (
 	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-boot/prom"
 	"github.com/rookie-ninja/rk-config"
+	rk_logger "github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
 )
@@ -179,11 +181,18 @@ func WithLogger(name string, logger *zap.Logger, loggerConf *zap.Config) BootOpt
 }
 
 func NewBoot(opts ...BootOption) *Boot {
+	config := &bootConfig{
+		AppName: "unknown",
+	}
+	defaultBootLogger, _, _ := rk_logger.NewZapLoggerWithBytes([]byte(defaultZapConfig), rk_logger.YAML)
+	defaultEventLogger, _, _ := rk_logger.NewZapLoggerWithBytes([]byte(defaultZapConfigEvent), rk_logger.YAML)
+
 	boot := &Boot{
+		appName:         "unknown",
 		gRpcServerEntry: make(map[string]*rk_grpc.GRpcServerEntry),
 		userLoggers:     make(map[string]*rkLogger),
-		bootLogger:      zap.NewNop(),
-		eventFactory:    rk_query.NewEventFactory(),
+		bootLogger:      defaultBootLogger,
+		eventFactory:    getEventFactory(config, defaultEventLogger),
 	}
 
 	for i := range opts {
@@ -256,20 +265,33 @@ func (boot *Boot) RegisterPromEntry(entry *rk_prom.PromEntry) {
 }
 
 func (boot *Boot) Bootstrap() *AppContext {
+	helper := rk_query.NewEventHelper(boot.eventFactory)
+	event := helper.Start("rk_app_start")
+	defer helper.Finish(event)
+
+	boot.startTime = time.Now()
+	event.AddFields(zap.Time("app_start_time", boot.startTime))
+
 	// gRpc, gateway, swagger
-	for _, v := range boot.gRpcServerEntry {
-		v.Start(boot.bootLogger)
+	for _, entry := range boot.gRpcServerEntry {
+		entry.Start(boot.bootLogger)
+		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gRpc_port", entry.GetName()), entry.GetPort()))
 
-		v.StartGW(boot.bootLogger)
+		entry.StartGW(boot.bootLogger)
+		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gw_port", entry.GetName()), entry.GetGWEntry().GetHttpPort()))
 
-		v.StartSW(boot.bootLogger)
+		entry.StartSW(boot.bootLogger)
+		event.AddFields(
+			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
+			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
 	}
 
 	if boot.promEntry != nil {
+		event.AddFields(
+			zap.Uint64("prom_port", boot.promEntry.GetPort()),
+			zap.String("prom_path", boot.promEntry.GetPath()))
 		boot.promEntry.Start(boot.bootLogger)
 	}
-
-	boot.startTime = time.Now()
 
 	AppCtx.boot = boot
 
@@ -299,19 +321,43 @@ func (boot *Boot) RegisterQuitter(name string, input QuitterFunc) error {
 func (boot *Boot) Quitter(draining time.Duration) {
 	sig := <-boot.shutdownHook()
 
+	helper := rk_query.NewEventHelper(boot.eventFactory)
+	event := helper.Start("rk_app_stop")
+
 	for _, entry := range boot.gRpcServerEntry {
+		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gRpc_port", entry.GetName()), entry.GetPort()))
 		entry.Stop(boot.bootLogger.With(zap.Any("signal", sig)))
+
+		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gw_port", entry.GetName()), entry.GetGWEntry().GetHttpPort()))
 		entry.StopGW(boot.bootLogger.With(zap.Any("signal", sig)))
+
+		event.AddFields(
+			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
+			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
 		entry.StopSW(boot.bootLogger.With(zap.Any("signal", sig)))
 	}
 
 	if boot.promEntry != nil {
+		event.AddFields(
+			zap.Uint64("prom_port", boot.promEntry.GetPort()),
+			zap.String("prom_path", boot.promEntry.GetPath()))
 		boot.promEntry.Stop(boot.bootLogger)
 	}
 
 	boot.bootLogger.Info("draining", zap.Duration("draining_duration", draining))
 	time.Sleep(draining)
 
+	event.AddFields(
+		zap.Duration("app_lifetime_nano", time.Since(boot.startTime)),
+		zap.Time("app_start_time", boot.startTime))
+
+	event.AddPair("signal", sig.String())
+
+	if err := recover(); err != nil {
+		event.AddFields(zap.Any("recover", err))
+		boot.bootLogger.Error(fmt.Sprintf("err: %+v. stack: %s", err, string(debug.Stack())))
+	}
+	helper.Finish(event)
 	os.Exit(0)
 }
 
@@ -320,8 +366,8 @@ func (boot *Boot) shutdownHook() chan os.Signal {
 	signal.Notify(shutdownHook,
 		syscall.SIGHUP,
 		syscall.SIGINT,
+		syscall.SIGKILL,
 		syscall.SIGTERM,
-		syscall.SIGQUIT,
-		os.Interrupt)
+		syscall.SIGQUIT)
 	return shutdownHook
 }

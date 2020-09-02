@@ -12,8 +12,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net/http"
-	"os"
 	"strconv"
+	"syscall"
 )
 
 type GRpcGWEntry struct {
@@ -152,7 +152,7 @@ func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
 		logger.Info("starting gRpc gateway",
 			zap.Uint64("http_port", entry.httpPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort))
-		if err := entry.server.ListenAndServe(); err != nil {
+		if err := entry.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			entry.logger.Error("failed to start gRpc gateway",
 				zap.Uint64("gRpc_port", entry.gRpcPort),
 				zap.Uint64("http_port", entry.httpPort),
@@ -174,5 +174,5 @@ func headMethodHandler(h http.Handler) http.Handler {
 
 func shutdownWithError(err error) {
 	glog.Error(err)
-	os.Exit(1)
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }

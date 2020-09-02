@@ -11,8 +11,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
-	"os"
 	"strconv"
+	"syscall"
 )
 
 type GRpcServerEntry struct {
@@ -236,5 +236,5 @@ func (entry *GRpcServerEntry) StartSW(logger *zap.Logger) {
 
 func shutdownWithError(err error) {
 	glog.Error(err)
-	os.Exit(1)
+	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 }
