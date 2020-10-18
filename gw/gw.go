@@ -82,6 +82,11 @@ func NewGRpcGWEntry(opts ...GRpcGWOption) *GRpcGWEntry {
 		entry.regFuncs = append(entry.regFuncs, rk_boot_common_v1.RegisterRkCommonServiceHandlerFromEndpoint)
 	}
 
+	httpEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10)
+	entry.server = &http.Server{
+		Addr:    httpEndpoint,
+	}
+
 	return entry
 }
 
@@ -114,7 +119,12 @@ func (entry *GRpcGWEntry) Stop(logger *zap.Logger) {
 		logger.Info("stopping gRpc gateway",
 			zap.Uint64("http_port", entry.httpPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort))
-		entry.server.Shutdown(context.Background())
+		if err := entry.server.Shutdown(context.Background()); err != nil {
+			logger.Warn("error occurs while stopping gRpc gateway",
+				zap.Uint64("http_port", entry.httpPort),
+				zap.Uint64("gRpc_port", entry.gRpcPort),
+				zap.Error(err))
+		}
 	}
 }
 
@@ -124,7 +134,6 @@ func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
 	}
 
 	gRPCEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.gRpcPort, 10)
-	httpEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10)
 
 	gwMux := runtime.NewServeMux(entry.muxOpts...)
 
@@ -143,10 +152,7 @@ func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
 	httpMux.Handle("/", gwMux)
 
 	// Support head method
-	entry.server = &http.Server{
-		Addr:    httpEndpoint,
-		Handler: headMethodHandler(httpMux),
-	}
+	entry.server.Handler = headMethodHandler(httpMux)
 
 	go func(entry *GRpcGWEntry) {
 		logger.Info("starting gRpc gateway",

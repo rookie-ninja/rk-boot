@@ -1,0 +1,86 @@
+---
+appName: rk-server
+event:
+  format: RK
+  quiet: false
+logger:
+  - name: app
+    confPath: "zap-app.yaml"
+    forBoot: true
+  - name: query
+    confPath: "zap-query.yaml"
+    forEvent: true
+config:
+  - name: rk-main
+    path: "rk.yaml"
+    format: RK
+    global: false
+gin:
+  - name: greeter
+    port: 8080
+    sw:
+      enabled: true
+      port: 8090
+      path: "sw"
+      jsonPath: "example/grpc/api/v1"
+      insecure: true
+      headers:
+        - cache-control: no-cache
+    enableCommonService: true
+    loggingInterceptor:
+      enabled: true
+      enableLogging: true
+      enableMetrics: true
+grpc:
+  - name: greeter
+    port: 8080
+    enableCommonService: true
+    gw:
+      enabled: true
+      port: 8081
+      insecure: true
+      enableCommonService: true
+    sw:
+      enabled: true
+      port: 8090
+      path: sw
+      jsonPath: "example/grpc/api/v1"
+      insecure: true
+      enableCommonService: true
+      headers:
+        - "cache-control: no-cache"
+    loggingInterceptor:
+      enabled: true
+      enableLogging: true
+      enableMetrics: true
+      enablePayloadLogging: false
+prom:
+  enabled: true
+  port: 1608
+  path: metrics
+  pushGateway:
+    enabled: false
+    remoteAddr: xxx
+    intervalMS: 2000
+    jobName: xxx
+proto:
+  source:
+    - api/v1/*.proto
+  import:
+    - third-party/googleapis
+  doc:
+    output: docs
+    name: rk-server-demo
+    type:
+      - html
+      - markdown
+ut:
+  output: docs
+build:
+  goos: darwin
+  goarch: amd64
+env:
+  REALM: rk
+  DOMAIN: dev
+  REGION: cn-north-pek
+  AZ: cn-north-pek-1

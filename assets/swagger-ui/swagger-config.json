@@ -1,1 +1,1 @@
-{"urls":[{"name":"rk-common","url":"/swagger/rk_common_service.swagger.json"},{"name":"hello.swagger","url":"/swagger/hello.swagger.json"}]}
+{"urls":[{"name":"swagger","url":"/swagger/swagger.json"},{"name":"rk-common","url":"/swagger/rk_common_service.swagger.json"}]}

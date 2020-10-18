@@ -124,12 +124,12 @@ func (entry *GRpcServerEntry) AddServerOptions(opts ...grpc.ServerOption) {
 	entry.serverOpts = append(entry.serverOpts, opts...)
 }
 
-func (entry *GRpcServerEntry) AddUnaryInterceptors(opts ...grpc.UnaryServerInterceptor) {
-	entry.unaryInterceptors = append(entry.unaryInterceptors, opts...)
+func (entry *GRpcServerEntry) AddUnaryInterceptors(inter ...grpc.UnaryServerInterceptor) {
+	entry.unaryInterceptors = append(entry.unaryInterceptors, inter...)
 }
 
-func (entry *GRpcServerEntry) AddStreamInterceptors(opts ...grpc.StreamServerInterceptor) {
-	entry.streamInterceptors = append(entry.streamInterceptors, opts...)
+func (entry *GRpcServerEntry) AddStreamInterceptors(inter ...grpc.StreamServerInterceptor) {
+	entry.streamInterceptors = append(entry.streamInterceptors, inter...)
 }
 
 func (entry *GRpcServerEntry) AddRegFuncs(funcs ...RegFunc) {

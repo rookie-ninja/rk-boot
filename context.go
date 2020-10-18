@@ -6,11 +6,13 @@ package rk_boot
 
 import (
 	"fmt"
+	rk_gin "github.com/rookie-ninja/rk-boot/gin"
 	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-boot/prom"
 	"github.com/rookie-ninja/rk-config"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"os"
 	"time"
 )
 
@@ -114,6 +116,14 @@ func (ctx *AppContext) ListGRpcEntries() []*rk_grpc.GRpcServerEntry {
 	return ctx.boot.ListGRpcEntries()
 }
 
+func (ctx *AppContext) ListGinEntries() []*rk_gin.GinServerEntry {
+	return ctx.boot.ListGinEntries()
+}
+
 func (ctx *AppContext) GetPromEntry() *rk_prom.PromEntry {
 	return ctx.boot.promEntry
+}
+
+func (ctx *AppContext) GetShutdownSig() chan os.Signal {
+	return ctx.boot.shutdownSig
 }

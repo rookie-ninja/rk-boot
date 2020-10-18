@@ -5,37 +5,31 @@ event:
   quiet: false
 logger:
   - name: app
-    confPath: "example/configs/zap-app.yaml"
+    confPath: "example/gin/configs/zap-app.yaml"
     forBoot: true
   - name: query
-    confPath: "example/configs/zap-query.yaml"
+    confPath: "example/gin/configs/zap-query.yaml"
     forEvent: true
 config:
   - name: rk-main
-    path: "example/configs/rk.yaml"
+    path: "example/gin/configs/rk.yaml"
     format: RK
     global: false
-grpc:
+gin:
   - name: greeter
     port: 8080
-    enableCommonService: true
-    gw:
-      enabled: true
-      port: 8081
-      insecure: true
-      enableCommonService: true
     sw:
       enabled: true
-      port: 8090
-      path: sw
-      jsonPath: "example/api/v1"
+      path: "sw"
+      jsonPath: "example/gin/server/docs"
       insecure: true
-      enableCommonService: true
+      headers:
+        - "cache-control: no-cache"
+    enableCommonService: true
     loggingInterceptor:
       enabled: true
       enableLogging: true
       enableMetrics: true
-      enablePayloadLogging: false
 prom:
   enabled: true
   port: 1608
@@ -45,17 +39,6 @@ prom:
     remoteAddr: xxx
     intervalMS: 2000
     jobName: xxx
-proto:
-  source:
-    - api/v1/*.proto
-  import:
-    - third-party/googleapis
-  doc:
-    output: docs
-    name: rk-server-demo
-    type:
-      - html
-      - markdown
 ut:
   output: docs
 build:

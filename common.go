@@ -10,11 +10,14 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/rookie-ninja/rk-boot/api/v1"
+	"github.com/rookie-ninja/rk-boot/gin"
 	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-boot/gw"
 	"github.com/rookie-ninja/rk-boot/prom"
 	"github.com/rookie-ninja/rk-boot/sw"
 	"github.com/rookie-ninja/rk-config"
+	"github.com/rookie-ninja/rk-gin-interceptor/logging/zap"
+	"github.com/rookie-ninja/rk-gin-interceptor/panic/zap"
 	"github.com/rookie-ninja/rk-interceptor/logging/zap"
 	"github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
@@ -26,6 +29,8 @@ import (
 	"os"
 	"os/user"
 	"path"
+	"path/filepath"
+	"strings"
 )
 
 var (
@@ -101,6 +106,7 @@ func shutdownWithError(err error) {
 func readFile(filePath string) ([]byte, string) {
 	if !path.IsAbs(filePath) {
 		wd, err := os.Getwd()
+
 		if err != nil {
 			shutdownWithError(err)
 		}
@@ -162,7 +168,13 @@ func getLoggers(config *bootConfig) (map[string]*rkLogger, *zap.Logger, *zap.Log
 	}
 
 	for i := range config.Logger {
-		bytes, ext := readFile(config.Logger[i].ConfPath)
+		confPath := config.Logger[i].ConfPath
+		if !filepath.IsAbs(confPath) {
+			wd, _ := os.Getwd()
+			confPath = path.Join(wd, confPath)
+		}
+
+		bytes, ext := readFile(confPath)
 		logger, loggerConf, err := rk_logger.NewZapLoggerWithBytes(bytes, rk_logger.ToFileType(ext))
 		if err != nil {
 			shutdownWithError(err)
@@ -199,6 +211,11 @@ func getConfigs(config *bootConfig) (map[string]*viper.Viper, map[string]*rk_con
 		name := element.Name
 		if len(name) < 1 {
 			name = uuid.New().String()
+		}
+
+		if !path.IsAbs(element.Path) {
+			wd, _ := os.Getwd()
+			element.Path = path.Join(wd, element.Path)
 		}
 
 		if element.Format == "RK" {
@@ -262,13 +279,25 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 				opts = append(opts, grpc.WithInsecure())
 			}
 
+			// init swagger custom headers from config
+			headers := make(map[string]string, 0)
+			for i := range element.SW.Headers {
+				header := element.SW.Headers[i]
+				tokens := strings.Split(header, ":")
+				if len(tokens) == 2 {
+					headers[tokens[0]] = tokens[1]
+				}
+			}
+
 			swEntry = rk_sw.NewSWEntry(
 				rk_sw.WithGRpcPort(element.Port),
 				rk_sw.WithSWPort(element.SW.Port),
 				rk_sw.WithPath(element.SW.Path),
 				rk_sw.WithJsonPath(element.SW.JsonPath),
 				rk_sw.WithDialOptions(opts...),
-				rk_sw.WithCommonService(element.SW.EnableCommonService))
+				rk_sw.WithCommonService(element.SW.EnableCommonService),
+				rk_sw.WithSourceEntry("grpc"),
+				rk_sw.WithHeaders(headers))
 		}
 
 		entry := rk_grpc.NewGRpcServerEntry(
@@ -303,6 +332,79 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 
 	return res
 }
+
+func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory) map[string]*rk_gin.GinServerEntry {
+	res := make(map[string]*rk_gin.GinServerEntry)
+
+	for i := range config.Gin {
+		element := config.Gin[i]
+		name := element.Name
+
+		// did we enabled swagger?
+		var swEntry *rk_sw.SWEntry
+		if element.SW.Enabled {
+			opts := make([]grpc.DialOption, 0)
+			if element.SW.Insecure {
+				opts = append(opts, grpc.WithInsecure())
+			}
+
+			// init swagger custom headers from config
+			headers := make(map[string]string, 0)
+			for i := range element.SW.Headers {
+				header := element.SW.Headers[i]
+				tokens := strings.Split(header, ":")
+				if len(tokens) == 2 {
+					headers[tokens[0]] = tokens[1]
+				}
+			}
+
+			swEntry = rk_sw.NewSWEntry(
+				rk_sw.WithSWPort(element.Port),
+				rk_sw.WithPath(element.SW.Path),
+				rk_sw.WithJsonPath(element.SW.JsonPath),
+				rk_sw.WithCommonService(element.EnableCommonService),
+				rk_sw.WithSourceEntry("gin"),
+				rk_sw.WithHeaders(headers))
+		}
+
+		entry := rk_gin.NewGinServerEntry(
+			rk_gin.WithName(name),
+			rk_gin.WithPort(element.Port),
+			rk_gin.WithSWEntry(swEntry))
+
+		if element.EnableCommonService {
+			entry.GetRouter().GET("/v1/rk/gc", GC4Gin)
+			entry.GetRouter().GET("/v1/rk/config", DumpConfig4Gin)
+			entry.GetRouter().GET("/v1/rk/config/*any", GetConfig4Gin)
+			entry.GetRouter().GET("/v1/rk/ping", Ping4Gin)
+			entry.GetRouter().GET("/v1/rk/log", Log4Gin)
+			entry.GetRouter().GET("/v1/rk/shutdown", Shutdown4Gin)
+			entry.GetRouter().GET("/v1/rk/info", Info4Gin)
+			entry.GetRouter().GET("/v1/rk/healthy", Healthy4Gin)
+		}
+
+		// did we enabled logging interceptor?
+		if element.LoggingInterceptor.Enabled {
+			opts := make([]rk_gin_inter_logging.Option, 0)
+			if !element.LoggingInterceptor.EnableLogging {
+				opts = append(opts, rk_gin_inter_logging.EnableLoggingOption(rk_gin_inter_logging.DisableLogging))
+			}
+
+			if !element.LoggingInterceptor.EnableMetrics {
+				opts = append(opts, rk_gin_inter_logging.EnableLoggingOption(rk_gin_inter_logging.DisableMetrics))
+			}
+
+			entry.AddInterceptor(
+				rk_gin_inter_logging.RkGinZap(eventFactory),
+				rk_gin_inter_panic.RkGinPanicZap())
+		}
+
+		res[name] = entry
+	}
+
+	return res
+}
+
 
 func getRkConfig(path string, global bool) *rk_config.RkConfig {
 	if len(path) < 1 {
@@ -354,5 +456,5 @@ func getViperConfig(path string, global bool) *viper.Viper {
 
 // Register common service
 func registerRkCommonServiceGRPC(server *grpc.Server) {
-	rk_boot_common_v1.RegisterRkCommonServiceServer(server, NewCommonService())
+	rk_boot_common_v1.RegisterRkCommonServiceServer(server, NewCommonServiceGRpc())
 }

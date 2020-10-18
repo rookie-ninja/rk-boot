@@ -8,8 +8,7 @@ service RkCommonService {
     // GC Stub
     rpc GC(GCRequest) returns (GCResponse) {
         option (google.api.http) = {
-            post: "/v1/rk/gc"
-            body: "*"
+            get: "/v1/rk/gc"
         };
     };
 
@@ -30,8 +29,7 @@ service RkCommonService {
     // Ping Stub
     rpc Ping(PingRequest) returns (PongResponse) {
         option (google.api.http) = {
-            post: "/v1/rk/ping"
-            body: "*"
+            get: "/v1/rk/ping"
         };
     };
 
@@ -46,8 +44,7 @@ service RkCommonService {
     // Shutdown Stub
     rpc Shutdown(ShutdownRequest) returns (ShutdownResponse) {
         option (google.api.http) = {
-            post: "/v1/rk/shutdown"
-            body: "*"
+            get: "/v1/rk/shutdown"
         };
     };
 
@@ -67,9 +64,7 @@ service RkCommonService {
 }
 
 // GC request, operator must be set
-message GCRequest {
-    string operator = 1;
-}
+message GCRequest {}
 
 // GC response, memory stats would be returned
 message GCResponse {
@@ -159,6 +154,12 @@ message GWInfo {
     string gw_port = 1;
 }
 
+message GinInfo {
+    string name = 1;
+    string port = 2;
+    SWInfo sw_info = 3;
+}
+
 message GRpcInfo {
     string name = 1;
     string port = 2;
@@ -169,7 +170,8 @@ message GRpcInfo {
 message InfoResponse {
     BasicInfo basic_info = 1;
     repeated GRpcInfo grpc_info_list = 2;
-    PromInfo prom_info = 3;
+    repeated GinInfo gin_info_list = 3;
+    PromInfo prom_info = 4;
 }
 
 message LogRequest {

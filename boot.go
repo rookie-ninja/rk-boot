@@ -7,15 +7,17 @@ package rk_boot
 import (
 	"errors"
 	"fmt"
+	"github.com/rookie-ninja/rk-boot/gin"
 	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-boot/prom"
 	"github.com/rookie-ninja/rk-config"
-	rk_logger "github.com/rookie-ninja/rk-logger"
+	"github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"os"
 	"os/signal"
+	"path"
 	"runtime/debug"
 	"syscall"
 	"time"
@@ -25,6 +27,7 @@ var AppCtx = NewAppContext(nil)
 
 type bootConfig struct {
 	AppName string `yaml:"appName"`
+	dir     string
 	Event   struct {
 		Format string `yaml:"format"`
 		Quiet  bool   `yaml:"quiet"`
@@ -58,6 +61,7 @@ type bootConfig struct {
 			JsonPath            string `yaml:"jsonPath"`
 			Insecure            bool   `yaml:"insecure"`
 			EnableCommonService bool   `yaml:"enableCommonService"`
+			Headers 			[]string `yaml:"headers"`
 		} `yaml:"sw"`
 		LoggingInterceptor struct {
 			Enabled              bool `yaml:"enabled"`
@@ -66,6 +70,23 @@ type bootConfig struct {
 			EnablePayloadLogging bool `yaml:"enablePayloadLogging"`
 		} `yaml:"loggingInterceptor"`
 	} `yaml:"grpc"`
+	Gin []struct {
+		Name                string `yaml:"name"`
+		Port                uint64 `yaml:"port"`
+		SW struct {
+			Enabled             bool   `yaml:"enabled"`
+			Path                string `yaml:"path"`
+			JsonPath            string `yaml:"jsonPath"`
+			Insecure            bool   `yaml:"insecure"`
+			Headers 			[]string `yaml:"headers"`
+		} `yaml:"sw"`
+		EnableCommonService bool   `yaml:"enableCommonService"`
+		LoggingInterceptor struct {
+			Enabled              bool `yaml:"enabled"`
+			EnableLogging        bool `yaml:"enableLogging"`
+			EnableMetrics        bool `yaml:"enableMetrics"`
+		} `yaml:"loggingInterceptor"`
+	} `yaml:"gin"`
 	Prom struct {
 		Enabled     bool   `yaml:"enabled"`
 		Port        uint64 `yaml:"port"`
@@ -91,6 +112,7 @@ type Boot struct {
 	quitters        map[string]QuitterFunc
 	startTime       time.Time
 	gRpcServerEntry map[string]*rk_grpc.GRpcServerEntry
+	ginServerEntry  map[string]*rk_gin.GinServerEntry
 	promEntry       *rk_prom.PromEntry
 	bootLogger      *zap.Logger
 	eventLogger     *zap.Logger
@@ -98,6 +120,7 @@ type Boot struct {
 	eventFactory    *rk_query.EventFactory
 	viperConfigs    map[string]*viper.Viper
 	rkConfigs       map[string]*rk_config.RkConfig
+	shutdownSig     chan os.Signal
 }
 
 type BootOption func(*Boot)
@@ -108,6 +131,9 @@ func WithBootConfigPath(filePath string) BootOption {
 		bytes, ext := readFile(filePath)
 		config := &bootConfig{}
 		unMarshal(bytes, ext, config)
+
+		// assign config path
+		config.dir = path.Dir(filePath)
 
 		boot.appName = config.AppName
 
@@ -122,6 +148,9 @@ func WithBootConfigPath(filePath string) BootOption {
 
 		// init gRpc
 		boot.gRpcServerEntry = getGRpcServerEntries(config, boot.eventFactory)
+
+		// init gin
+		boot.ginServerEntry = getGinServerEntries(config, boot.eventFactory)
 
 		// init prom
 		boot.promEntry = getPromEntry(config)
@@ -193,6 +222,7 @@ func NewBoot(opts ...BootOption) *Boot {
 		userLoggers:     make(map[string]*rkLogger),
 		bootLogger:      defaultBootLogger,
 		eventFactory:    getEventFactory(config, defaultEventLogger),
+		shutdownSig:     make(chan os.Signal),
 	}
 
 	for i := range opts {
@@ -239,9 +269,23 @@ func (boot *Boot) GetGRpcEntry(name string) *rk_grpc.GRpcServerEntry {
 	return res
 }
 
+func (boot *Boot) GetGinEntry(name string) *rk_gin.GinServerEntry {
+	res, _ := boot.ginServerEntry[name]
+	return res
+}
+
 func (boot *Boot) ListGRpcEntries() []*rk_grpc.GRpcServerEntry {
 	res := make([]*rk_grpc.GRpcServerEntry, 0)
 	for _, v := range boot.gRpcServerEntry {
+		res = append(res, v)
+	}
+
+	return res
+}
+
+func (boot *Boot) ListGinEntries() []*rk_gin.GinServerEntry {
+	res := make([]*rk_gin.GinServerEntry, 0)
+	for _, v := range boot.ginServerEntry {
 		res = append(res, v)
 	}
 
@@ -282,6 +326,15 @@ func (boot *Boot) Bootstrap() *AppContext {
 
 		entry.StartSW(boot.bootLogger)
 		event.AddFields(
+			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
+			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
+	}
+
+	// gin, swagger
+	for _, entry := range boot.ginServerEntry {
+		entry.Start(boot.bootLogger)
+		event.AddFields(
+			zap.Uint64(fmt.Sprintf("%s_gin_port", entry.GetName()), entry.GetPort()),
 			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
 			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
 	}
@@ -362,12 +415,11 @@ func (boot *Boot) Quitter(draining time.Duration) {
 }
 
 func (boot *Boot) shutdownHook() chan os.Signal {
-	shutdownHook := make(chan os.Signal)
-	signal.Notify(shutdownHook,
+	signal.Notify(boot.shutdownSig,
 		syscall.SIGHUP,
 		syscall.SIGINT,
 		syscall.SIGKILL,
 		syscall.SIGTERM,
 		syscall.SIGQUIT)
-	return shutdownHook
+	return boot.shutdownSig
 }

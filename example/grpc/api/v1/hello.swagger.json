@@ -1,15 +1,20 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "example/api/v1/hello.proto",
-    "version": "version not set"
+    "description": "This is a sample rk-demo server.",
+    "title": "Swagger Example API",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0"
   },
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
   "paths": {
     "/v1/hello": {
       "post": {

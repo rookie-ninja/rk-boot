@@ -7,13 +7,13 @@ package main
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/example/api/v1"
+	"github.com/rookie-ninja/rk-boot/example/grpc/api/v1"
 	"google.golang.org/grpc"
 	"time"
 )
 
 func main() {
-	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/configs/boot.yaml"))
+	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/grpc/configs/boot.yaml"))
 
 	// register gRpc
 	boot.GetGRpcEntry("greeter").AddRegFuncs(registerGreeter)

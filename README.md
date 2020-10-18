@@ -187,17 +187,17 @@ Please refer [rk-cmd](https://github.com/rookie-ninja/rk-cmd)
 With ptoroc command
 Compile to go file
 ```shell script
-protoc -I. -I third-party/googleapis --go_out=plugins=grpc:. --go_opt=paths=source_relative api/*.proto
+protoc -I. -I third-party/googleapis --go_out=plugins=grpc:. --go_opt=paths=source_relative api/v1/*.proto
 ```
 
 Compile to gw.go file
 ```shell script
-protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. api/*.proto
+protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. api/v1/*.proto
 ```
 
 Compile to gw.go and swagger.json file
 ```shell script
-protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. --swagger_out=logtostderr=true:. api/*.proto
+protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. --swagger_out=logtostderr=true:. api/v1/*.proto
 ```
 
 ### Contributing

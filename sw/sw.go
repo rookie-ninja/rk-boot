@@ -7,6 +7,7 @@ package rk_sw
 import (
 	"context"
 	"encoding/json"
+	"github.com/gin-gonic/gin"
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rookie-ninja/rk-boot/api/v1"
@@ -35,10 +36,10 @@ var (
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>PL Swagger</title>
-    <link rel="stylesheet" type="text/css" href="http://pulseline-prod-cdn-cn-south-can-1258344699.file.myqcloud.com/swagger-ui/3.24.2/swagger-ui.css" >
-    <link rel="icon" type="image/png" href="http://pulseline-prod-cdn-cn-south-can-1258344699.file.myqcloud.com/swagger-ui/3.24.2/favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="http://pulseline-prod-cdn-cn-south-can-1258344699.file.myqcloud.com/swagger-ui/3.24.2/favicon-16x16.png" sizes="16x16" />
+    <title>RK Swagger UI</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.35.1/swagger-ui.css" >
+    <link rel="icon" type="image/png" href="https://editor.swagger.io/dist/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://editor.swagger.io/dist/favicon-32x32.png" sizes="16x16" />
     <style>
       html
       {
@@ -65,8 +66,8 @@ var (
   <body>
     <div id="swagger-ui"></div>
 
-    <script src="http://pulseline-prod-cdn-cn-south-can-1258344699.file.myqcloud.com/swagger-ui/3.24.2/swagger-ui-bundle.js"> </script>
-    <script src="http://pulseline-prod-cdn-cn-south-can-1258344699.file.myqcloud.com/swagger-ui/3.24.2/swagger-ui-standalone-preset.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.35.1/swagger-ui-bundle.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.35.1/swagger-ui-standalone-preset.js"> </script>
     <script>
     window.onload = function() {
       // Begin Swagger UI call region
@@ -95,8 +96,19 @@ var (
 {
   "swagger": "2.0",
   "info": {
-    "title": "api/rk_common_service.proto",
-    "version": "version not set"
+    "description": "This is rk common services",
+    "title": "RK Common",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "name": "API Support",
+      "url": "http://www.swagger.io/support",
+      "email": "support@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0"
   },
   "consumes": [
     "application/json"
@@ -160,7 +172,7 @@ var (
       }
     },
     "/v1/rk/gc": {
-      "post": {
+      "get": {
         "summary": "GC Stub",
         "operationId": "RkCommonService_GC",
         "responses": {
@@ -177,16 +189,6 @@ var (
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GCRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
@@ -201,29 +203,6 @@ var (
             "description": "A successful response.",
             "schema": {
               "$ref": "#/definitions/HealthyResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response",
-            "schema": {
-              "$ref": "#/definitions/runtimeError"
-            }
-          }
-        },
-        "tags": [
-          "RkCommonService"
-        ]
-      }
-    },
-    "/v1/rk/help": {
-      "get": {
-        "summary": "Help Stub",
-        "operationId": "RkCommonService_Help",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/HelpResponse"
             }
           },
           "default": {
@@ -295,7 +274,7 @@ var (
       }
     },
     "/v1/rk/ping": {
-      "post": {
+      "get": {
         "summary": "Ping Stub",
         "operationId": "RkCommonService_Ping",
         "responses": {
@@ -312,23 +291,13 @@ var (
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PingRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
       }
     },
     "/v1/rk/shutdown": {
-      "post": {
+      "get": {
         "summary": "Shutdown Stub",
         "operationId": "RkCommonService_Shutdown",
         "responses": {
@@ -345,16 +314,6 @@ var (
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ShutdownRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
@@ -391,7 +350,21 @@ var (
     "Config": {
       "type": "object",
       "properties": {
-        "name": {
+        "config_name": {
+          "type": "string"
+        },
+        "config_pair": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConfigPair"
+          }
+        }
+      }
+    },
+    "ConfigPair": {
+      "type": "object",
+      "properties": {
+        "key": {
           "type": "string"
         },
         "value": {
@@ -402,19 +375,13 @@ var (
     "DumpConfigResponse": {
       "type": "object",
       "properties": {
-        "config": {
-          "type": "string"
+        "config_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Config"
+          }
         }
       }
-    },
-    "GCRequest": {
-      "type": "object",
-      "properties": {
-        "operator": {
-          "type": "string"
-        }
-      },
-      "title": "GC request, operator must be set"
     },
     "GCResponse": {
       "type": "object",
@@ -464,23 +431,26 @@ var (
         }
       }
     },
+    "GinInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "sw_info": {
+          "$ref": "#/definitions/SWInfo"
+        }
+      }
+    },
     "HealthyResponse": {
       "type": "object",
       "properties": {
         "healthy": {
           "type": "boolean",
           "format": "boolean"
-        }
-      }
-    },
-    "HelpResponse": {
-      "type": "object",
-      "properties": {
-        "stubs": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Stub"
-          }
         }
       }
     },
@@ -494,6 +464,12 @@ var (
           "type": "array",
           "items": {
             "$ref": "#/definitions/GRpcInfo"
+          }
+        },
+        "gin_info_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GinInfo"
           }
         },
         "prom_info": {
@@ -556,9 +532,6 @@ var (
       },
       "title": "Memory stats"
     },
-    "PingRequest": {
-      "type": "object"
-    },
     "PongResponse": {
       "type": "object",
       "properties": {
@@ -589,27 +562,10 @@ var (
         }
       }
     },
-    "ShutdownRequest": {
-      "type": "object"
-    },
     "ShutdownResponse": {
       "type": "object",
       "properties": {
         "message": {
-          "type": "string"
-        }
-      }
-    },
-    "Stub": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "usage": {
           "type": "string"
         }
       }
@@ -649,7 +605,6 @@ var (
     }
   }
 }
-
 `
 )
 
@@ -663,11 +618,13 @@ type swURL struct {
 }
 
 type SWEntry struct {
+	sourceType          string
 	logger              *zap.Logger
 	swPort              uint64
 	gRpcPort            uint64
 	jsonPath            string
 	path                string
+	headers             map[string]string
 	enableCommonService bool
 	fileHandler         http.Handler
 	regFuncs            []rk_gw.RegFunc
@@ -720,6 +677,18 @@ func WithDialOptions(opts ...grpc.DialOption) SWOption {
 	}
 }
 
+func WithSourceEntry(sourceType string) SWOption {
+	return func(entry *SWEntry) {
+		entry.sourceType = sourceType
+	}
+}
+
+func WithHeaders(headers map[string]string) SWOption {
+	return func(entry *SWEntry) {
+		entry.headers = headers
+	}
+}
+
 func NewSWEntry(opts ...SWOption) *SWEntry {
 	entry := &SWEntry{
 		logger: zap.NewNop(),
@@ -727,6 +696,16 @@ func NewSWEntry(opts ...SWOption) *SWEntry {
 
 	for i := range opts {
 		opts[i](entry)
+	}
+
+	// Deal with Path
+	// add "/" at start and end side if missing
+	if !strings.HasPrefix(entry.path, "/") {
+		entry.path = "/" + entry.path
+	}
+
+	if !strings.HasSuffix(entry.path, "/") {
+		entry.path = entry.path + "/"
 	}
 
 	if entry.dialOpts == nil {
@@ -744,6 +723,15 @@ func NewSWEntry(opts ...SWOption) *SWEntry {
 	if entry.enableCommonService {
 		entry.regFuncs = append(entry.regFuncs, rk_boot_common_v1.RegisterRkCommonServiceHandlerFromEndpoint)
 	}
+
+	// 1: create ./assets/swagger-ui if missing
+	entry.createSWAssetsPath()
+
+	// 2: create ./assets/swagger-ui/index.html if missing
+	entry.createIndexHtml()
+
+	// 3: create or modify ./assets/swagger-ui/swagger-config.json
+	entry.createOrModifySWURLConfig()
 
 	return entry
 }
@@ -787,28 +775,17 @@ func (entry *SWEntry) Stop(logger *zap.Logger) {
 }
 
 func (entry *SWEntry) Start(logger *zap.Logger) {
+	if entry.sourceType != "grpc" {
+		logger.Warn("do not call Start() for non gRpc type",
+			zap.Uint64("sw_port", entry.swPort),
+			zap.Uint64("gRpc_port", entry.gRpcPort),
+			zap.String("sw_path", entry.path))
+		return
+	}
+
 	if logger == nil {
 		logger = zap.NewNop()
 	}
-
-	// Deal with Path
-	// add "/" at start and end side if missing
-	if !strings.HasPrefix(entry.path, "/") {
-		entry.path = "/" + entry.path
-	}
-
-	if !strings.HasSuffix(entry.path, "/") {
-		entry.path = entry.path + "/"
-	}
-
-	// 1: create ./assets/swagger-ui if missing
-	entry.createSWAssetsPath()
-
-	// 2: create ./assets/swagger-ui/index.html if missing
-	entry.createIndexHtml()
-
-	// 3: create or modify ./assets/swagger-ui/swagger-config.json
-	entry.createOrModifySWURLConfig()
 
 	// Init http server
 	ctx := context.Background()
@@ -854,6 +831,18 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 			shutdownWithError(err)
 		}
 	}(entry)
+}
+
+func (entry *SWEntry) GinHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		http.StripPrefix(entry.path, entry.fileHandler).ServeHTTP(c.Writer, c.Request)
+	}
+}
+
+func (entry *SWEntry) GinFileHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		entry.swJsonFileHandler(c.Writer, c.Request)
+	}
 }
 
 func (entry *SWEntry) createSWAssetsPath() {
@@ -1018,6 +1007,7 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 	}
 
 	p := strings.TrimPrefix(r.URL.Path, swHandlerPrefix)
+
 	// This is common file
 	if p == "rk_common_service.swagger.json" {
 		http.ServeContent(w, r, "rk-common", time.Now(), strings.NewReader(commonServiceJson))
@@ -1026,6 +1016,9 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 
 	p = path.Join(entry.jsonPath, p)
 
+	for k, v := range entry.headers {
+		w.Header().Set(k, v)
+	}
 	http.ServeFile(w, r, p)
 }
 

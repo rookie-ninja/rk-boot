@@ -66,7 +66,7 @@
       }
     },
     "/v1/rk/gc": {
-      "post": {
+      "get": {
         "summary": "GC Stub",
         "operationId": "RkCommonService_GC",
         "responses": {
@@ -83,16 +83,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/GCRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
@@ -178,7 +168,7 @@
       }
     },
     "/v1/rk/ping": {
-      "post": {
+      "get": {
         "summary": "Ping Stub",
         "operationId": "RkCommonService_Ping",
         "responses": {
@@ -195,23 +185,13 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PingRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
       }
     },
     "/v1/rk/shutdown": {
-      "post": {
+      "get": {
         "summary": "Shutdown Stub",
         "operationId": "RkCommonService_Shutdown",
         "responses": {
@@ -228,16 +208,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ShutdownRequest"
-            }
-          }
-        ],
         "tags": [
           "RkCommonService"
         ]
@@ -307,15 +277,6 @@
         }
       }
     },
-    "GCRequest": {
-      "type": "object",
-      "properties": {
-        "operator": {
-          "type": "string"
-        }
-      },
-      "title": "GC request, operator must be set"
-    },
     "GCResponse": {
       "type": "object",
       "properties": {
@@ -364,6 +325,20 @@
         }
       }
     },
+    "GinInfo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "port": {
+          "type": "string"
+        },
+        "sw_info": {
+          "$ref": "#/definitions/SWInfo"
+        }
+      }
+    },
     "HealthyResponse": {
       "type": "object",
       "properties": {
@@ -383,6 +358,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/GRpcInfo"
+          }
+        },
+        "gin_info_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GinInfo"
           }
         },
         "prom_info": {
@@ -445,9 +426,6 @@
       },
       "title": "Memory stats"
     },
-    "PingRequest": {
-      "type": "object"
-    },
     "PongResponse": {
       "type": "object",
       "properties": {
@@ -477,9 +455,6 @@
           "type": "string"
         }
       }
-    },
-    "ShutdownRequest": {
-      "type": "object"
     },
     "ShutdownResponse": {
       "type": "object",
