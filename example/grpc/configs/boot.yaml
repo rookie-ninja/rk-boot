@@ -5,32 +5,16 @@ event:
   quiet: false
 logger:
   - name: app
-    confPath: "zap-app.yaml"
+    confPath: "example/grpc/configs/zap-app.yaml"
     forBoot: true
   - name: query
-    confPath: "zap-query.yaml"
+    confPath: "example/grpc/configs/zap-query.yaml"
     forEvent: true
 config:
   - name: rk-main
-    path: "rk.yaml"
+    path: "example/grpc/configs/rk.yaml"
     format: RK
     global: false
-gin:
-  - name: greeter
-    port: 8080
-    sw:
-      enabled: true
-      port: 8090
-      path: "sw"
-      jsonPath: "example/grpc/api/v1"
-      insecure: true
-      headers:
-        - cache-control: no-cache
-    enableCommonService: true
-    loggingInterceptor:
-      enabled: true
-      enableLogging: true
-      enableMetrics: true
 grpc:
   - name: greeter
     port: 8080

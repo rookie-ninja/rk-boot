@@ -405,7 +405,6 @@ func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory
 	return res
 }
 
-
 func getRkConfig(path string, global bool) *rk_config.RkConfig {
 	if len(path) < 1 {
 		shutdownWithError(errors.New("empty config path"))

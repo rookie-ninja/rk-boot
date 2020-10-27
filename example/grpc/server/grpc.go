@@ -31,6 +31,6 @@ type GreeterServer struct{}
 
 func (server *GreeterServer) SayHello(ctx context.Context, request *hello_v1.HelloRequest) (*hello_v1.HelloResponse, error) {
 	return &hello_v1.HelloResponse{
-		Message: "hello",
+		Message: "Hello~",
 	}, nil
 }

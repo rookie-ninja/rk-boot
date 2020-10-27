@@ -606,6 +606,8 @@ var (
   }
 }
 `
+	swaggerConfigJson = ``
+	swaggerJsonFiles  = make(map[string]string, 0)
 )
 
 type swURLConfig struct {
@@ -626,7 +628,6 @@ type SWEntry struct {
 	path                string
 	headers             map[string]string
 	enableCommonService bool
-	fileHandler         http.Handler
 	regFuncs            []rk_gw.RegFunc
 	dialOpts            []grpc.DialOption
 	muxOpts             []runtime.ServeMuxOption
@@ -716,22 +717,12 @@ func NewSWEntry(opts ...SWOption) *SWEntry {
 		entry.regFuncs = make([]rk_gw.RegFunc, 0)
 	}
 
-	entry.fileHandler = func() http.Handler {
-		return http.FileServer(http.Dir("./assets/swagger-ui"))
-	}()
-
 	if entry.enableCommonService {
 		entry.regFuncs = append(entry.regFuncs, rk_boot_common_v1.RegisterRkCommonServiceHandlerFromEndpoint)
 	}
 
-	// 1: create ./assets/swagger-ui if missing
-	entry.createSWAssetsPath()
-
-	// 2: create ./assets/swagger-ui/index.html if missing
-	entry.createIndexHtml()
-
-	// 3: create or modify ./assets/swagger-ui/swagger-config.json
-	entry.createOrModifySWURLConfig()
+	// init swagger configs
+	entry.initSwaggerConfig()
 
 	return entry
 }
@@ -810,7 +801,9 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 	httpMux := http.NewServeMux()
 	httpMux.Handle(gwHandlerPrefix, gwMux)
 	httpMux.HandleFunc(swHandlerPrefix, entry.swJsonFileHandler)
-	httpMux.Handle(entry.path, http.StripPrefix(entry.path, entry.fileHandler))
+	httpMux.HandleFunc(entry.path, entry.swIndexHandler)
+
+	//httpMux.Handle(entry.path, http.StripPrefix(entry.path, entry.fileHandler))
 
 	entry.server = &http.Server{
 		Addr:    swEndpoint,
@@ -835,7 +828,7 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 
 func (entry *SWEntry) GinHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		http.StripPrefix(entry.path, entry.fileHandler).ServeHTTP(c.Writer, c.Request)
+		entry.swIndexHandler(c.Writer, c.Request)
 	}
 }
 
@@ -845,45 +838,18 @@ func (entry *SWEntry) GinFileHandler() gin.HandlerFunc {
 	}
 }
 
-func (entry *SWEntry) createSWAssetsPath() {
-	err := os.MkdirAll(swAssetsPath, os.ModePerm)
-	if err != nil {
-		entry.logger.Error("failed to create folder to swagger",
-			zap.String("sw_assets_path", swAssetsPath),
-			zap.Error(err))
-		shutdownWithError(err)
-	}
-}
-
-func (entry *SWEntry) createIndexHtml() {
-	_, err := os.Stat(path.Join(swAssetsPath, "index.html"))
-	if os.IsNotExist(err) {
-		// create a default index.html file
-		err := ioutil.WriteFile(path.Join(swAssetsPath, "index.html"), []byte(swaggerIndexHTML), os.ModePerm)
-		if err != nil {
-			entry.logger.Error("failed to create index.html for swagger",
-				zap.String("sw_assets_path", swAssetsPath),
-				zap.Error(err))
-			shutdownWithError(err)
-		}
-	} else if err != nil {
-		entry.logger.Error("failed to stat index.html for swagger",
-			zap.String("sw_assets_path", swAssetsPath),
-			zap.Error(err))
-		shutdownWithError(err)
-	}
-}
-
-func (entry *SWEntry) createOrModifySWURLConfig() {
+func (entry *SWEntry) initSwaggerConfig() {
 	// 1: Get swagger-config.json if exists
-	swaggerURLConfig := entry.getSWURLConfigByName()
+	swaggerURLConfig := &swURLConfig{
+		URLs: make([]*swURL, 0),
+	}
 
 	// 2: Add user API swagger JSON
-	swaggerJSONFiles := entry.listFilesWithSuffix()
-	for i := range swaggerJSONFiles {
+	entry.listFilesWithSuffix()
+	for k, _ := range swaggerJsonFiles {
 		swaggerURL := &swURL{
-			Name: strings.TrimSuffix(swaggerJSONFiles[i], ".json"),
-			URL:  path.Join("/swagger", swaggerJSONFiles[i]),
+			Name: k,
+			URL:  path.Join("/swagger", k),
 		}
 		entry.appendAndDeduplication(swaggerURLConfig, swaggerURL)
 	}
@@ -905,55 +871,10 @@ func (entry *SWEntry) createOrModifySWURLConfig() {
 		shutdownWithError(err)
 	}
 
-	// 5: Create swagger-config.json
-	err = ioutil.WriteFile(path.Join(swAssetsPath, "swagger-config.json"), bytes, os.ModePerm)
-	if err != nil {
-		entry.logger.Warn("failed to create swagger-config.json",
-			zap.Uint64("gRpc_port", entry.gRpcPort),
-			zap.Uint64("sw_port", entry.swPort),
-			zap.String("sw_assets_path", swAssetsPath),
-			zap.Error(err))
-		shutdownWithError(err)
-	}
+	swaggerConfigJson = string(bytes)
 }
 
-func (entry *SWEntry) getSWURLConfigByName() *swURLConfig {
-	config := &swURLConfig{
-		URLs: make([]*swURL, 0),
-	}
-
-	_, err := os.Stat(path.Join(swAssetsPath, "swagger-config.json"))
-
-	// swagger-config.json exists, read value from it
-	if err == nil {
-		// Exist! override it
-		content, err := ioutil.ReadFile(path.Join(swAssetsPath, "swagger-config.json"))
-		if err != nil {
-			entry.logger.Warn("failed to read swagger-config.json",
-				zap.Uint64("gRpc_port", entry.gRpcPort),
-				zap.Uint64("sw_port", entry.swPort),
-				zap.String("sw_assets_path", swAssetsPath),
-				zap.Error(err))
-			return config
-		}
-
-		err = json.Unmarshal(content, config)
-		if err != nil {
-			entry.logger.Warn("failed to unmarshal swagger-config.json",
-				zap.Uint64("gRpc_port", entry.gRpcPort),
-				zap.Uint64("sw_port", entry.swPort),
-				zap.String("sw_assets_path", swAssetsPath),
-				zap.Error(err))
-			return config
-		}
-	}
-
-	return config
-}
-
-func (entry *SWEntry) listFilesWithSuffix() []string {
-	res := make([]string, 0)
-
+func (entry *SWEntry) listFilesWithSuffix() {
 	jsonPath := entry.jsonPath
 	suffix := ".json"
 	// re-path it with working directory if not absolute path
@@ -962,7 +883,7 @@ func (entry *SWEntry) listFilesWithSuffix() []string {
 		if err != nil {
 			entry.logger.Info("failed to get working directory",
 				zap.String("error", err.Error()))
-			return res
+			shutdownWithError(err)
 		}
 		jsonPath = path.Join(wd, jsonPath)
 	}
@@ -973,17 +894,24 @@ func (entry *SWEntry) listFilesWithSuffix() []string {
 			zap.String("path", jsonPath),
 			zap.String("suffix", suffix),
 			zap.String("error", err.Error()))
-		return res
+		shutdownWithError(err)
 	}
 
 	for i := range files {
 		file := files[i]
 		if !file.IsDir() && strings.HasSuffix(file.Name(), suffix) {
-			res = append(res, file.Name())
+			bytes, err := ioutil.ReadFile(path.Join(jsonPath, file.Name()))
+			if err != nil {
+				entry.logger.Info("failed to read file with suffix",
+					zap.String("path", path.Join(jsonPath, file.Name())),
+					zap.String("suffix", suffix),
+					zap.String("error", err.Error()))
+				shutdownWithError(err)
+			}
+
+			swaggerJsonFiles[file.Name()] = string(bytes)
 		}
 	}
-
-	return res
 }
 
 func (entry *SWEntry) appendAndDeduplication(config *swURLConfig, url *swURL) {
@@ -1014,12 +942,29 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	p = path.Join(entry.jsonPath, p)
-
 	for k, v := range entry.headers {
 		w.Header().Set(k, v)
 	}
-	http.ServeFile(w, r, p)
+
+	value, ok := swaggerJsonFiles[p]
+
+	if ok {
+		http.ServeContent(w, r, p, time.Now(), strings.NewReader(value))
+	}
+}
+
+func (entry *SWEntry) swIndexHandler(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/"), "/")
+	// This is common file
+	if path == "sw" {
+		http.ServeContent(w, r, "index.html", time.Now(), strings.NewReader(swaggerIndexHTML))
+		return
+	} else if path == "sw/swagger-config.json" {
+		http.ServeContent(w, r, "swagger-config.json", time.Now(), strings.NewReader(swaggerConfigJson))
+		return
+	} else {
+
+	}
 }
 
 func shutdownWithError(err error) {

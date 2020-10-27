@@ -84,7 +84,7 @@ func NewGRpcGWEntry(opts ...GRpcGWOption) *GRpcGWEntry {
 
 	httpEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10)
 	entry.server = &http.Server{
-		Addr:    httpEndpoint,
+		Addr: httpEndpoint,
 	}
 
 	return entry

@@ -25,6 +25,7 @@ github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMx
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/afex/hystrix-go v0.0.0-20180502004556-fa1af6a1f4f5/go.mod h1:SkGFH1ia65gfNATL8TAiHDNxPzPdmEL5uirI2Uyuz6c=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
+github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751 h1:JYp7IbQjafoB+tBA3gMyHYHrpOtNuDiK/uB5uXxq5wM=
 github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
 github.com/alecthomas/units v0.0.0-20151022065526-2efee857e7cf/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
 github.com/alecthomas/units v0.0.0-20190717042225-c3de453c63f4/go.mod h1:ybxpYRFXyAe+OPACYpWeL0wqObRcbAqCMya13uyzqw0=
@@ -375,6 +376,8 @@ github.com/rookie-ninja/rk-gin-interceptor v1.0.1 h1:bA2uGzmabmU/BxrNoo2bbgZGBOg
 github.com/rookie-ninja/rk-gin-interceptor v1.0.1/go.mod h1:yqtEPBjcjv6TgzqGTT6hhDdNX7h8iSYzjDoj+71pUFU=
 github.com/rookie-ninja/rk-interceptor v1.0.0 h1:VfOyAdd6EqFxHAEGm5d2y9jbr+s9I2vZ7pvVF4dAmSs=
 github.com/rookie-ninja/rk-interceptor v1.0.0/go.mod h1:Ix8n6wqGzY4KsXtEHAFpaDmLwmyxPzCgcgbeamU+cUs=
+github.com/rookie-ninja/rk-interceptor v1.0.1 h1:aHKgSIUtiMM4Kot47sh+H9rNBnXllkT3b5po/xLJVss=
+github.com/rookie-ninja/rk-interceptor v1.0.1/go.mod h1:2CFYwYe1XACSadruiqHlAz+q0xPW1LRofsNL/eRzdaY=
 github.com/rookie-ninja/rk-logger v1.0.3 h1:sX/fWnKbX2STysWLahkaVIyoaRh5RFl3v/u/4reKUCM=
 github.com/rookie-ninja/rk-logger v1.0.3/go.mod h1:ep3zy5MvOcVg+ftUsVnUcfFA9cxvVb99IBJEsmWAnlM=
 github.com/rookie-ninja/rk-prom v1.0.1 h1:otLbK1KrniSbGxOECstdtTW1NGornIwbv6iUvvjJPUk=

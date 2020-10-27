@@ -13,13 +13,13 @@ import (
 )
 
 type GinServerEntry struct {
-	logger                    *zap.Logger
-	router                    *gin.Engine
-	server                    *http.Server
-	name                      string
-	port                      uint64
-	interceptors              []gin.HandlerFunc
-	sw                        *rk_sw.SWEntry
+	logger       *zap.Logger
+	router       *gin.Engine
+	server       *http.Server
+	name         string
+	port         uint64
+	interceptors []gin.HandlerFunc
+	sw           *rk_sw.SWEntry
 }
 
 type GinEntryOption func(*GinServerEntry)

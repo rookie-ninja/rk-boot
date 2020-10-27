@@ -3,6 +3,7 @@ module github.com/rookie-ninja/rk-boot
 go 1.14
 
 require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
@@ -13,7 +14,7 @@ require (
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/rookie-ninja/rk-config v1.0.0
 	github.com/rookie-ninja/rk-gin-interceptor v1.0.1
-	github.com/rookie-ninja/rk-interceptor v1.0.0
+	github.com/rookie-ninja/rk-interceptor v1.0.1
 	github.com/rookie-ninja/rk-logger v1.0.3
 	github.com/rookie-ninja/rk-prom v1.0.1
 	github.com/rookie-ninja/rk-query v1.0.6
@@ -23,8 +24,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1
-	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.2.0
+	github.com/swaggo/swag v1.5.1
 	go.uber.org/zap v1.15.0
 	golang.org/x/net v0.0.0-20200707034311-ab3426394381
 	golang.org/x/text v0.3.3 // indirect

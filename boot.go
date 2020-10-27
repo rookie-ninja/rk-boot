@@ -55,13 +55,13 @@ type bootConfig struct {
 			EnableCommonService bool   `yaml:"enableCommonService"`
 		} `yaml:"gw"`
 		SW struct {
-			Enabled             bool   `yaml:"enabled"`
-			Port                uint64 `yaml:"port"`
-			Path                string `yaml:"path"`
-			JsonPath            string `yaml:"jsonPath"`
-			Insecure            bool   `yaml:"insecure"`
-			EnableCommonService bool   `yaml:"enableCommonService"`
-			Headers 			[]string `yaml:"headers"`
+			Enabled             bool     `yaml:"enabled"`
+			Port                uint64   `yaml:"port"`
+			Path                string   `yaml:"path"`
+			JsonPath            string   `yaml:"jsonPath"`
+			Insecure            bool     `yaml:"insecure"`
+			EnableCommonService bool     `yaml:"enableCommonService"`
+			Headers             []string `yaml:"headers"`
 		} `yaml:"sw"`
 		LoggingInterceptor struct {
 			Enabled              bool `yaml:"enabled"`
@@ -71,20 +71,20 @@ type bootConfig struct {
 		} `yaml:"loggingInterceptor"`
 	} `yaml:"grpc"`
 	Gin []struct {
-		Name                string `yaml:"name"`
-		Port                uint64 `yaml:"port"`
-		SW struct {
-			Enabled             bool   `yaml:"enabled"`
-			Path                string `yaml:"path"`
-			JsonPath            string `yaml:"jsonPath"`
-			Insecure            bool   `yaml:"insecure"`
-			Headers 			[]string `yaml:"headers"`
+		Name string `yaml:"name"`
+		Port uint64 `yaml:"port"`
+		SW   struct {
+			Enabled  bool     `yaml:"enabled"`
+			Path     string   `yaml:"path"`
+			JsonPath string   `yaml:"jsonPath"`
+			Insecure bool     `yaml:"insecure"`
+			Headers  []string `yaml:"headers"`
 		} `yaml:"sw"`
-		EnableCommonService bool   `yaml:"enableCommonService"`
-		LoggingInterceptor struct {
-			Enabled              bool `yaml:"enabled"`
-			EnableLogging        bool `yaml:"enableLogging"`
-			EnableMetrics        bool `yaml:"enableMetrics"`
+		EnableCommonService bool `yaml:"enableCommonService"`
+		LoggingInterceptor  struct {
+			Enabled       bool `yaml:"enabled"`
+			EnableLogging bool `yaml:"enableLogging"`
+			EnableMetrics bool `yaml:"enableMetrics"`
 		} `yaml:"loggingInterceptor"`
 	} `yaml:"gin"`
 	Prom struct {
