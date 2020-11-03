@@ -20,7 +20,6 @@ import (
 	"path"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 )
 
@@ -603,6 +602,11 @@ var (
         }
       }
     }
+  },
+  "securityDefinitions": {
+    "BasicAuth": {
+      "type": "basic"
+    }
   }
 }
 `
@@ -969,5 +973,5 @@ func (entry *SWEntry) swIndexHandler(w http.ResponseWriter, r *http.Request) {
 
 func shutdownWithError(err error) {
 	glog.Error(err)
-	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	os.Exit(1)
 }

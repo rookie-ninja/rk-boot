@@ -73,7 +73,20 @@ type bootConfig struct {
 	Gin []struct {
 		Name string `yaml:"name"`
 		Port uint64 `yaml:"port"`
-		SW   struct {
+		Tls  struct {
+			Enabled bool   `yaml:"enabled"`
+			Port    uint64 `yaml:"port"`
+			User    struct {
+				Enabled  bool   `yaml:"enabled"`
+				CertFile string `yaml:"certFile"`
+				KeyFile  string `yaml:"keyFile"`
+			} `yaml:"user"`
+			Auto struct {
+				Enabled    bool   `yaml:"enabled"`
+				CertOutput string `yaml:"certOutput"`
+			} `yaml:"auto"`
+		} `yaml:"tls"`
+		SW struct {
 			Enabled  bool     `yaml:"enabled"`
 			Path     string   `yaml:"path"`
 			JsonPath string   `yaml:"jsonPath"`
@@ -86,6 +99,11 @@ type bootConfig struct {
 			EnableLogging bool `yaml:"enableLogging"`
 			EnableMetrics bool `yaml:"enableMetrics"`
 		} `yaml:"loggingInterceptor"`
+		AuthInterceptor struct {
+			Enabled     bool     `yaml:"enabled"`
+			Realm       string   `yaml:"realm"`
+			Credentials []string `yaml:"credentials"`
+		} `yaml:"authInterceptor"`
 	} `yaml:"gin"`
 	Prom struct {
 		Enabled     bool   `yaml:"enabled"`
@@ -150,7 +168,7 @@ func WithBootConfigPath(filePath string) BootOption {
 		boot.gRpcServerEntry = getGRpcServerEntries(config, boot.eventFactory)
 
 		// init gin
-		boot.ginServerEntry = getGinServerEntries(config, boot.eventFactory)
+		boot.ginServerEntry = getGinServerEntries(config, boot.eventFactory, boot.bootLogger)
 
 		// init prom
 		boot.promEntry = getPromEntry(config)
@@ -377,6 +395,7 @@ func (boot *Boot) Quitter(draining time.Duration) {
 	helper := rk_query.NewEventHelper(boot.eventFactory)
 	event := helper.Start("rk_app_stop")
 
+	// shutdown gRpc, gateway, swagger entry
 	for _, entry := range boot.gRpcServerEntry {
 		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gRpc_port", entry.GetName()), entry.GetPort()))
 		entry.Stop(boot.bootLogger.With(zap.Any("signal", sig)))
@@ -388,6 +407,16 @@ func (boot *Boot) Quitter(draining time.Duration) {
 			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
 			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
 		entry.StopSW(boot.bootLogger.With(zap.Any("signal", sig)))
+	}
+
+	// shutdown gin entry
+	for _, entry := range boot.ginServerEntry {
+		event.AddFields(zap.Uint64(fmt.Sprintf("%s_gin_port", entry.GetName()), entry.GetPort()))
+		entry.Stop(boot.bootLogger.With(zap.Any("signal", sig)))
+
+		event.AddFields(
+			zap.Uint64(fmt.Sprintf("%s_sw_port", entry.GetName()), entry.GetSWEntry().GetSWPort()),
+			zap.String(fmt.Sprintf("%s_sw_path", entry.GetName()), entry.GetSWEntry().GetPath()))
 	}
 
 	if boot.promEntry != nil {

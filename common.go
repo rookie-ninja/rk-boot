@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rookie-ninja/rk-boot/api/v1"
 	"github.com/rookie-ninja/rk-boot/gin"
@@ -15,9 +16,10 @@ import (
 	"github.com/rookie-ninja/rk-boot/gw"
 	"github.com/rookie-ninja/rk-boot/prom"
 	"github.com/rookie-ninja/rk-boot/sw"
+	"github.com/rookie-ninja/rk-boot/tls"
 	"github.com/rookie-ninja/rk-config"
+	"github.com/rookie-ninja/rk-gin-interceptor/auth"
 	"github.com/rookie-ninja/rk-gin-interceptor/logging/zap"
-	"github.com/rookie-ninja/rk-gin-interceptor/panic/zap"
 	"github.com/rookie-ninja/rk-interceptor/logging/zap"
 	"github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
@@ -333,7 +335,7 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 	return res
 }
 
-func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory) map[string]*rk_gin.GinServerEntry {
+func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory, logger *zap.Logger) map[string]*rk_gin.GinServerEntry {
 	res := make(map[string]*rk_gin.GinServerEntry)
 
 	for i := range config.Gin {
@@ -367,10 +369,55 @@ func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory
 				rk_sw.WithHeaders(headers))
 		}
 
+		// did we enabled tls?
+		var tlsEntry *rk_tls.TlsEntry
+
+		if element.Tls.Enabled {
+			if element.Tls.User.Enabled {
+				tlsEntry = rk_tls.NewTlsEntry(
+					rk_tls.WithPort(element.Tls.Port),
+					rk_tls.WithCertFilePath(element.Tls.User.CertFile),
+					rk_tls.WithKeyFilePath(element.Tls.User.KeyFile))
+			} else if element.Tls.Auto.Enabled {
+				tlsEntry = rk_tls.NewTlsEntry(
+					rk_tls.WithPort(element.Tls.Port),
+					rk_tls.WithGenerateCert(element.Tls.Auto.Enabled),
+					rk_tls.WithGeneratePath(element.Tls.Auto.CertOutput))
+			}
+		}
+
+		inters := make([]gin.HandlerFunc, 0)
+		// did we enabled logging interceptor?
+		if element.LoggingInterceptor.Enabled {
+			opts := []rk_gin_inter_logging.Option{
+				rk_gin_inter_logging.WithEventFactory(eventFactory),
+				rk_gin_inter_logging.WithLogger(logger),
+				rk_gin_inter_logging.WithEnableLogging(element.LoggingInterceptor.EnableLogging),
+				rk_gin_inter_logging.WithEnableMetrics(element.LoggingInterceptor.EnableMetrics),
+			}
+
+			inters = append(inters, rk_gin_inter_logging.RkGinZap(opts...))
+		}
+
+		// did we enabled auth interceptor?
+		if element.AuthInterceptor.Enabled {
+			accounts := gin.Accounts{}
+			for i := range element.AuthInterceptor.Credentials {
+				cred := element.AuthInterceptor.Credentials[i]
+				tokens := strings.Split(cred, ":")
+				if len(tokens) == 2 {
+					accounts[tokens[0]] = tokens[1]
+				}
+			}
+			inters = append(inters, rk_gin_inter_auth.RkGinAuthZap(accounts, element.AuthInterceptor.Realm))
+		}
+
 		entry := rk_gin.NewGinServerEntry(
 			rk_gin.WithName(name),
 			rk_gin.WithPort(element.Port),
-			rk_gin.WithSWEntry(swEntry))
+			rk_gin.WithSWEntry(swEntry),
+			rk_gin.WithTlsEntry(tlsEntry),
+			rk_gin.WithInterceptors(inters...))
 
 		if element.EnableCommonService {
 			entry.GetRouter().GET("/v1/rk/gc", GC4Gin)
@@ -381,22 +428,6 @@ func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory
 			entry.GetRouter().GET("/v1/rk/shutdown", Shutdown4Gin)
 			entry.GetRouter().GET("/v1/rk/info", Info4Gin)
 			entry.GetRouter().GET("/v1/rk/healthy", Healthy4Gin)
-		}
-
-		// did we enabled logging interceptor?
-		if element.LoggingInterceptor.Enabled {
-			opts := make([]rk_gin_inter_logging.Option, 0)
-			if !element.LoggingInterceptor.EnableLogging {
-				opts = append(opts, rk_gin_inter_logging.EnableLoggingOption(rk_gin_inter_logging.DisableLogging))
-			}
-
-			if !element.LoggingInterceptor.EnableMetrics {
-				opts = append(opts, rk_gin_inter_logging.EnableLoggingOption(rk_gin_inter_logging.DisableMetrics))
-			}
-
-			entry.AddInterceptor(
-				rk_gin_inter_logging.RkGinZap(eventFactory),
-				rk_gin_inter_panic.RkGinPanicZap())
 		}
 
 		res[name] = entry

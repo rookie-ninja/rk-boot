@@ -24,4 +24,7 @@ paths:
       summary: Hello
       tags:
       - Hello
+securityDefinitions:
+  BasicAuth:
+    type: basic
 swagger: "2.0"

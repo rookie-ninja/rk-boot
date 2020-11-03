@@ -1,4 +1,4 @@
-# rk-boot
+# gRPC Example
 gRpc service bootstrapper for goLang.
 With rk-boot, users can start gRpc service with yaml formatted config file.
 Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
@@ -9,34 +9,35 @@ Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
 - [rk-interceptor](https://github.com/rookie-ninja/rk-interceptor)
 - [rk-prom](https://github.com/rookie-ninja/rk-prom)
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-  - [YAML config](#yaml-config)
-  - [Development Status: Stable](#development-status-stable)
-  - [Appendix](#appendix)
-    - [Proto file compilation](#proto-file-compilation)
-  - [Contributing](#contributing)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Installation
 `go get -u rookie-ninja/rk-boot`
 
 ## Quick Start
-There are two ways users can run gRpc or Gin service. one is yaml formatted config file.
+There are two ways users can run gRpc service. one is yaml formatted config file.
 The other one is through goLang code.
 
-### YAML config
+### Example
 With human readable yaml config.
 All you need to do is compile .proto file with protoc, protoc-gen-go, protoc-gen-grpc-gateway and protoc-gen-swagger
 
-#### gRpc
+Directory struct
+```shell script
+.
+├── api
+│   └── v1
+│       ├── hello.pb.go
+│       ├── hello.pb.gw.go
+│       ├── hello.proto
+│       └── hello.swagger.json
+├── configs
+│   ├── boot.yaml
+│   ├── zap-app.yaml
+│   └── zap-query.yaml
+└── server
+    └── grpc.go
+```
 
-Example:
+boot.yaml:
 ```yaml
 ---
 appName: rk-demo
@@ -50,11 +51,6 @@ logger:
   - name: query
     confPath: "example/configs/zap-query.yaml"
     forEvent: true
-config:
-  - name: rk-main
-    path: "example/configs/rk.yaml"
-    format: RK
-    global: false
 grpc:
   - name: greeter
     port: 8080
@@ -164,9 +160,9 @@ YAML config Explanation
 | grpc.sw.enabled | Enable swagger service over gRpc server | true, false |
 | grpc.sw.port | The port of swagger | true, false |
 | grpc.sw.insecure | Run swagger with insecure mode | true, false |
-| grpc.sw.enableCommonService | Enable embedded common service | true, false |
 | grpc.sw.path | The path access swagger service from web | string |
 | grpc.sw.jsonPath | Where the swagger.json files are stored locally | string |
+| grpc.sw.headers | Default headers append to swagger | string array |
 | grpc.loggingInterceptor.enabled | Enable rk-interceptor logging interceptor | true, false |
 | grpc.loggingInterceptor.enableLogging | Enable rk-interceptor logging interceptor specifically for each Rpc with rk-query | true, false |
 | grpc.loggingInterceptor.enableMetrics | Enable rk-interceptor logging interceptor specifically for each Rpc with prometheus | true, false |
@@ -201,16 +197,3 @@ Compile to gw.go and swagger.json file
 ```shell script
 protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. --swagger_out=logtostderr=true:. api/v1/*.proto
 ```
-
-### Contributing
-We encourage and support an active, healthy community of contributors &mdash;
-including you! Details are in the [contribution guide](CONTRIBUTING.md) and
-the [code of conduct](CODE_OF_CONDUCT.md). The rk maintainers keep an eye on
-issues and pull requests, but you can also report any negative conduct to
-dongxuny@gmail.com. That email list is a private, safe space; even the zap
-maintainers don't have access, so don't hesitate to hold us to a high
-standard.
-
-<hr>
-
-Released under the [MIT License](LICENSE).

@@ -18,6 +18,16 @@ config:
 gin:
   - name: greeter
     port: 8080
+    tls:
+      enabled: true
+      port: 8443
+      user:
+        enabled: false
+        certFile: "example/gin/server/cert/server.pem"
+        keyFile: "example/gin/server/cert/server-key.pem"
+      auto:
+        enabled: true
+        certOutput: "example/gin/server/cert"
     sw:
       enabled: true
       path: "sw"
@@ -30,6 +40,12 @@ gin:
       enabled: true
       enableLogging: true
       enableMetrics: true
+    authInterceptor:
+      enabled: false
+      realm: "rk"
+      credentials:
+        - "foo:pass"
+        - "bar:pass"
 prom:
   enabled: true
   port: 1608
