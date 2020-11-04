@@ -32,7 +32,6 @@ gin:
       enabled: true
       path: "sw"
       jsonPath: "example/gin/server/docs"
-      insecure: true
       headers:
         - "cache-control: no-cache"
     enableCommonService: true

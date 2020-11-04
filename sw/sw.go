@@ -971,6 +971,9 @@ func (entry *SWEntry) swJsonFileHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
+	// Set no-cache headers by default
+	w.Header().Set("cache-control", "no-cache")
+
 	for k, v := range entry.headers {
 		w.Header().Set(k, v)
 	}
