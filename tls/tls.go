@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	runtime2 "runtime/debug"
 )
 
 var (
@@ -84,6 +85,8 @@ var (
     ]
 }`
 )
+
+var originalWD, _ = os.Getwd()
 
 type TlsEntry struct {
 	logger       *zap.Logger
@@ -161,7 +164,7 @@ func NewTlsEntry(opts ...TlsOption) *TlsEntry {
 	return entry
 }
 
-func (entry *TlsEntry) GetCerFilePath() string {
+func (entry *TlsEntry) GetCertFilePath() string {
 	return entry.certFilePath
 }
 
@@ -204,6 +207,7 @@ func generateRootCA(fullPath string) {
 		// cfssl gencert -initca ca-csr.json | cfssljson -bare ca -
 		// first, lets cd to cert directory
 		os.Chdir(fullPath)
+		defer os.Chdir(originalWD)
 		// second, run the command
 		cmd := "cfssl gencert -initca ca-csr.json | cfssljson -bare ca -"
 		if _, err := exec.Command("sh", "-c", cmd).Output(); err != nil {
@@ -229,6 +233,7 @@ func generateServerCA(fullPath string) {
 		// cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server
 		// first, lets cd to cert directory
 		os.Chdir(fullPath)
+		defer os.Chdir(originalWD)
 		// second, run the command
 		cmd := "cfssl gencert -ca=ca.pem -ca-key=ca-key.pem -config=ca-config.json -profile=server server.json | cfssljson -bare server"
 		if _, err := exec.Command("sh", "-c", cmd).Output(); err != nil {
@@ -255,6 +260,7 @@ func exists(file string) bool {
 }
 
 func shutdownWithError(err error) {
+	runtime2.PrintStack()
 	glog.Error(err)
 	os.Exit(1)
 }

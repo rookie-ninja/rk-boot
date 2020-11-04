@@ -9,11 +9,14 @@ import (
 	"github.com/golang/glog"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rookie-ninja/rk-boot/api/v1"
+	rk_tls "github.com/rookie-ninja/rk-boot/tls"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"net/http"
+	"os"
+	runtime2 "runtime/debug"
 	"strconv"
-	"syscall"
 )
 
 type GRpcGWEntry struct {
@@ -21,6 +24,7 @@ type GRpcGWEntry struct {
 	httpPort            uint64
 	gRpcPort            uint64
 	enableCommonService bool
+	tls                 *rk_tls.TlsEntry
 	regFuncs            []RegFunc
 	dialOpts            []grpc.DialOption
 	muxOpts             []runtime.ServeMuxOption
@@ -34,6 +38,12 @@ type GRpcGWOption func(*GRpcGWEntry)
 func WithHttpPort(port uint64) GRpcGWOption {
 	return func(entry *GRpcGWEntry) {
 		entry.httpPort = port
+	}
+}
+
+func WithTlsEntry(tls *rk_tls.TlsEntry) GRpcGWOption {
+	return func(entry *GRpcGWEntry) {
+		entry.tls = tls
 	}
 }
 
@@ -82,9 +92,20 @@ func NewGRpcGWEntry(opts ...GRpcGWOption) *GRpcGWEntry {
 		entry.regFuncs = append(entry.regFuncs, rk_boot_common_v1.RegisterRkCommonServiceHandlerFromEndpoint)
 	}
 
-	httpEndpoint := "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10)
 	entry.server = &http.Server{
-		Addr: httpEndpoint,
+		Addr:    "0.0.0.0:" + strconv.FormatUint(entry.httpPort, 10),
+	}
+
+	// init tls server only if port is not zero
+	if entry.tls != nil {
+		creds, err := credentials.NewClientTLSFromFile(entry.tls.GetCertFilePath(), "")
+		if err != nil {
+			shutdownWithError(err)
+		}
+
+		entry.AddDialOptions(grpc.WithTransportCredentials(creds))
+	} else {
+		entry.AddDialOptions(grpc.WithInsecure())
 	}
 
 	return entry
@@ -116,11 +137,11 @@ func (entry *GRpcGWEntry) Stop(logger *zap.Logger) {
 			logger = zap.NewNop()
 		}
 
-		logger.Info("stopping gRpc gateway",
+		logger.Info("stopping gRpc-gateway",
 			zap.Uint64("http_port", entry.httpPort),
 			zap.Uint64("gRpc_port", entry.gRpcPort))
 		if err := entry.server.Shutdown(context.Background()); err != nil {
-			logger.Warn("error occurs while stopping gRpc gateway",
+			logger.Warn("error occurs while stopping gRpc-gateway",
 				zap.Uint64("http_port", entry.httpPort),
 				zap.Uint64("gRpc_port", entry.gRpcPort),
 				zap.Error(err))
@@ -140,10 +161,16 @@ func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
 	for i := range entry.regFuncs {
 		err := entry.regFuncs[i](context.Background(), gwMux, gRPCEndpoint, entry.dialOpts)
 		if err != nil {
-			logger.Error("registering functions",
+			fields := []zap.Field{
 				zap.Uint64("http_port", entry.httpPort),
 				zap.Uint64("gRpc_port", entry.gRpcPort),
-				zap.Error(err))
+				zap.Error(err),
+			}
+			if entry.tls != nil {
+				fields = append(fields, zap.Bool("tls", true))
+			}
+
+			logger.Error("registering functions", fields...)
 			shutdownWithError(err)
 		}
 	}
@@ -155,15 +182,27 @@ func (entry *GRpcGWEntry) Start(logger *zap.Logger) {
 	entry.server.Handler = headMethodHandler(httpMux)
 
 	go func(entry *GRpcGWEntry) {
-		logger.Info("starting gRpc gateway",
+		fields := []zap.Field{
 			zap.Uint64("http_port", entry.httpPort),
-			zap.Uint64("gRpc_port", entry.gRpcPort))
-		if err := entry.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			entry.logger.Error("failed to start gRpc gateway",
-				zap.Uint64("gRpc_port", entry.gRpcPort),
-				zap.Uint64("http_port", entry.httpPort),
-				zap.Error(err))
-			shutdownWithError(err)
+			zap.Uint64("gRpc_port", entry.gRpcPort),
+		}
+		if entry.tls != nil {
+			fields = append(fields, zap.Bool("tls", true))
+		}
+
+		logger.Info("starting gRpc-gateway", fields...)
+		if entry.tls != nil {
+			if err := entry.server.ListenAndServeTLS(entry.tls.GetCertFilePath(), entry.tls.GetKeyFilePath()); err != nil && err != http.ErrServerClosed {
+				fields = append(fields, zap.Error(err))
+				entry.logger.Error("failed to start gRpc-gateway", fields...)
+				shutdownWithError(err)
+			}
+		} else {
+			if err := entry.server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				fields = append(fields, zap.Error(err))
+				entry.logger.Error("failed to start gRpc-gateway", fields...)
+				shutdownWithError(err)
+			}
 		}
 	}(entry)
 }
@@ -179,6 +218,7 @@ func headMethodHandler(h http.Handler) http.Handler {
 }
 
 func shutdownWithError(err error) {
+	runtime2.PrintStack()
 	glog.Error(err)
-	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	os.Exit(1)
 }

@@ -19,17 +19,24 @@ grpc:
   - name: greeter
     port: 8080
     enableCommonService: true
+    tls:
+      enabled: true
+      user:
+        enabled: false
+        certFile: "example/grpc/server/cert/server.pem"
+        keyFile: "example/grpc/server/cert/server-key.pem"
+      auto:
+        enabled: true
+        certOutput: "example/grpc/server/cert"
     gw:
       enabled: true
       port: 8081
-      insecure: true
       enableCommonService: true
     sw:
       enabled: true
       port: 8090
       path: sw
       jsonPath: "example/grpc/api/v1"
-      insecure: true
       enableCommonService: true
       headers:
         - "cache-control: no-cache"

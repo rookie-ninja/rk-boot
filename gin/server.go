@@ -13,9 +13,10 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"net/http"
+	"os"
 	"path"
+	runtime2 "runtime/debug"
 	"strconv"
-	"syscall"
 )
 
 type GinServerEntry struct {
@@ -121,11 +122,16 @@ func NewGinServerEntry(opts ...GinEntryOption) *GinServerEntry {
 
 	// init server only if port is not zero
 	if entry.port != 0 {
-		entry.server = &http.Server{
-			Addr:    "0.0.0.0:" + strconv.FormatUint(entry.port, 10),
-			Handler: entry.router,
+		if entry.tls != nil && entry.tls.GetPort() != entry.port {
+			entry.server = &http.Server{
+				Addr:    "0.0.0.0:" + strconv.FormatUint(entry.port, 10),
+				Handler: entry.router,
+			}
 		}
 	}
+
+	// make sure we keep only one server
+
 
 	return entry
 }
@@ -148,6 +154,10 @@ func (entry *GinServerEntry) GetTlsEntry() *rk_tls.TlsEntry {
 
 func (entry *GinServerEntry) GetServer() *http.Server {
 	return entry.server
+}
+
+func (entry *GinServerEntry) GetTlsServer() *http.Server {
+	return entry.tlsServer
 }
 
 func (entry *GinServerEntry) GetRouter() *gin.Engine {
@@ -173,7 +183,7 @@ func (entry *GinServerEntry) Start(logger *zap.Logger) {
 
 			logger.Info("starting gin-tls-server", fields...)
 
-			if err := entry.tlsServer.ListenAndServeTLS(entry.tls.GetCerFilePath(), entry.tls.GetKeyFilePath()); err != nil && err != http.ErrServerClosed {
+			if err := entry.tlsServer.ListenAndServeTLS(entry.tls.GetCertFilePath(), entry.tls.GetKeyFilePath()); err != nil && err != http.ErrServerClosed {
 				fields = append(fields, zap.Error(err))
 				logger.Error("err while serving gin-tls-listener", fields...)
 				shutdownWithError(err)
@@ -237,6 +247,7 @@ func (entry *GinServerEntry) Stop(logger *zap.Logger) {
 }
 
 func shutdownWithError(err error) {
+	runtime2.PrintStack()
 	glog.Error(err)
-	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	os.Exit(1)
 }

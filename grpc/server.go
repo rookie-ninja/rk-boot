@@ -5,11 +5,14 @@
 package rk_grpc
 
 import (
+	"crypto/tls"
 	"github.com/golang/glog"
 	"github.com/rookie-ninja/rk-boot/gw"
 	"github.com/rookie-ninja/rk-boot/sw"
+	rk_tls "github.com/rookie-ninja/rk-boot/tls"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"net"
 	"strconv"
 	"syscall"
@@ -26,6 +29,7 @@ type GRpcServerEntry struct {
 	regFuncs            []RegFunc
 	gw                  *rk_gw.GRpcGWEntry
 	sw                  *rk_sw.SWEntry
+	tls                 *rk_tls.TlsEntry
 	server              *grpc.Server
 	listener            net.Listener
 }
@@ -49,6 +53,12 @@ func WithGWEntry(gw *rk_gw.GRpcGWEntry) GRpcEntryOption {
 func WithSWEntry(sw *rk_sw.SWEntry) GRpcEntryOption {
 	return func(entry *GRpcServerEntry) {
 		entry.sw = sw
+	}
+}
+
+func WithTlsEntry(tls *rk_tls.TlsEntry) GRpcEntryOption {
+	return func(entry *GRpcServerEntry) {
+		entry.tls = tls
 	}
 }
 
@@ -176,9 +186,16 @@ func (entry *GRpcServerEntry) Stop(logger *zap.Logger) {
 			logger = zap.NewNop()
 		}
 
-		logger.Info("stopping gRpc",
-			zap.Uint64("gRpc_port", entry.port),
-			zap.String("name", entry.name))
+		fields := []zap.Field{
+			zap.Uint64("gRpc_port", entry.GetPort()),
+			zap.String("name", entry.name),
+		}
+
+		if entry.tls != nil {
+			fields = append(fields, zap.Bool("tls", true))
+		}
+
+		logger.Info("stopping gRpc-server", fields...)
 		entry.server.GracefulStop()
 	}
 }
@@ -207,20 +224,33 @@ func (entry *GRpcServerEntry) Start(logger *zap.Logger) {
 	// make stream server opts
 	entry.serverOpts = append(entry.serverOpts, grpc.ChainStreamInterceptor(entry.streamInterceptors...))
 
+	if entry.tls != nil {
+		cert, err := tls.LoadX509KeyPair(entry.tls.GetCertFilePath(), entry.tls.GetKeyFilePath())
+		if err != nil {
+			shutdownWithError(err)
+		}
+		entry.serverOpts = append(entry.serverOpts, grpc.Creds(credentials.NewServerTLSFromCert(&cert)))
+	}
+
 	entry.server = grpc.NewServer(entry.serverOpts...)
 	for _, regFunc := range entry.regFuncs {
 		regFunc(entry.server)
 	}
 
 	go func(entry *GRpcServerEntry) {
-		logger.Info("starting gRpc",
-			zap.Uint64("gRpc_port", entry.port),
-			zap.String("name", entry.name))
+		fields := []zap.Field{
+			zap.Uint64("gRpc_port", entry.GetPort()),
+			zap.String("name", entry.name),
+		}
+
+		if entry.tls != nil {
+			fields = append(fields, zap.Bool("tls", true))
+		}
+
+		logger.Info("starting gRpc-server", fields...)
 		if err := entry.server.Serve(listener); err != nil {
-			logger.Error("err while serving gRpc listener",
-				zap.Uint64("gRpc_port", entry.port),
-				zap.String("name", entry.name),
-				zap.Error(err))
+			fields = append(fields, zap.Error(err))
+			logger.Error("err while serving gRpc-listener", fields...)
 			shutdownWithError(err)
 		}
 	}(entry)

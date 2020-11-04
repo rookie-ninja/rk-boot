@@ -10,7 +10,8 @@ import (
 	"github.com/rookie-ninja/rk-prom"
 	"go.uber.org/zap"
 	"net/http"
-	"syscall"
+	"os"
+	runtime2 "runtime/debug"
 	"time"
 )
 
@@ -144,6 +145,7 @@ func (entry *PromEntry) Stop(logger *zap.Logger) {
 }
 
 func shutdownWithError(err error) {
+	runtime2.PrintStack()
 	glog.Error(err)
-	syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+	os.Exit(1)
 }

@@ -258,28 +258,39 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 		element := config.GRpc[i]
 		name := element.Name
 
+		// did we enabled tls?
+		var tlsEntry *rk_tls.TlsEntry
+		if element.Tls.Enabled {
+			if element.Tls.User.Enabled {
+				tlsEntry = rk_tls.NewTlsEntry(
+					rk_tls.WithPort(element.Tls.Port),
+					rk_tls.WithCertFilePath(element.Tls.User.CertFile),
+					rk_tls.WithKeyFilePath(element.Tls.User.KeyFile))
+			} else if element.Tls.Auto.Enabled {
+				tlsEntry = rk_tls.NewTlsEntry(
+					rk_tls.WithPort(element.Tls.Port),
+					rk_tls.WithGenerateCert(element.Tls.Auto.Enabled),
+					rk_tls.WithGeneratePath(element.Tls.Auto.CertOutput))
+			}
+		}
+
 		// did we enabled gateway?
 		var gwEntry *rk_gw.GRpcGWEntry
 		if element.GW.Enabled {
 			opts := make([]grpc.DialOption, 0)
-			if element.GW.Insecure {
-				opts = append(opts, grpc.WithInsecure())
-			}
 
 			gwEntry = rk_gw.NewGRpcGWEntry(
 				rk_gw.WithHttpPort(element.GW.Port),
 				rk_gw.WithGRpcPort(element.Port),
 				rk_gw.WithDialOptions(opts...),
-				rk_gw.WithCommonService(element.GW.EnableCommonService))
+				rk_gw.WithCommonService(element.GW.EnableCommonService),
+				rk_gw.WithTlsEntry(tlsEntry))
 		}
 
 		// did we enabled swagger?
 		var swEntry *rk_sw.SWEntry
 		if element.SW.Enabled {
 			opts := make([]grpc.DialOption, 0)
-			if element.SW.Insecure {
-				opts = append(opts, grpc.WithInsecure())
-			}
 
 			// init swagger custom headers from config
 			headers := make(map[string]string, 0)
@@ -299,7 +310,8 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 				rk_sw.WithDialOptions(opts...),
 				rk_sw.WithCommonService(element.SW.EnableCommonService),
 				rk_sw.WithSourceEntry("grpc"),
-				rk_sw.WithHeaders(headers))
+				rk_sw.WithHeaders(headers),
+				rk_sw.WithTlsEntry(tlsEntry))
 		}
 
 		entry := rk_grpc.NewGRpcServerEntry(
@@ -308,7 +320,8 @@ func getGRpcServerEntries(config *bootConfig, eventFactory *rk_query.EventFactor
 			rk_grpc.WithGWEntry(gwEntry),
 			rk_grpc.WithRegFuncs(registerRkCommonServiceGRPC),
 			rk_grpc.WithSWEntry(swEntry),
-			rk_grpc.WithCommonService(element.EnableCommonService))
+			rk_grpc.WithCommonService(element.EnableCommonService),
+			rk_grpc.WithTlsEntry(tlsEntry))
 
 		// did we enabled logging interceptor?
 		if element.LoggingInterceptor.Enabled {

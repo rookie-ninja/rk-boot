@@ -11,59 +11,32 @@ import (
 	"github.com/rookie-ninja/rk-interceptor/context"
 	"github.com/rookie-ninja/rk-interceptor/logging/zap"
 	"github.com/rookie-ninja/rk-interceptor/retry"
-	"github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"log"
+	"os"
+	"path"
 	"time"
-)
-
-var (
-	bytes = []byte(`{
-     "level": "info",
-     "encoding": "console",
-     "outputPaths": ["stdout"],
-     "errorOutputPaths": ["stderr"],
-     "initialFields": {},
-     "encoderConfig": {
-       "messageKey": "msg",
-       "levelKey": "",
-       "nameKey": "",
-       "timeKey": "",
-       "callerKey": "",
-       "stacktraceKey": "",
-       "callstackKey": "",
-       "errorKey": "",
-       "timeEncoder": "iso8601",
-       "fileKey": "",
-       "levelEncoder": "capital",
-       "durationEncoder": "second",
-       "callerEncoder": "full",
-       "nameEncoder": "full"
-     },
-    "maxsize": 1,
-    "maxage": 7,
-    "maxbackups": 3,
-    "localtime": true,
-    "compress": true
-   }`)
-
-	logger, _, _ = rk_logger.NewZapLoggerWithBytes(bytes, rk_logger.JSON)
 )
 
 func main() {
 	// create event factory
-	factory := rk_query.NewEventFactory(
-		rk_query.WithAppName("app"),
-		rk_query.WithLogger(logger),
-		rk_query.WithFormat(rk_query.RK))
+	factory := rk_query.NewEventFactory(rk_query.WithAppName("app"))
+
+	wd, _ := os.Getwd()
+
+	creds, err := credentials.NewClientTLSFromFile(path.Join(wd, "example/grpc/server/cert/ca.pem"), "")
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
 
 	// create client interceptor
 	opt := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
 			rk_inter_logging.UnaryClientInterceptor(factory),
 			rk_inter_retry.UnaryClientInterceptor()),
-		grpc.WithInsecure(),
+		grpc.WithTransportCredentials(creds),
 		grpc.WithBlock(),
 	}
 

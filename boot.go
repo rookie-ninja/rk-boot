@@ -48,10 +48,22 @@ type bootConfig struct {
 		Name                string `yaml:"name"`
 		Port                uint64 `yaml:"port"`
 		EnableCommonService bool   `yaml:"enableCommonService"`
+		Tls  struct {
+			Enabled bool   `yaml:"enabled"`
+			Port    uint64 `yaml:"port"`
+			User    struct {
+				Enabled  bool   `yaml:"enabled"`
+				CertFile string `yaml:"certFile"`
+				KeyFile  string `yaml:"keyFile"`
+			} `yaml:"user"`
+			Auto struct {
+				Enabled    bool   `yaml:"enabled"`
+				CertOutput string `yaml:"certOutput"`
+			} `yaml:"auto"`
+		} `yaml:"tls"`
 		GW                  struct {
 			Enabled             bool   `yaml:"enabled"`
 			Port                uint64 `yaml:"port"`
-			Insecure            bool   `yaml:"insecure"`
 			EnableCommonService bool   `yaml:"enableCommonService"`
 		} `yaml:"gw"`
 		SW struct {
@@ -59,7 +71,6 @@ type bootConfig struct {
 			Port                uint64   `yaml:"port"`
 			Path                string   `yaml:"path"`
 			JsonPath            string   `yaml:"jsonPath"`
-			Insecure            bool     `yaml:"insecure"`
 			EnableCommonService bool     `yaml:"enableCommonService"`
 			Headers             []string `yaml:"headers"`
 		} `yaml:"sw"`

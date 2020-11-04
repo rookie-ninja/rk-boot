@@ -12,12 +12,15 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"github.com/rookie-ninja/rk-boot/api/v1"
 	"github.com/rookie-ninja/rk-boot/gw"
+	rk_tls "github.com/rookie-ninja/rk-boot/tls"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path"
+	runtime2 "runtime/debug"
 	"strconv"
 	"strings"
 	"time"
@@ -630,6 +633,7 @@ type SWEntry struct {
 	gRpcPort            uint64
 	jsonPath            string
 	path                string
+	tls                 *rk_tls.TlsEntry
 	headers             map[string]string
 	enableCommonService bool
 	regFuncs            []rk_gw.RegFunc
@@ -661,6 +665,12 @@ func WithGRpcPort(port uint64) SWOption {
 func WithPath(path string) SWOption {
 	return func(entry *SWEntry) {
 		entry.path = path
+	}
+}
+
+func WithTlsEntry(tls *rk_tls.TlsEntry) SWOption {
+	return func(entry *SWEntry) {
+		entry.tls = tls
 	}
 }
 
@@ -790,6 +800,17 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 
 	gwMux := runtime.NewServeMux()
 
+	if entry.tls != nil {
+		creds, err := credentials.NewClientTLSFromFile(entry.tls.GetCertFilePath(), "")
+		if err != nil {
+			shutdownWithError(err)
+		}
+
+		entry.AddDialOptions(grpc.WithTransportCredentials(creds))
+	} else {
+		entry.AddDialOptions(grpc.WithInsecure())
+	}
+
 	for i := range entry.regFuncs {
 		err := entry.regFuncs[i](ctx, gwMux, gRPCEndpoint, entry.dialOpts)
 		if err != nil {
@@ -807,7 +828,9 @@ func (entry *SWEntry) Start(logger *zap.Logger) {
 	httpMux.HandleFunc(swHandlerPrefix, entry.swJsonFileHandler)
 	httpMux.HandleFunc(entry.path, entry.swIndexHandler)
 
-	//httpMux.Handle(entry.path, http.StripPrefix(entry.path, entry.fileHandler))
+	entry.server = &http.Server {
+		Addr:    "0.0.0.0:" + strconv.FormatUint(entry.swPort, 10),
+	}
 
 	entry.server = &http.Server{
 		Addr:    swEndpoint,
@@ -892,9 +915,11 @@ func (entry *SWEntry) listFilesWithSuffix() {
 		jsonPath = path.Join(wd, jsonPath)
 	}
 
+	println(jsonPath)
+
 	files, err := ioutil.ReadDir(jsonPath)
 	if err != nil {
-		entry.logger.Info("failed to list files with suffix",
+		entry.logger.Error("failed to list files with suffix",
 			zap.String("path", jsonPath),
 			zap.String("suffix", suffix),
 			zap.String("error", err.Error()))
@@ -972,6 +997,7 @@ func (entry *SWEntry) swIndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func shutdownWithError(err error) {
+	runtime2.PrintStack()
 	glog.Error(err)
 	os.Exit(1)
 }
