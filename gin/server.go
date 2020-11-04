@@ -122,16 +122,13 @@ func NewGinServerEntry(opts ...GinEntryOption) *GinServerEntry {
 
 	// init server only if port is not zero
 	if entry.port != 0 {
-		if entry.tls != nil && entry.tls.GetPort() != entry.port {
+		if entry.tls == nil || entry.tls != nil && entry.tls.GetPort() != entry.port {
 			entry.server = &http.Server{
 				Addr:    "0.0.0.0:" + strconv.FormatUint(entry.port, 10),
 				Handler: entry.router,
 			}
 		}
 	}
-
-	// make sure we keep only one server
-
 
 	return entry
 }

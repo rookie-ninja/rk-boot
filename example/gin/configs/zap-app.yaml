@@ -22,3 +22,8 @@ encoderConfig:
   durationEncoder: ""
   callerEncoder: short
   nameEncoder: full
+maxsize: 1
+maxage: 7
+maxbackups: 3
+localtime: true
+compress: true

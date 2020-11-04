@@ -384,7 +384,6 @@ func getGinServerEntries(config *bootConfig, eventFactory *rk_query.EventFactory
 
 		// did we enabled tls?
 		var tlsEntry *rk_tls.TlsEntry
-
 		if element.Tls.Enabled {
 			if element.Tls.User.Enabled {
 				tlsEntry = rk_tls.NewTlsEntry(

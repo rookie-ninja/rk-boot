@@ -664,6 +664,9 @@ func WithGRpcPort(port uint64) SWOption {
 
 func WithPath(path string) SWOption {
 	return func(entry *SWEntry) {
+		if len(path) < 1 {
+			path = "sw"
+		}
 		entry.path = path
 	}
 }
@@ -914,8 +917,6 @@ func (entry *SWEntry) listFilesWithSuffix() {
 		}
 		jsonPath = path.Join(wd, jsonPath)
 	}
-
-	println(jsonPath)
 
 	files, err := ioutil.ReadDir(jsonPath)
 	if err != nil {
