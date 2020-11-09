@@ -9,7 +9,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1
 	github.com/rookie-ninja/rk-common v1.0.2
 	github.com/rookie-ninja/rk-config v1.0.0
-	github.com/rookie-ninja/rk-gin v1.1.2
+	github.com/rookie-ninja/rk-gin v1.1.3
 	github.com/rookie-ninja/rk-grpc v1.1.1
 	github.com/rookie-ninja/rk-logger v1.0.5
 	github.com/rookie-ninja/rk-prom v1.0.2

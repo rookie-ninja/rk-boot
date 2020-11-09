@@ -277,13 +277,6 @@ func (boot *Boot) Wait(draining time.Duration) {
 		entry.Shutdown(event)
 	}
 
-	//if boot.promEntry != nil {
-	//	event.AddFields(
-	//		zap.Uint64("prom_port", boot.promEntry.GetPort()),
-	//		zap.String("prom_path", boot.promEntry.GetPath()))
-	//	boot.promEntry.Stop(boot.bootLogger)
-	//}
-
 	boot.logger.Info("draining", zap.Duration("draining_duration", draining))
 	time.Sleep(draining)
 

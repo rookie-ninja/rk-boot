@@ -402,6 +402,8 @@ github.com/rookie-ninja/rk-config v1.0.0 h1:zUhSOH4MCjSXoQ1mFpNBpDeY4Skovlkx5V+f
 github.com/rookie-ninja/rk-config v1.0.0/go.mod h1:ybQeDwhbyRwmtin6dIADiSTMnimVUuktKfQWzwYhrsY=
 github.com/rookie-ninja/rk-gin v1.1.2 h1:T6REdlqiXlWtbwMn01M/Tk3DnJfBbNI3tpWwBUKPVhk=
 github.com/rookie-ninja/rk-gin v1.1.2/go.mod h1:e9jRT9mnhkY1WUGOUn0+7ZErAW5YJ3U2q9xhunK7q/4=
+github.com/rookie-ninja/rk-gin v1.1.3 h1:QqfavgLJ5XpnX+/qHbFwnqeL9oCz/Lc1/kWKqZFGKAU=
+github.com/rookie-ninja/rk-gin v1.1.3/go.mod h1:HT+SNBivPa6NuSpKDmegHwmQoYuMLlOjjlCT6iOv+ns=
 github.com/rookie-ninja/rk-grpc v1.1.1 h1:zuJx+WKaoEgAnbgN0vDstQXZuZSea/WJSEZtRoaCQ8o=
 github.com/rookie-ninja/rk-grpc v1.1.1/go.mod h1:p+nI9VHcUCTO3p49QKkIdy1DEmk0MyZ/DbS9BssvRDY=
 github.com/rookie-ninja/rk-logger v1.0.3/go.mod h1:ep3zy5MvOcVg+ftUsVnUcfFA9cxvVb99IBJEsmWAnlM=
