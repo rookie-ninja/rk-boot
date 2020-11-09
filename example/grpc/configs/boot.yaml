@@ -3,13 +3,28 @@ appName: rk-server
 event:
   format: RK
   quiet: false
+  outputPaths:
+    - stdout
+  loggerConf: "example/grpc/configs/query.yaml"
 logger:
   - name: app
-    confPath: "example/grpc/configs/zap-app.yaml"
-    forBoot: true
+    quiet: false
+    outputPath: stdout
+    loggerConf: "example/grpc/configs/app.yaml"
+    maxsize: 1
+    maxage: 7
+    maxbackups: 3
+    localtime: true
+    compress: true
   - name: query
-    confPath: "example/grpc/configs/zap-query.yaml"
-    forEvent: true
+    quiet: false
+    outputPath: stdout
+    loggerConf: "example/grpc/configs/query.yaml"
+    maxsize: 1
+    maxage: 7
+    maxbackups: 3
+    localtime: true
+    compress: true
 config:
   - name: rk-main
     path: "example/grpc/configs/rk.yaml"
@@ -17,29 +32,26 @@ config:
     global: false
 grpc:
   - name: greeter
-    port: 8080
+    port: 1949
     enableCommonService: true
     tls:
-      enabled: true
+      enabled: false
       user:
         enabled: false
         certFile: "example/grpc/server/cert/server.pem"
         keyFile: "example/grpc/server/cert/server-key.pem"
       auto:
-        enabled: true
+        enabled: false
         certOutput: "example/grpc/server/cert"
     gw:
       enabled: true
-      port: 8081
-      enableCommonService: true
-    sw:
-      enabled: true
-      port: 8090
-      path: sw
-      jsonPath: "example/grpc/api/v1"
-      enableCommonService: true
-      headers:
-        - "cache-control: no-cache"
+      port: 8080
+      sw:
+        enabled: true
+        path: sw
+        jsonPath: "example/grpc/api/v1"
+        headers:
+          - "cache-control: no-cache"
     loggingInterceptor:
       enabled: true
       enableLogging: true
@@ -49,11 +61,6 @@ prom:
   enabled: true
   port: 1608
   path: metrics
-  pushGateway:
-    enabled: false
-    remoteAddr: xxx
-    intervalMS: 2000
-    jobName: xxx
 proto:
   source:
     - api/v1/*.proto

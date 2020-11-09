@@ -30,7 +30,7 @@ func main() {
 	boot.GetGinEntry("greeter").GetRouter().GET("/v1/hello", hello)
 
 	boot.Bootstrap()
-	boot.Quitter(5 * time.Second)
+	boot.Wait(5 * time.Second)
 }
 
 // @Summary Hello

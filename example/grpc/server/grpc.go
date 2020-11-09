@@ -16,11 +16,11 @@ func main() {
 	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/grpc/configs/boot.yaml"))
 
 	// register gRpc
-	boot.GetGRpcEntry("greeter").AddRegFuncs(registerGreeter)
+	boot.GetGRpcEntry("greeter").AddGRpcRegFuncs(registerGreeter)
 	boot.GetGRpcEntry("greeter").AddGWRegFuncs(hello_v1.RegisterGreeterHandlerFromEndpoint)
 
 	boot.Bootstrap()
-	boot.Quitter(5 * time.Second)
+	boot.Wait(2 * time.Second)
 }
 
 func registerGreeter(server *grpc.Server) {
@@ -31,6 +31,6 @@ type GreeterServer struct{}
 
 func (server *GreeterServer) SayHello(ctx context.Context, request *hello_v1.HelloRequest) (*hello_v1.HelloResponse, error) {
 	return &hello_v1.HelloResponse{
-		Message: "Hello~",
+		Message: "Hello",
 	}, nil
 }

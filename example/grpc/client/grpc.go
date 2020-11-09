@@ -8,9 +8,10 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/rookie-ninja/rk-boot/example/grpc/api/v1"
-	"github.com/rookie-ninja/rk-interceptor/context"
-	"github.com/rookie-ninja/rk-interceptor/logging/zap"
-	"github.com/rookie-ninja/rk-interceptor/retry"
+	"github.com/rookie-ninja/rk-grpc/interceptor/context"
+	"github.com/rookie-ninja/rk-grpc/interceptor/log/zap"
+	"github.com/rookie-ninja/rk-grpc/interceptor/retry"
+	"github.com/rookie-ninja/rk-logger"
 	"github.com/rookie-ninja/rk-query"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -34,8 +35,10 @@ func main() {
 	// create client interceptor
 	opt := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
-			rk_inter_logging.UnaryClientInterceptor(factory),
-			rk_inter_retry.UnaryClientInterceptor()),
+			rk_grpc_log.UnaryClientInterceptor(
+				rk_grpc_log.WithEventFactory(factory),
+				rk_grpc_log.WithLogger(rk_logger.StdoutLogger)),
+			rk_grpc_retry.UnaryClientInterceptor()),
 		grpc.WithTransportCredentials(creds),
 		grpc.WithBlock(),
 	}
@@ -50,19 +53,19 @@ func main() {
 	// create grpc client
 	c := hello_v1.NewGreeterClient(conn)
 	// create with rk context
-	ctx, cancel := context.WithTimeout(rk_inter_context.NewContext(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(rk_grpc_ctx.NewContext(), 5*time.Second)
 	defer cancel()
 
 	// add metadata
-	rk_inter_context.AddToOutgoingMD(ctx, "key", "1", "2")
+	rk_grpc_ctx.AddToOutgoingMD(ctx, "key", "1", "2")
 	// add request id
-	rk_inter_context.AddRequestIdToOutgoingMD(ctx)
+	rk_grpc_ctx.AddRequestIdToOutgoingMD(ctx)
 
 	// call server
 	r, err := c.SayHello(ctx, &hello_v1.HelloRequest{Name: "name"})
 
 	// print incoming metadata
-	bytes, _ := json.Marshal(rk_inter_context.GetIncomingMD(ctx))
+	bytes, _ := json.Marshal(rk_grpc_ctx.GetIncomingMD(ctx))
 	println(string(bytes))
 
 	if err != nil {
