@@ -394,14 +394,10 @@ github.com/rcrowley/go-metrics v0.0.0-20181016184325-3113b8401b8a/go.mod h1:bCqn
 github.com/rogpeppe/fastuuid v0.0.0-20150106093220-6724a57986af/go.mod h1:XWv6SoW27p1b0cqNHllgS5HIMJraePCO15w5zCzIWYg=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
-github.com/rookie-ninja/rk-common v1.0.1 h1:g6lUvF1avjxjpN+bNApyIkOJ/dxhHvKVFQGB0YMpi48=
-github.com/rookie-ninja/rk-common v1.0.1/go.mod h1:xWqWs3Msva5bhJHEUm+SdUYQIHMORYMZwh8K3qODue4=
 github.com/rookie-ninja/rk-common v1.0.2 h1:ETAzGj9APZswr0lcvQAnIUjxiJqL7bi2rsqq0x4aDqg=
 github.com/rookie-ninja/rk-common v1.0.2/go.mod h1:xWqWs3Msva5bhJHEUm+SdUYQIHMORYMZwh8K3qODue4=
 github.com/rookie-ninja/rk-config v1.0.0 h1:zUhSOH4MCjSXoQ1mFpNBpDeY4Skovlkx5V+fonOLleQ=
 github.com/rookie-ninja/rk-config v1.0.0/go.mod h1:ybQeDwhbyRwmtin6dIADiSTMnimVUuktKfQWzwYhrsY=
-github.com/rookie-ninja/rk-gin v1.1.2 h1:T6REdlqiXlWtbwMn01M/Tk3DnJfBbNI3tpWwBUKPVhk=
-github.com/rookie-ninja/rk-gin v1.1.2/go.mod h1:e9jRT9mnhkY1WUGOUn0+7ZErAW5YJ3U2q9xhunK7q/4=
 github.com/rookie-ninja/rk-gin v1.1.3 h1:QqfavgLJ5XpnX+/qHbFwnqeL9oCz/Lc1/kWKqZFGKAU=
 github.com/rookie-ninja/rk-gin v1.1.3/go.mod h1:HT+SNBivPa6NuSpKDmegHwmQoYuMLlOjjlCT6iOv+ns=
 github.com/rookie-ninja/rk-grpc v1.1.1 h1:zuJx+WKaoEgAnbgN0vDstQXZuZSea/WJSEZtRoaCQ8o=
@@ -411,8 +407,8 @@ github.com/rookie-ninja/rk-logger v1.0.5 h1:MJieOSUxfGDm/uEh+mtaTivu/io2ohJQXzrz
 github.com/rookie-ninja/rk-logger v1.0.5/go.mod h1:ep3zy5MvOcVg+ftUsVnUcfFA9cxvVb99IBJEsmWAnlM=
 github.com/rookie-ninja/rk-prom v1.0.1 h1:otLbK1KrniSbGxOECstdtTW1NGornIwbv6iUvvjJPUk=
 github.com/rookie-ninja/rk-prom v1.0.1/go.mod h1:V072bldHaq9RYGfq6JPCXt0fp6yvyTLM9SBeMuHUaEc=
-github.com/rookie-ninja/rk-prom v1.0.2 h1:2WOGs5eyeW0xwPFv5I6V54D48aViL7u5kiLNVg4zJAU=
-github.com/rookie-ninja/rk-prom v1.0.2/go.mod h1:yAovnyXLjpZv0GzftrQQLBFAtWgs732T6PwZcRx3+Lo=
+github.com/rookie-ninja/rk-prom v1.0.3 h1:hTgF1BsxfvAFbRUfG2oOUh8KRxHu4R7E2p2yGCw3s4c=
+github.com/rookie-ninja/rk-prom v1.0.3/go.mod h1:yAovnyXLjpZv0GzftrQQLBFAtWgs732T6PwZcRx3+Lo=
 github.com/rookie-ninja/rk-query v1.0.7 h1:e8oKJMiWlBONiamEJENsSSP0pAc5WsKPPaHWR6+E7q4=
 github.com/rookie-ninja/rk-query v1.0.7/go.mod h1:Y9kTfDDMvQgcKrg/6gevAlDZ4fbB7XFHcMYzMq+i/8U=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=

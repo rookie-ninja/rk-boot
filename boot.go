@@ -106,7 +106,7 @@ func WithBootConfigPath(filePath string) BootOption {
 		for k, v := range rk_gin.NewGinEntries(filePath, boot.eventFactory, boot.logger) {
 			rk_ctx.GlobalAppCtx.AddEntry(k, v)
 		}
-		rk_ctx.GlobalAppCtx.AddEntry("prom", rk_prom.NewPromEntryWithConfig(filePath, boot.eventFactory, boot.logger))
+		rk_ctx.GlobalAppCtx.AddEntry(rk_prom.PromEntryNameDefault, rk_prom.NewPromEntryWithConfig(filePath, boot.eventFactory, boot.logger))
 	}
 }
 
@@ -228,6 +228,10 @@ func (boot *Boot) GetGinEntry(name string) *rk_gin.GinEntry {
 
 func (boot *Boot) GetGRpcEntry(name string) *rk_grpc.GRpcEntry {
 	return rk_ctx.GlobalAppCtx.GetEntry(name).(*rk_grpc.GRpcEntry)
+}
+
+func (boot *Boot) GetPromEntry() *rk_prom.PromEntry {
+	return rk_ctx.GlobalAppCtx.GetEntry(rk_prom.PromEntryNameDefault).(*rk_prom.PromEntry)
 }
 
 func (boot *Boot) Bootstrap() {

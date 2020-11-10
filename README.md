@@ -155,7 +155,7 @@ YAML config Explanation
 | config.format | Config format, viper support standard yaml, hcl, toml, json. For RK format please refer [rk-config](https://github.com/uber-go/zap) | RK, Viper |
 | config.global | Whether access config globally, like rk_config.Get() | true, false |
 | grpc.name | The name of gRpc server | string |
-| grpc.port | The port of gRpc server | number |
+| grpc.port | The port of gRpc server | integer |
 | grpc.enableCommonService | Enable embedded common service | true, false |
 | grpc.gw.enabled | Enable gateway service over gRpc server | true, false |
 | grpc.gw.port | The port of gRpc gateway | true, false |
@@ -172,12 +172,12 @@ YAML config Explanation
 | grpc.loggingInterceptor.enableMetrics | Enable rk-interceptor logging interceptor specifically for each Rpc with prometheus | true, false |
 | grpc.loggingInterceptor.enablePayloadLogging | Enable rk-interceptor logging interceptor specifically for each Rpc's payload | true, false |
 | prom.enabled | Enable local prometheus client | true, false |
-| prom.port | The port of prometheus client | number |
+| prom.port | The port of prometheus client | integer |
 | prom.path | The path of prometheus client | string |
-| prom.pushGateway.enabled | Enable pushGateway jobs locally | true, false |
-| prom.pushGateway.remoteAddr | pushGateway remote address | string |
-| prom.pushGateway.intervalMS | Push job intervals with milliseconds | number |
-| prom.pushGateway.jobName | pushGateway job name | string |
+| prom.pusher.enabled | Enable pushGateway jobs locally | true, false |
+| prom.pusher.url | pushGateway remote address | string |
+| prom.pusher.interval | Push job intervals with seconds | integer |
+| prom.pusher.job | pushGateway job name | string |
 
 ### Development Status: Stable
 
