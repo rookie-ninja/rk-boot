@@ -100,13 +100,12 @@ func WithBootConfigPath(filePath string) BootOption {
 		boot.viperConfigs, boot.rkConfigs = getConfigs(config)
 
 		// init entries
-		for k, v := range rk_grpc.NewGRpcEntries(filePath, boot.eventFactory, boot.logger) {
-			rk_ctx.GlobalAppCtx.AddEntry(k, v)
-		}
-		for k, v := range rk_gin.NewGinEntries(filePath, boot.eventFactory, boot.logger) {
-			rk_ctx.GlobalAppCtx.AddEntry(k, v)
-		}
-		rk_ctx.GlobalAppCtx.AddEntry(rk_prom.PromEntryNameDefault, rk_prom.NewPromEntryWithConfig(filePath, boot.eventFactory, boot.logger))
+		rk_grpc.NewGRpcEntries(filePath, boot.eventFactory, boot.logger)
+		rk_gin.NewGinEntries(filePath, boot.eventFactory, boot.logger)
+
+		rk_ctx.GlobalAppCtx.AddEntry(
+			rk_prom.PromEntryNameDefault,
+			rk_prom.NewPromEntryWithConfig(filePath, boot.eventFactory, boot.logger))
 	}
 }
 

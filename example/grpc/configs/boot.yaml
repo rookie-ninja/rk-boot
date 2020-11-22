@@ -46,6 +46,7 @@ grpc:
     gw:
       enabled: true
       port: 8080
+      enableTV: true
       sw:
         enabled: true
         path: sw

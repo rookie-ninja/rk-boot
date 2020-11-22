@@ -45,6 +45,7 @@ gin:
       headers:
         - "cache-control: no-cache"
     enableCommonService: true
+    enableTV: true
     loggingInterceptor:
       enabled: true
       enableLogging: true

@@ -16,6 +16,7 @@ Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
 - [Installation](#installation)
 - [Quick Start](#quick-start)
   - [YAML config](#yaml-config)
+    - [gRpc](#grpc)
   - [Development Status: Stable](#development-status-stable)
   - [Appendix](#appendix)
     - [Proto file compilation](#proto-file-compilation)
@@ -64,6 +65,7 @@ grpc:
       port: 8081
       insecure: true
       enableCommonService: true
+      enableTV: true
     sw:
       enabled: true
       port: 8090
@@ -159,6 +161,7 @@ YAML config Explanation
 | grpc.enableCommonService | Enable embedded common service | true, false |
 | grpc.gw.enabled | Enable gateway service over gRpc server | true, false |
 | grpc.gw.port | The port of gRpc gateway | true, false |
+| grpc.gw.enableTV | Enable RK TV | true, false |
 | grpc.gw.insecure | Run gateway with insecure mode | true, false |
 | grpc.gw.enableCommonService | Enable embedded common service | true, false |
 | grpc.sw.enabled | Enable swagger service over gRpc server | true, false |
@@ -171,6 +174,26 @@ YAML config Explanation
 | grpc.loggingInterceptor.enableLogging | Enable rk-interceptor logging interceptor specifically for each Rpc with rk-query | true, false |
 | grpc.loggingInterceptor.enableMetrics | Enable rk-interceptor logging interceptor specifically for each Rpc with prometheus | true, false |
 | grpc.loggingInterceptor.enablePayloadLogging | Enable rk-interceptor logging interceptor specifically for each Rpc's payload | true, false |
+| gin.name | name of gin server entry| string | unknown application |
+| gin.port | port of server | integer | nil, server won't start |
+| gin.tls.enabled | enable tls or not | boolean | false | 
+| gin.tls.user.enabled | enable user provided CA file? | boolean | false |
+| gin.tls.user.certFile | cert file path | string | empty string |
+| gin.tls.user.keyFile | key file path | string | empty string | 
+| gin.tls.auth.enabled | server will generate CA files | string | false |
+| gin.tls.auth.certOutput | cert file output path | string | current working directory | 
+| gin.sw.enabled | enable swagger | boolean | false | 
+| gin.sw.path | swagger path | string | / |
+| gin.sw.jsonPath | swagger json file path | string | / |
+| gin.sw.headers | headers will send with swagger response | array | empty array |
+| gin.enableCommonService | enable common service | boolean | false |
+| gin.enableTV | enable RK TV whose path is /v1/rk/tv | boolean | false |
+| gin.loggingInterceptor.enabled | enable logging interceptor | boolean | false |
+| gin.loggingInterceptor.enableLogging | enable logging for every request | boolean | false |
+| gin.loggingInterceptor.enableMetrics | enable prometheus metrics for every request | boolean | false |
+| gin.authInterceptor.enabled | enable auth interceptor | boolean | false |
+| gin.authInterceptor.realm | realm for basic auth interceptor | string | Authorization Required |
+| gin.authInterceptor.credentials | array of credentials such as "user:pass" | string array | empty array |
 | prom.enabled | Enable local prometheus client | true, false |
 | prom.port | The port of prometheus client | integer |
 | prom.path | The path of prometheus client | string |
@@ -178,6 +201,170 @@ YAML config Explanation
 | prom.pusher.url | pushGateway remote address | string |
 | prom.pusher.interval | Push job intervals with seconds | integer |
 | prom.pusher.job | pushGateway job name | string |
+
+#### gin
+
+Example:
+```yaml
+---
+application: rk-server
+event:
+  format: RK
+  quiet: false
+  outputPaths:
+    - stdout
+  loggerConf: "example/gin/configs/query.yaml"
+logger:
+  - name: app
+    quiet: false
+    outputPath: stdout
+    loggerConf: "example/gin/configs/app.yaml"
+    maxsize: 1
+    maxage: 7
+    maxbackups: 3
+    localtime: true
+    compress: true
+config:
+  - name: rk-main
+    path: "example/gin/configs/app.yaml"
+    format: RK
+    global: false
+env:
+  REALM: rk
+  DOMAIN: dev
+  REGION: cn-north-pek
+  AZ: cn-north-pek-1
+gin:
+  - name: greeter
+    port: 8080
+    tls:
+      enabled: false
+      user:
+        enabled: false
+        certFile: "example/gin/server/cert/server.pem"
+        keyFile: "example/gin/server/cert/server-key.pem"
+      auto:
+        enabled: true
+        certOutput: "example/gin/server/cert"
+    sw:
+      enabled: true
+      path: "sw"
+      jsonPath: "example/gin/server/docs"
+      headers:
+        - "cache-control: no-cache"
+    enableCommonService: true
+    enableTV: true
+    loggingInterceptor:
+      enabled: true
+      enableLogging: true
+      enableMetrics: true
+    authInterceptor:
+      enabled: false
+      realm: "rk"
+      credentials:
+        - "foo:pass"
+        - "bar:pass"
+prom:
+  enabled: true
+  port: 1608
+  path: metrics
+ut:
+  output: docs
+build:
+  goos: darwin
+  goarch: amd64
+
+```
+
+```go
+// Copyright (c) 2020 rookie-ninja
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file.
+package main
+
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/rookie-ninja/rk-boot"
+	"net/http"
+	"time"
+)
+
+// @title Swagger Example API
+// @version 1.0
+// @description This is a sample rk-demo server.
+// @termsOfService http://swagger.io/terms/
+
+// @securityDefinitions.basic BasicAuth
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+func main() {
+	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/gin/configs/boot.yaml"))
+
+	boot.GetGinEntry("greeter").GetRouter().GET("/v1/hello", hello)
+
+	boot.Bootstrap()
+	boot.Wait(5 * time.Second)
+}
+	
+// @Summary Hello
+// @Id 1
+// @Tags Hello
+// @version 1.0
+// @produce application/json
+// @Success 200 string string
+// @Router /v1/hello [get]
+func hello(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "hello!",
+	})
+}
+```
+
+Available configuration
+User can start multiple servers at the same time
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.name | name of gin server entry| string | unknown application |
+| gin.port | port of server | integer | nil, server won't start |
+| gin.tls.enabled | enable tls or not | boolean | false | 
+| gin.tls.user.enabled | enable user provided CA file? | boolean | false |
+| gin.tls.user.certFile | cert file path | string | empty string |
+| gin.tls.user.keyFile | key file path | string | empty string | 
+| gin.tls.auth.enabled | server will generate CA files | string | false |
+| gin.tls.auth.certOutput | cert file output path | string | current working directory | 
+| gin.sw.enabled | enable swagger | boolean | false | 
+| gin.sw.path | swagger path | string | / |
+| gin.sw.jsonPath | swagger json file path | string | / |
+| gin.sw.headers | headers will send with swagger response | array | empty array |
+| gin.enableCommonService | enable common service | boolean | false |
+| gin.enableTV | enable RK TV whose path is /v1/rk/tv | boolean | false |
+| gin.loggingInterceptor.enabled | enable logging interceptor | boolean | false |
+| gin.loggingInterceptor.enableLogging | enable logging for every request | boolean | false |
+| gin.loggingInterceptor.enableMetrics | enable prometheus metrics for every request | boolean | false |
+| gin.authInterceptor.enabled | enable auth interceptor | boolean | false |
+| gin.authInterceptor.realm | realm for basic auth interceptor | string | Authorization Required |
+| gin.authInterceptor.credentials | array of credentials such as "user:pass" | string array | empty array |
+
+### Common Services
+User can start multiple servers at the same time
+
+| path | description |
+| ------ | ------ |
+| /v1/rk/healthy | always return true if service is available |
+| /v1/rk/gc | trigger gc and return memory stats |
+| /v1/rk/info | return basic info |
+| /v1/rk/config | return configs in memory |
+| /v1/rk/apis | list all apis |
+| /v1/rk/sys | return system information including cpu and memory usage |
+| /v1/rk/req | return requests stats recorded by prometheus client |
+| /v1/rk/tv | web ui for metrics |
 
 ### Development Status: Stable
 

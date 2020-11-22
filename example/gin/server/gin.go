@@ -45,3 +45,4 @@ func hello(ctx *gin.Context) {
 		"message": "hello!",
 	})
 }
+
