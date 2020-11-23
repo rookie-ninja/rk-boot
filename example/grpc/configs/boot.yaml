@@ -1,5 +1,5 @@
 ---
-appName: rk-server
+application: rk-server
 event:
   format: RK
   quiet: false

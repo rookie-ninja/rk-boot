@@ -7,12 +7,12 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/google/uuid v1.1.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1
-	github.com/rookie-ninja/rk-common v1.0.4
+	github.com/rookie-ninja/rk-common v1.0.5
 	github.com/rookie-ninja/rk-config v1.0.0
-	github.com/rookie-ninja/rk-gin v1.1.4
-	github.com/rookie-ninja/rk-grpc v1.1.5
+	github.com/rookie-ninja/rk-gin v1.1.5
+	github.com/rookie-ninja/rk-grpc v1.1.6
 	github.com/rookie-ninja/rk-logger v1.0.5
-	github.com/rookie-ninja/rk-prom v1.0.4
+	github.com/rookie-ninja/rk-prom v1.0.5
 	github.com/rookie-ninja/rk-query v1.0.7
 	github.com/spf13/viper v1.7.1
 	github.com/swaggo/swag v1.5.1
