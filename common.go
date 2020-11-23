@@ -43,10 +43,14 @@ func getEventFactory(config *bootConfig) *rk_query.EventFactory {
 		}
 
 		// merge logger config and build logger
-		logger = mergeLogger(readFile(config.Event.LoggerConf), config.Event)
+		logger, _ = mergeLogger(readFile(config.Event.LoggerConf), config.Event)
 	} else {
 		// merge logger config and build logger
-		logger = mergeLogger(rk_query.StdLoggerConfigBytes, config.Event)
+		// we need to add stdout if outputPaths is empty
+		if config.Event.OutputPaths == nil || len(config.Event.OutputPaths) < 1 {
+			config.Event.OutputPaths = []string{"stdout"}
+		}
+		logger, _ = mergeLogger(rk_query.StdLoggerConfigBytes, config.Event)
 	}
 
 	return rk_query.NewEventFactory(
@@ -69,17 +73,30 @@ func getLoggers(config *bootConfig) map[string]*rk_ctx.LoggerPair {
 		return res
 	}
 
-	for i := range config.Logger {
-		confPath := config.Logger[i].LoggerConf
-		if !filepath.IsAbs(confPath) {
-			wd, _ := os.Getwd()
-			confPath = path.Join(wd, confPath)
-		}
+	var logger *zap.Logger
+	var loggerConf *zap.Config
+	var err error
 
-		bytes := readFile(confPath)
-		logger, loggerConf, err := rk_logger.NewZapLoggerWithBytes(bytes, rk_logger.YAML)
-		if err != nil {
-			shutdownWithError(err)
+	for i := range config.Logger {
+		if len(config.Logger[i].LoggerConf) > 0 {
+			confPath := config.Logger[i].LoggerConf
+			if !filepath.IsAbs(confPath) {
+				wd, _ := os.Getwd()
+				confPath = path.Join(wd, confPath)
+			}
+
+			bytes := readFile(confPath)
+			logger, loggerConf, err = rk_logger.NewZapLoggerWithBytes(bytes, rk_logger.YAML)
+			if err != nil {
+				shutdownWithError(err)
+			}
+		} else {
+			// merge logger config and build logger
+			// we need to add stdout if outputPaths is empty
+			if config.Logger[i].OutputPaths == nil || len(config.Logger[i].OutputPaths) < 1 {
+				config.Event.OutputPaths = []string{"stdout"}
+			}
+			logger, loggerConf = mergeLogger(rk_query.StdLoggerConfigBytes, config.Logger[i])
 		}
 
 		name := config.Logger[i].Name
@@ -121,27 +138,6 @@ func getConfigs(config *bootConfig) (map[string]*viper.Viper, map[string]*rk_con
 
 	return vipers, rks
 }
-
-//func getPromEntry(config *bootConfig) *rk_prom.PromEntry {
-//	var res *rk_prom.PromEntry
-//	if config.Prom.Enabled {
-//		var pgwRemoteAddr string
-//		var pgwIntervalMS uint64
-//		if config.Prom.PushGateway.Enabled {
-//			pgwRemoteAddr = config.Prom.PushGateway.RemoteAddr
-//			pgwIntervalMS = config.Prom.PushGateway.IntervalMS
-//		}
-//
-//		res = rk_prom.NewPromEntry(
-//			rk_prom.WithPort(config.Prom.Port),
-//			rk_prom.WithPath(config.Prom.Path),
-//			rk_prom.WithPGWRemoteAddr(pgwRemoteAddr),
-//			rk_prom.WithPGWIntervalMS(pgwIntervalMS),
-//		)
-//	}
-//
-//	return res
-//}
 
 func getRkConfig(path string, global bool) *rk_config.RkConfig {
 	if len(path) < 1 {
@@ -191,21 +187,21 @@ func getViperConfig(path string, global bool) *viper.Viper {
 	}
 }
 
-func mergeLogger(src []byte, event interface{}) *zap.Logger {
+func mergeLogger(one []byte, two interface{}) (*zap.Logger, *zap.Config) {
 	// get event config as make it as bytes
-	override, err := yaml.Marshal(event)
+	override, err := yaml.Marshal(two)
 	if err != nil {
 		shutdownWithError(err)
 	}
 
 	// merge logger config specified and element specified
-	merged := mergeBytesAsMap(src, override)
-	logger, _, err := rk_logger.NewZapLoggerWithBytes(merged, rk_logger.YAML)
+	merged := mergeBytesAsMap(one, override)
+	logger, loggerConf, err := rk_logger.NewZapLoggerWithBytes(merged, rk_logger.YAML)
 	if err != nil {
 		shutdownWithError(err)
 	}
 
-	return logger
+	return logger, loggerConf
 }
 
 // merge two maps unmarshalled with YAML type

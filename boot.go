@@ -38,15 +38,15 @@ type bootConfig struct {
 		Compress    bool     `yaml:"compress"`
 	} `yaml:"event"`
 	Logger []struct {
-		Name       string `yaml:"name"`
-		Quiet      bool   `yaml:"quiet"`
-		OutputPath string `yaml:"outputPath"`
-		LoggerConf string `yaml:"loggerConf"`
-		Maxsize    int    `yaml:"maxsize"`
-		MaxAge     int    `yaml:"maxage"`
-		MaxBackups int    `yaml:"maxbackups"`
-		Localtime  bool   `yaml:"localtime"`
-		Compress   bool   `yaml:"compress"`
+		Name        string   `yaml:"name"`
+		Quiet       bool     `yaml:"quiet"`
+		OutputPaths []string `yaml:"outputPaths"`
+		LoggerConf  string   `yaml:"loggerConf"`
+		Maxsize     int      `yaml:"maxsize"`
+		MaxAge      int      `yaml:"maxage"`
+		MaxBackups  int      `yaml:"maxbackups"`
+		Localtime   bool     `yaml:"localtime"`
+		Compress    bool     `yaml:"compress"`
 	} `yaml:"logger"`
 	Config []struct {
 		Name   string `yaml:"name"`
