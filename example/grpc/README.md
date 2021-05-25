@@ -1,27 +1,27 @@
+# rk-grpc
+Interceptor & bootstrapper designed for grpc. Currently, supports bellow interceptors
+
+- logging
+- metrics
+- auth
+- panic
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [rk-grpc](#rk-grpc)
-  - [Installation](#installation)
-  - [Quick Start](#quick-start)
-    - [Start gRpc server from YAML config](#start-grpc-server-from-yaml-config)
-    - [Server side interceptor](#server-side-interceptor)
-    - [Client side interceptor](#client-side-interceptor)
-    - [Common Services](#common-services)
-    - [Development Status: Stable](#development-status-stable)
-    - [Appendix](#appendix)
-    - [Contributing](#contributing)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+  - [Start gRpc server from YAML config](#start-grpc-server-from-yaml-config)
+  - [Logging interceptor](#logging-interceptor)
+  - [Client side interceptor](#client-side-interceptor)
+  - [Common Services](#common-services)
+  - [TV Service](#tv-service)
+  - [Development Status: Stable](#development-status-stable)
+  - [Appendix](#appendix)
+  - [Contributing](#contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# rk-grpc
-Interceptor & bootstrapper designed for grpc. Currently, supports bellow interceptors
-
-- logging & metrics
-- auth
-- panic
-- bootstrapper
 
 ## Installation
 `go get -u github.com/rookie-ninja/rk-grpc`
@@ -33,37 +33,45 @@ Bootstrapper can be used with YAML config
 User can access common service with localhost:8080/sw
 ```yaml
 ---
+rk: # NOT required
+  appName: rk-example-entry           # Optional, default: "rkApp"
 grpc:
   - name: greeter
     port: 1949
-    enableCommonService: true
+    commonService:
+      enabled: true
     gw:
       enabled: true
       port: 8080
-      enableTV: true
+      tv:
+        enabled: true
       sw:
         enabled: true
-        path: sw
-    loggingInterceptor:
-      enabled: true
-      enableLogging: true
-      enableMetrics: true
-      enablePayloadLogging: true
+      prom:
+        enabled: true
+    interceptors:
+      loggingZap:
+        enabled: true
+      metricsProm:
+        enabled: true
 ```
 
 ```go
-package main
+func bootFromConfig() {
+	// Bootstrap basic entries from boot config.
+	rkentry.RegisterInternalEntriesFromConfig("example/boot/boot.yaml")
 
-import (
-	"github.com/rookie-ninja/rk-grpc/boot"
-	"github.com/rookie-ninja/rk-logger"
-	"github.com/rookie-ninja/rk-query"
-)
+	// Bootstrap grpc entry from boot config
+	res := rkgrpc.RegisterGrpcEntriesWithConfig("example/boot/boot.yaml")
 
-func main() {
-	fac := rk_query.NewEventFactory()
-	boot := rk_grpc.NewGRpcEntries("example/boot/boot.yaml", fac, rk_logger.StdoutLogger)
-	boot["greeter"].Bootstrap(fac.CreateEvent())
+	// Bootstrap gin entry
+	go res["greeter"].Bootstrap(context.Background())
+
+	// Wait for shutdown signal
+	rkentry.GlobalAppCtx.WaitForShutdownSig()
+
+	// Interrupt gin entry
+	res["greeter"].Interrupt(context.Background())
 }
 ```
 
@@ -72,47 +80,57 @@ User can start multiple servers at the same time
 
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| grpc.name | The name of gRpc server | string |
-| grpc.port | The port of gRpc server | integer |
-| grpc.enableCommonService | Enable embedded common service | true, false |
-| grpc.tls.enabled | enable tls or not | boolean | false | 
-| grpc.tls.user.enabled | enable user provided CA file? | boolean | false |
-| grpc.tls.user.certFile | cert file path | string | empty string |
-| grpc.tls.user.keyFile | key file path | string | empty string | 
-| grpc.tls.auth.enabled | server will generate CA files | string | false |
-| grpc.tls.auth.certOutput | cert file output path | string | current working directory | 
-| grpc.gw.enabled | Enable gateway service over gRpc server | true, false |
-| grpc.gw.port | The port of gRpc gateway | true, false |
-| grpc.gw.insecure | Run gateway with insecure mode | true, false |
-| grpc.gw.enableCommonService | Enable embedded common service | true, false |
-| grpc.gw.enableTV | Enable RK TV | true, false |
-| grpc.sw.enabled | Enable swagger service over gRpc server | true, false |
-| grpc.sw.port | The port of swagger | true, false |
-| grpc.sw.insecure | Run swagger with insecure mode | true, false |
-| grpc.sw.enableCommonService | Enable embedded common service | true, false |
-| grpc.sw.path | The path access swagger service from web | string |
-| grpc.sw.jsonPath | Where the swagger.json files are stored locally | string |
-| grpc.loggingInterceptor.enabled | Enable rk-interceptor logging interceptor | true, false |
-| grpc.loggingInterceptor.enableLogging | Enable rk-interceptor logging interceptor specifically for each Rpc with rk-query | true, false |
-| grpc.loggingInterceptor.enableMetrics | Enable rk-interceptor logging interceptor specifically for each Rpc with prometheus | true, false |
-| grpc.loggingInterceptor.enablePayloadLogging | Enable rk-interceptor logging interceptor specifically for each Rpc's payload | true, false |
+| grpc.name | The name of gRpc server | string | N/A |
+| grpc.port | The port of gRpc server | integer | nil, server won't start |
+| grpc.commonService.enabled | Enable embedded common service | boolean | false |
+| grpc.cert.ref | Reference of cert entry declared in cert section | string | "" |
+| grpc.gw.enabled | Enable gateway service over gRpc server | boolean | false |
+| grpc.gw.port | The port of gRpc gateway | integer | nil, server won't start |
+| grpc.gw.gwMappingFilePaths | The grpc gateway mapping file path | string array | empty array |
+| grpc.gw.cert.ref | Reference of cert entry declared in cert section | string | "" |
+| grpc.gw.tv.enabled | Enable RK TV | boolean | false |
+| grpc.gw.sw.enabled | Enable swagger service over gRpc server | boolean | false |
+| grpc.sw.path | The path access swagger service from web | string | sw |
+| grpc.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
+| grpc.sw.headers | Headers would be sent to caller | map<string, string> | nil |
+| grpc.prom.enabled | Enable prometheus | boolean | false |
+| grpc.prom.path | Path of prometheus | string | metrics |
+| grpc.prom.pusher.enabled | Enable prometheus pusher | bool | false |
+| grpc.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
+| grpc.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
+| grpc.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
+| grpc.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of \<user:pass\> | string | "" |
+| grpc.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
+| grpc.logger.zapLogger.ref | Reference of logger entry declared above | string | "" |
+| grpc.logger.eventLogger.ref | Reference of logger entry declared above | string | "" |
+| grpc.interceptors.loggingZap.enabled | Enable logging interceptor | boolean | false |
+| grpc.interceptors.metricsProm.enabled | Enable prometheus metrics for every request | boolean | false |
+| grpc.interceptors.basicAuth.enabled | Enable auth interceptor | boolean | false |
+| grpc.interceptors.basicAuth.credentials | Provide basic auth credentials, form of \<user:pass\> | string | false |
 
-### Server side interceptor
+### Logging interceptor
 
 Example:
 ```go
+// Copyright (c) 2021 rookie-ninja
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file.
 package main
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/rookie-ninja/rk-grpc/example/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rookie-ninja/rk-entry/entry"
+	"github.com/rookie-ninja/rk-grpc/example/interceptor/proto"
+	"github.com/rookie-ninja/rk-grpc/interceptor/auth/basic_auth"
+	"github.com/rookie-ninja/rk-grpc/interceptor/basic"
 	"github.com/rookie-ninja/rk-grpc/interceptor/context"
 	"github.com/rookie-ninja/rk-grpc/interceptor/log/zap"
+	"github.com/rookie-ninja/rk-grpc/interceptor/metrics/prom"
 	"github.com/rookie-ninja/rk-grpc/interceptor/panic"
-	"github.com/rookie-ninja/rk-logger"
-	"github.com/rookie-ninja/rk-query"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"log"
@@ -127,16 +145,40 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	// create event factory
-	factory := rk_query.NewEventFactory()
+	entryName := "example-entry-server-name"
+	entryType := "example-entry-client"
 
 	// create server interceptor
+	// basic interceptor
+	basicInter := rkgrpcbasic.UnaryServerInterceptor(
+		rkgrpcbasic.WithEntryNameAndType(entryName, entryType))
+
+	// logging interceptor
+	logInter := rkgrpclog.UnaryServerInterceptor(
+		rkgrpclog.WithEntryNameAndType(entryName, entryType),
+		rkgrpclog.WithZapLoggerEntry(rkentry.GlobalAppCtx.GetZapLoggerEntryDefault()),
+		rkgrpclog.WithEventLoggerEntry(rkentry.GlobalAppCtx.GetEventLoggerEntryDefault()))
+
+	// prometheus metrics interceptor
+	metricsInter := rkgrpcmetrics.UnaryServerInterceptor(
+		rkgrpcmetrics.WithEntryNameAndType(entryName, entryType),
+		rkgrpcmetrics.WithRegisterer(prometheus.NewRegistry()))
+
+	// basic auth interceptor
+	basicAuthInter := rkgrpcbasicauth.UnaryServerInterceptor(
+		rkgrpcbasicauth.WithEntryNameAndType(entryName, entryType),
+		rkgrpcbasicauth.WithCredential("user:name"))
+
+	// panic interceptor
+	panicInter := rkgrpcpanic.UnaryServerInterceptor()
+
 	opt := []grpc.ServerOption{
 		grpc.ChainUnaryInterceptor(
-			rk_grpc_log.UnaryServerInterceptor(
-				rk_grpc_log.WithEventFactory(factory),
-				rk_grpc_log.WithLogger(rk_logger.StdoutLogger)),
-			rk_grpc_panic.UnaryServerInterceptor(rk_grpc_panic.PanicToStderr)),
+			basicInter,
+			logInter,
+			metricsInter,
+			basicAuthInter,
+			panicInter),
 	}
 
 	// create server
@@ -152,7 +194,7 @@ func main() {
 type GreeterServer struct{}
 
 func (server *GreeterServer) SayHello(ctx context.Context, request *proto.HelloRequest) (*proto.HelloResponse, error) {
-	event := rk_grpc_ctx.GetEvent(ctx)
+	event := rkgrpcctx.GetEvent(ctx)
 	// add fields
 	event.AddFields(zap.String("key", "value"))
 	// add error
@@ -166,11 +208,16 @@ func (server *GreeterServer) SayHello(ctx context.Context, request *proto.HelloR
 	time.Sleep(1 * time.Second)
 	event.EndTimer("sleep")
 	// add to metadata
-	rk_grpc_ctx.AddToOutgoingMD(ctx, "key", "1", "2")
+	rkgrpcctx.AddToOutgoingMD(ctx, "key", "1", "2")
 	// add request id
-	rk_grpc_ctx.AddRequestIdToOutgoingMD(ctx)
+	rkgrpcctx.AddRequestIdToOutgoingMD(ctx)
 
-	rk_grpc_ctx.GetLogger(ctx).Info("this is info message")
+	// print incoming metadata
+	bytes, _ := json.Marshal(rkgrpcctx.GetIncomingMD(ctx))
+	println(string(bytes))
+
+	// print with logger to check whether id was printed
+	rkgrpcctx.GetZapLogger(ctx).Info("this is info message")
 
 	return &proto.HelloResponse{
 		Message: "hello",
@@ -180,21 +227,22 @@ func (server *GreeterServer) SayHello(ctx context.Context, request *proto.HelloR
 Output
 ```
 ------------------------------------------------------------------------
-end_time=2020-11-06T01:17:50.710002+08:00
-start_time=2020-11-06T01:17:49.708046+08:00
-time=1001
-hostname=JEREMYYIN-MB0
-event_id=["bb69e3d7-0a9f-4621-8987-7a468366be1c","37448bca-1b3f-4e51-8abb-1573dfcaaaa1"]
-timing={"sleep.count":1,"sleep.elapsed_ms":1001}
-counter={"ctr":1}
-pair={"key":"value"}
-error={"std-err":1}
-field={"api.role":"unary_server","api.service":"Greeter","api.verb":"SayHello","app_version":"latest","az":"unknown","deadline":"2020-11-06T01:17:54+08:00","domain":"unknown","elapsed_ms":1001,"end_time":"2020-11-06T01:17:50.710002+08:00","incoming_request_id":["bb69e3d7-0a9f-4621-8987-7a468366be1c"],"key":"value","local.IP":"10.8.0.2","outgoing_request_id":["37448bca-1b3f-4e51-8abb-1573dfcaaaa1"],"realm":"unknown","region":"unknown","remote.IP":"localhost","remote.net_type":"tcp","remote.port":"61086","request_payload":"{\"name\":\"name\"}","res_code":"OK","response_payload":"{\"message\":\"hello\"}","start_time":"2020-11-06T01:17:49.708046+08:00"}
-remote_addr=localhost
-app_name=Unknown
+endTime=2021-05-25T02:08:03.348494+08:00
+startTime=2021-05-25T02:08:03.348264+08:00
+elapsedNano=229639
+hostname=lark.local
+eventId=fakeId
+timing={}
+counter={}
+pair={}
+error={}
+field={"appName":"rkApp","appVersion":"v0.0.0","az":"unknown","deadline":"2021-05-25T02:08:08+08:00","domain":"unknown","elapsedNano":229639,"endTime":"2021-05-25T02:08:03.348494+08:00","grpcMethod":"SayHello","grpcService":"Greeter","grpcType":"unaryServer","gwMethod":"unknown","gwPath":"unknown","incomingRequestId":["76bec784-de98-4e52-98a0-ee106bac6600"],"localIp":"10.8.0.6","outgoingRequestId":[],"realm":"unknown","region":"unknown","remoteIp":"localhost","remoteNetType":"tcp","remotePort":"58222","resCode":"Unauthenticated","startTime":"2021-05-25T02:08:03.348264+08:00"}
+remoteAddr=localhost
+appName=unknown
+appVersion=unknown
+locale=unknown
 operation=SayHello
-event_status=Ended
-history=s-sleep:1604596669708,e-sleep:1001,end:1
+eventStatus=Ended
 timezone=CST
 os=darwin
 arch=amd64
@@ -205,33 +253,55 @@ EOE
 
 Example:
 ```go
+// Copyright (c) 2021 rookie-ninja
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file.
 package main
 
 import (
 	"context"
 	"encoding/json"
-	"github.com/rookie-ninja/rk-grpc/example/proto"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/rookie-ninja/rk-entry/entry"
+	"github.com/rookie-ninja/rk-grpc/example/interceptor/proto"
+	"github.com/rookie-ninja/rk-grpc/interceptor/basic"
 	"github.com/rookie-ninja/rk-grpc/interceptor/context"
 	"github.com/rookie-ninja/rk-grpc/interceptor/log/zap"
-	"github.com/rookie-ninja/rk-grpc/interceptor/retry"
-	"github.com/rookie-ninja/rk-logger"
-	"github.com/rookie-ninja/rk-query"
+	"github.com/rookie-ninja/rk-grpc/interceptor/metrics/prom"
+	"github.com/rookie-ninja/rk-grpc/interceptor/panic"
 	"google.golang.org/grpc"
 	"log"
 	"time"
 )
 
 func main() {
-	// create event factory
-	factory := rk_query.NewEventFactory()
+	entryName := "example-entry-client-name"
+	entryType := "example-entry-client"
+
+	// create server interceptor
+	basicInter := rkgrpcbasic.UnaryClientInterceptor(
+		rkgrpcbasic.WithEntryNameAndType(entryName, entryType))
+
+	logInter := rkgrpclog.UnaryClientInterceptor(
+		rkgrpclog.WithEntryNameAndType(entryName, entryType),
+		rkgrpclog.WithZapLoggerEntry(rkentry.GlobalAppCtx.GetZapLoggerEntryDefault()),
+		rkgrpclog.WithEventLoggerEntry(rkentry.GlobalAppCtx.GetEventLoggerEntryDefault()))
+
+	metricsInter := rkgrpcmetrics.UnaryClientInterceptor(
+		rkgrpcmetrics.WithEntryNameAndType(entryName, entryType),
+		rkgrpcmetrics.WithRegisterer(prometheus.NewRegistry()))
+
+	panicInter := rkgrpcpanic.UnaryClientInterceptor()
 
 	// create client interceptor
 	opt := []grpc.DialOption{
 		grpc.WithChainUnaryInterceptor(
-			rk_grpc_log.UnaryClientInterceptor(
-				rk_grpc_log.WithEventFactory(factory),
-				rk_grpc_log.WithLogger(rk_logger.StdoutLogger)),
-			rk_grpc_retry.UnaryClientInterceptor()),
+			basicInter,
+			logInter,
+			metricsInter,
+			panicInter,
+		),
 		grpc.WithInsecure(),
 		grpc.WithBlock(),
 	}
@@ -246,21 +316,21 @@ func main() {
 	// create grpc client
 	c := proto.NewGreeterClient(conn)
 	// create with rk context
-	ctx, cancel := context.WithTimeout(rk_grpc_ctx.NewContext(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(rkgrpcctx.NewContext(), 5*time.Second)
 	defer cancel()
 
 	// add metadata
-	rk_grpc_ctx.AddToOutgoingMD(ctx, "key", "1", "2")
+	rkgrpcctx.AddToOutgoingMD(ctx, "key", "1", "2")
 	// add request id
-	rk_grpc_ctx.AddRequestIdToOutgoingMD(ctx)
+	rkgrpcctx.AddRequestIdToOutgoingMD(ctx)
 
 	// call server
 	r, err := c.SayHello(ctx, &proto.HelloRequest{Name: "name"})
 
-	rk_grpc_ctx.GetLogger(ctx).Info("This is info message")
+	rkgrpcctx.GetZapLogger(ctx).Info("This is info message")
 
 	// print incoming metadata
-	bytes, _ := json.Marshal(rk_grpc_ctx.GetIncomingMD(ctx))
+	bytes, _ := json.Marshal(rkgrpcctx.GetIncomingMD(ctx))
 	println(string(bytes))
 
 	if err != nil {
@@ -272,24 +342,27 @@ func main() {
 Output 
 ```
 ------------------------------------------------------------------------
-end_time=2020-11-06T01:17:50.710937+08:00
-start_time=2020-11-06T01:17:49.706934+08:00
-time=1004
-hostname=JEREMYYIN-MB0
-event_id=["37448bca-1b3f-4e51-8abb-1573dfcaaaa1","bb69e3d7-0a9f-4621-8987-7a468366be1c"]
+endTime=2021-05-25T02:08:03.349978+08:00
+startTime=2021-05-25T02:08:03.347594+08:00
+elapsedNano=2384154
+hostname=lark.local
+eventId=fakeId
 timing={}
-counter={"rk_max_retries":0}
+counter={}
 pair={}
 error={}
-field={"api.role":"unary_client","api.service":"Greeter","api.verb":"SayHello","app_version":"latest","az":"unknown","deadline":"2020-11-06T01:17:54+08:00","domain":"unknown","elapsed_ms":1004,"end_time":"2020-11-06T01:17:50.710942+08:00","incoming_request_id":["37448bca-1b3f-4e51-8abb-1573dfcaaaa1"],"local.IP":"10.8.0.2","outgoing_request_id":["bb69e3d7-0a9f-4621-8987-7a468366be1c"],"realm":"unknown","region":"unknown","remote.IP":"localhost","remote.port":"8080","request_payload":"{\"name\":\"name\"}","res_code":"OK","response_payload":"{\"message\":\"hello\"}","start_time":"2020-11-06T01:17:49.706934+08:00"}
-remote_addr=localhost
-app_name=Unknown
+field={"appName":"rkApp","appVersion":"v0.0.0","az":"unknown","deadline":"2021-05-25T02:08:08+08:00","domain":"unknown","elapsedNano":2384154,"endTime":"2021-05-25T02:08:03.34998+08:00","grpcMethod":"SayHello","grpcService":"","grpcType":"unaryClient","incomingRequestId":[],"localIp":"10.8.0.6","outgoingRequestId":["76bec784-de98-4e52-98a0-ee106bac6600"],"realm":"unknown","region":"unknown","remoteIp":"localhost","remotePort":"8080","resCode":"Unauthenticated","startTime":"2021-05-25T02:08:03.347594+08:00"}
+remoteAddr=localhost
+appName=unknown
+appVersion=unknown
+locale=unknown
 operation=SayHello
-event_status=Ended
+eventStatus=Ended
 timezone=CST
 os=darwin
 arch=amd64
 EOE
+
 ```
 
 ### Common Services
@@ -297,23 +370,39 @@ User can start multiple servers at the same time
 
 | path | description |
 | ------ | ------ |
-| /v1/rk/healthy | always return true if service is available |
-| /v1/rk/gc | trigger gc and return memory stats |
-| /v1/rk/info | return basic info |
-| /v1/rk/config | return configs in memory |
-| /v1/rk/apis | list all apis |
-| /v1/rk/sys | return system information including cpu and memory usage |
-| /v1/rk/req | return requests stats recorded by prometheus client |
-| /v1/rk/tv | web ui for metrics |
+| /rk/v1/apis | List API |
+| /rk/v1/certs | List CertEntry |
+| /rk/v1/configs | List ConfigEntry |
+| /rk/v1/entries | List all Entry |
+| /rk/v1/gc | Trigger GC |
+| /rk/v1/healthy | Get application healthy status, returns true if application is running |
+| /rk/v1/info | Get application and process info |
+| /rk/v1/logs | List logger related entries |
+| /rk/v1/req | List prometheus metrics of requests |
+| /rk/v1/sys | Get OS stat |
+| /rk/v1/tv | Get HTML page of /tv |
+
+### TV Service
+
+| path | description |
+| ------ | ------ |
+| /rk/v1/tv or /rk/v1/tv/overview | Get application and process info of HTML page |
+| /rk/v1/tv/api | Get API of HTML page |
+| /rk/v1/tv/entry | Get entry of HTML page |
+| /rk/v1/tv/config | Get config of HTML page |
+| /rk/v1/tv/cert | Get cert of HTML page |
+| /rk/v1/tv/os | Get OS of HTML page |
+| /rk/v1/tv/env | Get Go environment of HTML page |
+| /rk/v1/tv/prometheus | Get metrics of HTML page |
+| /rk/v1/log | Get log of HTML page |
 
 ### Development Status: Stable
 
 ### Appendix
-Use bellow command to rebuild proto files
-cd to ./boot folder
-- protoc -I. --go_out=plugins=grpc:. --go_opt=paths=source_relative api/v1/*.proto
-- protoc -I. --openapiv2_out=logtostderr=true,json_names_for_fields=false,grpc_api_configuration=api/v1/gw_mapping.yaml:. api/v1/*.proto
-- protoc -I. --grpc-gateway_out=logtostderr=true,paths=source_relative,grpc_api_configuration=api/v1/gw_mapping.yaml:. api/v1/*.proto
+Use bellow command to rebuild proto files, we are using [buf](https://docs.buf.build/generate-usage) to generate proto related files.
+Configuration could be found at root path of project.
+
+- make buf
 
 ### Contributing
 We encourage and support an active, healthy community of contributors &mdash;

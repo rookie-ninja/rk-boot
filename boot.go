@@ -1,297 +1,172 @@
-// Copyright (c) 2020 rookie-ninja
+// Copyright (c) 2021 rookie-ninja
 //
 // Use of this source code is governed by an MIT-style
 // license that can be found in the LICENSE file.
-package rk_boot
+package rkboot
 
 import (
-	"errors"
-	"fmt"
-	rk_entry "github.com/rookie-ninja/rk-common/entry"
-	rk_prom "github.com/rookie-ninja/rk-prom"
-
-	//"github.com/rookie-ninja/rk-boot/prom"
-	"github.com/rookie-ninja/rk-common/context"
-	"github.com/rookie-ninja/rk-config"
-	"github.com/rookie-ninja/rk-gin/boot"
-	"github.com/rookie-ninja/rk-grpc/boot"
-	"github.com/rookie-ninja/rk-query"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
-	"gopkg.in/yaml.v2"
-	"os"
-	"runtime/debug"
-	"time"
+	"context"
+	"github.com/rookie-ninja/rk-entry/entry"
+	rkgin "github.com/rookie-ninja/rk-gin/boot"
+	rkgrpc "github.com/rookie-ninja/rk-grpc/boot"
+	rkprom "github.com/rookie-ninja/rk-prom"
 )
 
-type bootConfig struct {
-	Application string `yaml:"application"`
-	Event       struct {
-		Format      string   `yaml:"format"`
-		Quiet       bool     `yaml:"quiet"`
-		OutputPaths []string `yaml:"outputPaths"`
-		LoggerConf  string   `yaml:"loggerConf"`
-		Maxsize     int      `yaml:"maxsize"`
-		MaxAge      int      `yaml:"maxage"`
-		MaxBackups  int      `yaml:"maxbackups"`
-		Localtime   bool     `yaml:"localtime"`
-		Compress    bool     `yaml:"compress"`
-	} `yaml:"event"`
-	Logger []struct {
-		Name        string   `yaml:"name"`
-		Quiet       bool     `yaml:"quiet"`
-		OutputPaths []string `yaml:"outputPaths"`
-		LoggerConf  string   `yaml:"loggerConf"`
-		Maxsize     int      `yaml:"maxsize"`
-		MaxAge      int      `yaml:"maxage"`
-		MaxBackups  int      `yaml:"maxbackups"`
-		Localtime   bool     `yaml:"localtime"`
-		Compress    bool     `yaml:"compress"`
-	} `yaml:"logger"`
-	Config []struct {
-		Name   string `yaml:"name"`
-		Path   string `yaml:"path"`
-		Format string `yaml:"format"`
-		Global bool   `yaml:"global"`
-	} `yaml:"config"`
-	Env struct {
-		REALM  string `yaml:"REALM"`
-		DOMAIN string `yaml:"DOMAIN"`
-		REGION string `yaml:"REGION"`
-		AZ     string `yaml:"AZ"`
-	} `yaml:"env"`
-}
-
 type Boot struct {
-	application  string
-	startTime    time.Time
-	viperConfigs map[string]*viper.Viper
-	rkConfigs    map[string]*rk_config.RkConfig
-	loggers      map[string]*rk_ctx.LoggerPair
-	logger       *zap.Logger
-	eventFactory *rk_query.EventFactory
+	BootConfigPath string `yaml:"bootConfigPath" json:"bootConfigPath"`
 }
 
 type BootOption func(*Boot)
 
+// Provide boot config yaml file.
 func WithBootConfigPath(filePath string) BootOption {
 	return func(boot *Boot) {
-		// read config
-		bytes := readFile(filePath)
-		config := &bootConfig{}
-		err := yaml.Unmarshal(bytes, config)
-		if err != nil {
-			shutdownWithError(err)
-		}
-
-		// assign application name
-		if len(config.Application) < 1 {
-			config.Application = "unknown-application"
-		}
-		boot.application = config.Application
-
-		// init logger
-		boot.loggers = getLoggers(config)
-
-		// init event factory
-		boot.eventFactory = getEventFactory(config)
-
-		// init config
-		boot.viperConfigs, boot.rkConfigs = getConfigs(config)
-
-		// init entries
-		entryInitializers := rk_ctx.ListEntryInitializer()
-		for i := range entryInitializers {
-			init := entryInitializers[i]
-			init(filePath, boot.eventFactory, boot.logger)
-		}
+		boot.BootConfigPath = filePath
 	}
 }
 
-func WithEventFactory(fac *rk_query.EventFactory) BootOption {
-	return func(boot *Boot) {
-		if fac != nil {
-			boot.eventFactory = fac
-		}
-	}
-}
-
-func WithRkConfig(name string, config *rk_config.RkConfig) BootOption {
-	return func(boot *Boot) {
-		if len(name) < 1 {
-			// with new name
-			name = fmt.Sprintf("rkconfig-%d", len(boot.rkConfigs)+1)
-		}
-
-		boot.rkConfigs[name] = config
-	}
-}
-
-func WithViperConfig(name string, config *viper.Viper) BootOption {
-	return func(boot *Boot) {
-		if len(name) < 1 {
-			// with new name
-			name = fmt.Sprintf("viper-%d", len(boot.viperConfigs)+1)
-		}
-
-		boot.viperConfigs[name] = config
-	}
-}
-
-func WithLogger(name string, logger *zap.Logger, loggerConf *zap.Config) BootOption {
-	return func(boot *Boot) {
-		if len(name) < 1 {
-			// with new name
-			name = fmt.Sprintf("logger-%d", len(boot.viperConfigs)+1)
-		}
-
-		boot.loggers[name] = &rk_ctx.LoggerPair{
-			Logger: logger,
-			Config: loggerConf,
-		}
-	}
-}
-
+// Create a bootstrapper.
 func NewBoot(opts ...BootOption) *Boot {
-	// add default logger
-	boot := &Boot{
-		application:  "rk-application",
-		eventFactory: rk_query.NewEventFactory(),
-		viperConfigs: make(map[string]*viper.Viper),
-		rkConfigs:    make(map[string]*rk_config.RkConfig),
-		startTime:    time.Now(),
-		logger:       rk_ctx.GlobalAppCtx.GetLogger("default"),
-	}
+	boot := &Boot{}
 
 	for i := range opts {
 		opts[i](boot)
 	}
 
-	// basic information initiated, let's override app context
-	rk_ctx.GlobalAppCtx.SetApplication(boot.application)
-	rk_ctx.GlobalAppCtx.SetEventFactory(boot.eventFactory)
-	for k, v := range boot.loggers {
-		rk_ctx.GlobalAppCtx.AddLoggerPair(k, v)
+	if len(boot.BootConfigPath) < 1 {
+		boot.BootConfigPath = "boot.yaml"
 	}
-	rk_ctx.GlobalAppCtx.SetStartTime(boot.startTime)
-	for k, v := range boot.viperConfigs {
-		rk_ctx.GlobalAppCtx.AddViperConfig(k, v)
-	}
-	for k, v := range boot.rkConfigs {
-		rk_ctx.GlobalAppCtx.AddRkConfig(k, v)
+
+	// Register and bootstrap internal entries with boot config.
+	rkentry.RegisterInternalEntriesFromConfig(boot.BootConfigPath)
+
+	// Register external entries.
+	regFuncList := rkentry.ListEntryRegFunc()
+	for i := range regFuncList {
+		regFuncList[i](boot.BootConfigPath)
 	}
 
 	return boot
 }
 
-func (boot *Boot) GetApplication() string {
-	return boot.application
-}
-
-func (boot *Boot) GetRkConfig(name string) *rk_config.RkConfig {
-	res, _ := boot.rkConfigs[name]
-	return res
-}
-
-func (boot *Boot) ListRkConfigs() []*rk_config.RkConfig {
-	res := make([]*rk_config.RkConfig, 0)
-
-	for _, v := range boot.rkConfigs {
-		res = append(res, v)
+// Bootstrap entries in rkentry.GlobalAppCtx including bellow:
+//
+// Internal entries:
+// 1: rkentry.AppInfoEntry
+// 2: rkentry.ConfigEntry
+// 3: rkentry.ZapLoggerEntry
+// 4: rkentry.EventLoggerEntry
+// 5: rkentry.CertEntry
+//
+// External entries:
+// User defined entries
+func (boot *Boot) Bootstrap(ctx context.Context) {
+	// Bootstrap external entries
+	for _, entry := range rkentry.GlobalAppCtx.ListEntries() {
+		go entry.Bootstrap(ctx)
 	}
-	return res
+
+	// Wait for shutdown signal
+	rkentry.GlobalAppCtx.WaitForShutdownSig()
+
+	// Interrupt all entries
+	boot.Interrupt(ctx)
 }
 
-func (boot *Boot) GetViperConfig(name string) *viper.Viper {
-	res, _ := boot.viperConfigs[name]
-	return res
+// Interrupt entries in rkentry.GlobalAppCtx including bellow:
+//
+// Internal entries:
+// 1: rkentry.AppInfoEntry
+// 2: rkentry.ConfigEntry
+// 3: rkentry.ZapLoggerEntry
+// 4: rkentry.EventLoggerEntry
+// 5: rkentry.CertEntry
+//
+// External entries:
+// User defined entries
+func (boot *Boot) Interrupt(ctx context.Context) {
+	// Interrupt internal entries
+	rkentry.GlobalAppCtx.GetAppInfoEntry().Interrupt(ctx)
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListZapLoggerEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEventLoggerEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListConfigEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListCertEntriesRaw())
+
+	// Interrupt external entries
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEntries())
 }
 
-func (boot *Boot) ListViperConfigs() []*viper.Viper {
-	res := make([]*viper.Viper, 0)
-
-	for _, v := range boot.viperConfigs {
-		res = append(res, v)
-	}
-	return res
-}
-
-func (boot *Boot) GetEntry(name string) rk_entry.Entry {
-	return rk_ctx.GlobalAppCtx.GetEntry(name)
-}
-
-func (boot *Boot) GetGinEntry(name string) *rk_gin.GinEntry {
-	return rk_ctx.GlobalAppCtx.GetEntry(name).(*rk_gin.GinEntry)
-}
-
-func (boot *Boot) GetGRpcEntry(name string) *rk_grpc.GRpcEntry {
-	return rk_ctx.GlobalAppCtx.GetEntry(name).(*rk_grpc.GRpcEntry)
-}
-
-func (boot *Boot) GetPromEntry() *rk_prom.PromEntry {
-	return rk_ctx.GlobalAppCtx.GetEntry(rk_prom.PromEntryNameDefault).(*rk_prom.PromEntry)
-}
-
-func (boot *Boot) Bootstrap() {
-	helper := rk_query.NewEventHelper(boot.eventFactory)
-	event := helper.Start("rk_app_start")
-	defer helper.Finish(event)
-
-	boot.startTime = time.Now()
-	event.AddFields(zap.Time("app_start_time", boot.startTime))
-
-	// bootstrap entries
-	for _, entry := range rk_ctx.GlobalAppCtx.ListEntries() {
-		entry.Bootstrap(event)
+// Helper function which all interrupt() function for each entry.
+func (boot *Boot) interruptHelper(ctx context.Context, m map[string]rkentry.Entry) {
+	for _, entry := range m {
+		entry.Interrupt(ctx)
 	}
 }
 
-func (boot *Boot) GetEventFactory() *rk_query.EventFactory {
-	return boot.eventFactory
+// Get rkentry.AppInfoEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetAppInfoEntry() *rkentry.AppInfoEntry {
+	return rkentry.GlobalAppCtx.GetAppInfoEntry()
 }
 
-func (boot *Boot) RegisterQuitter(name string, input rk_ctx.QuitterFunc) error {
-	if input == nil {
-		return errors.New("empty quitter function")
-	}
+// Get rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetZapLoggerEntry(name string) *rkentry.ZapLoggerEntry {
+	return rkentry.GlobalAppCtx.GetZapLoggerEntry(name)
+}
 
-	if len(name) < 1 {
-		return errors.New("empty quitter name")
-	}
+// Get default rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetZapLoggerEntryDefault() *rkentry.ZapLoggerEntry {
+	return rkentry.GlobalAppCtx.GetZapLoggerEntryDefault()
+}
 
-	if quitter := rk_ctx.GlobalAppCtx.GetQuitter(name); quitter != nil {
-		return errors.New("duplicate quitter function")
-	}
+// Get rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetEventLoggerEntry(name string) *rkentry.EventLoggerEntry {
+	return rkentry.GlobalAppCtx.GetEventLoggerEntry(name)
+}
 
-	rk_ctx.GlobalAppCtx.AddQuitter(name, input)
+// Get default rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetEventLoggerEntryDefault() *rkentry.EventLoggerEntry {
+	return rkentry.GlobalAppCtx.GetEventLoggerEntryDefault()
+}
+
+// Get rkentry.ConfigEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetConfigEntry(name string) *rkentry.ConfigEntry {
+	return rkentry.GlobalAppCtx.GetConfigEntry(name)
+}
+
+// Get rkentry.CertEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
+	return rkentry.GlobalAppCtx.GetCertEntry(name)
+}
+
+// Get rkgin.GinEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetGinEntry(name string) *rkgin.GinEntry {
+	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
+
+	if entry, ok := entryRaw.(*rkgin.GinEntry); ok {
+		return entry
+	}
 
 	return nil
 }
 
-func (boot *Boot) Wait(draining time.Duration) {
-	sig := <-rk_ctx.GlobalAppCtx.GetShutdownSig()
+// Get rkgrpc.GrpcEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetGrpcEntry(name string) *rkgrpc.GrpcEntry {
+	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
-	helper := rk_query.NewEventHelper(boot.eventFactory)
-	event := helper.Start("rk_app_stop")
-
-	// shutdown entries
-	for _, entry := range rk_ctx.GlobalAppCtx.ListEntries() {
-		entry.Shutdown(event)
+	if entry, ok := entryRaw.(*rkgrpc.GrpcEntry); ok {
+		return entry
 	}
 
-	boot.logger.Info("draining", zap.Duration("draining_duration", draining))
-	time.Sleep(draining)
+	return nil
+}
 
-	event.AddFields(
-		zap.Duration("app_lifetime_nano", time.Since(boot.startTime)),
-		zap.Time("app_start_time", boot.startTime))
+// Get rkprom.PromEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetPromEntry(name string) *rkprom.PromEntry {
+	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
-	event.AddPair("signal", sig.String())
-
-	if err := recover(); err != nil {
-		event.AddFields(zap.Any("recover", err))
-		boot.logger.Error(fmt.Sprintf("err: %+v. stack: %s", err, string(debug.Stack())))
+	if entry, ok := entryRaw.(*rkprom.PromEntry); ok {
+		return entry
 	}
-	helper.Finish(event)
-	os.Exit(0)
+
+	return nil
 }

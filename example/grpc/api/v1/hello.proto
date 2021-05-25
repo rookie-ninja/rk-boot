@@ -1,16 +1,11 @@
 syntax = "proto3";
 
-import "google/api/annotations.proto";
+package api.v1;
 
-option go_package = "hello_v1";
+option go_package = "api/v1/hello";
 
 service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloResponse) {
-        option (google.api.http) = {
-            post: "/v1/hello"
-            body: "*"
-        };
-  }
+  rpc SayHello (HelloRequest) returns (HelloResponse) {}
 }
 
 message HelloRequest {

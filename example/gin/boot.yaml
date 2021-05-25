@@ -1,0 +1,71 @@
+---
+# Bellow sections are RK common entries which is not necessary.
+rk: # NOT required
+  appName: rk-example-entry                           # Optional, default: "rkApp"
+  version: v0.0.1                                     # Optional, default: "v0.0.0"
+  description: "this is description"                  # Optional, default: ""
+  keywords: ["rk", "golang"]                          # Optional, default: []
+  homeUrl: "http://example.com"                       # Optional, default: ""
+  iconUrl: "http://example.com"                       # Optional, default: ""
+  docsUrl: ["http://example.com"]                     # Optional, default: []
+  maintainers: ["rk-dev"]                             # Optional, default: []
+zapLogger:                                            # Optional
+  - name: zap-logger                                  # Required
+    description: "Description of entry"               # Optional
+eventLogger:                                          # Optional
+  - name: event-logger                                # Required
+    description: "Description of entry"               # Optional
+cert:                                                 # Optional
+  - name: "local-cert"                                # Required
+    description: "Description of entry"               # Optional
+    provider: "localFs"                               # Required, etcd, consul, localFs, remoteFs are supported options
+    locale: "*::*::*::*"                              # Optional, default: *::*::*::*
+    serverCertPath: "example/gin/certs/server.pem"    # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "example/gin/certs/server-key.pem" # Optional, default: "", path of certificate on local FS
+#    clientCertPath: "example/client.pem"             # Optional, default: "", path of certificate on local FS
+#    clientKeyPath: "example/client.pem"              # Optional, default: "", path of certificate on local FS
+config:
+  - name: rk-main                                     # Required
+    path: "example/gin/config/config.yaml"            # Required
+    description: "Description of entry"               # Optional
+    locale: "*::*::*::*"                              # Optional, default: *::*::*::*
+# Gin entry
+gin:
+  - name: greeter                                     # Required
+    port: 8080                                        # Required
+    cert:                                             # Optional
+      ref: "local-cert"                               # Optional, default: "", reference of cert entry declared above
+    sw:                                               # Optional
+      enabled: true                                   # Optional, default: false
+      jsonPath: "example/gin/docs"
+      path: "sw"                                      # Optional, default: "sw"
+      headers: ["sw:rk"]                              # Optional, default: []
+    commonService:                                    # Optional
+      enabled: true                                   # Optional, default: false
+    tv:                                               # Optional
+      enabled:  true                                  # Optional, default: false
+    prom:                                             # Optional
+      enabled: true                                   # Optional, default: false
+      path: "metrics"                                 # Optional, default: ""
+      pusher:                                         # Optional
+        enabled: false                                # Optional, default: false
+        jobName: "greeter-pusher"                     # Required
+        remoteAddress: "localhost:9091"               # Required
+        basicAuth: "user:pass"                        # Optional, default: ""
+        intervalMs: 1000                              # Optional, default: 1000
+        cert:                                         # Optional
+          ref: "local-cert"                           # Optional, default: "", reference of cert entry declared above
+    logger:                                           # Optional
+      zapLogger:                                      # Optional
+        ref: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
+      eventLogger:                                    # Optional
+        ref: event-logger                             # Optional, default: logger of STDOUT, reference of logger entry declared above
+    interceptors:                                     # Optional
+      loggingZap:
+        enabled: true                                 # Optional, default: false
+      metricsProm:
+        enabled: true                                 # Optional, default: false
+#      basicAuth:
+#        enabled: true                                # Optional, default: false
+#       credentials:
+#         - "user:pass"                               # Optional, default: ""

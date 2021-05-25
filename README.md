@@ -1,13 +1,7 @@
 # rk-boot
-gRpc service bootstrapper for goLang.
-With rk-boot, users can start gRpc service with yaml formatted config file.
-Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
-
-- [rk-config](https://github.com/uber-go/zap)
-- [rk-query](https://github.com/rookie-ninja/rk-query)
-- [rk-logger](https://github.com/rookie-ninja/rk-logger)
-- [rk-interceptor](https://github.com/rookie-ninja/rk-interceptor)
-- [rk-prom](https://github.com/rookie-ninja/rk-prom)
+Bootstrapper for rkentry.Entry.
+With rk-boot, users can start grpc, gin, prometheus client or custom entry service with yaml formatted config file.
+Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -16,7 +10,10 @@ Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
 - [Installation](#installation)
 - [Quick Start](#quick-start)
   - [YAML config](#yaml-config)
-    - [gRpc](#grpc)
+    - [grpc](#grpc)
+    - [gin](#gin)
+  - [Common Service](#common-service)
+  - [TV Service](#tv-service)
   - [Development Status: Stable](#development-status-stable)
   - [Appendix](#appendix)
     - [Proto file compilation](#proto-file-compilation)
@@ -25,269 +22,259 @@ Easy to compile, run and debug your gRpc service, gRpc gateway and swagger UI.
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
-`go get -u rookie-ninja/rk-boot`
+`go get -u github.com/rookie-ninja/rk-boot`
 
 ## Quick Start
 There are two ways users can run gRpc or Gin service. one is yaml formatted config file.
-The other one is through goLang code.
+The other one is through golang code.
 
 ### YAML config
 With human readable yaml config.
-All you need to do is compile .proto file with protoc, protoc-gen-go, protoc-gen-grpc-gateway and protoc-gen-swagger
+All you need to do is compile .proto file with buf.
 
-#### gRpc
+There is example in Makefile.
+
+#### grpc
 
 Example:
 ```yaml
 ---
-appName: rk-demo
-event:
-  format: RK
-  quiet: false
-logger:
-  - name: app
-    confPath: "example/configs/zap-app.yaml"
-    forBoot: true
-  - name: query
-    confPath: "example/configs/zap-query.yaml"
-    forEvent: true
+# Bellow sections are RK common entries which is not necessary.
+rk:
+  appName: myapp
+  version: v0.0.1                                      # Optional, default: "v0.0.0"
+  description: "this is description"                   # Optional, default: ""
+  keywords: [ "rk", "golang" ]                         # Optional, default: []
+  homeURL: "http://example.com"                        # Optional, default: ""
+  iconURL: "http://example.com"                        # Optional, default: ""
+  docsURL: [ "http://example.com" ]                    # Optional, default: []
+  maintainers: [ "rk-dev" ]                            # Optional, default: []
+zapLogger:                                             # Optional
+  - name: zap-logger                                   # Required
+    description: "Description of entry"                # Optional
+eventLogger:                                           # Optional
+  - name: event-logger                                 # Required
+    description: "Description of entry"                # Optional
+cert:                                                  # Optional
+  - name: "local-cert"                                 # Required
+    description: "Description of entry"                # Optional
+    provider: "localFs"                                # Required, etcd, consul, localFs, remoteFs are supported options
+    locale: "*::*::*::*"                               # Optional, default: *::*::*::*
+    serverCertPath: "example/grpc/certs/server.pem"    # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "example/grpc/certs/server-key.pem" # Optional, default: "", path of certificate on local FS
+    clientCertPath: "example/grpc/certs/server.pem"    # Optional, default: "", path of certificate on local FS
 config:
-  - name: rk-main
-    path: "example/configs/rk.yaml"
-    format: RK
-    global: false
+  - name: rk-main                                      # Required
+    path: "example/grpc/config/config.yaml"            # Required
+    description: "Description of entry"                # Optional
+    locale: "*::*::*::*"                               # Optional, default: *::*::*::*
+# Grpc entry
 grpc:
-  - name: greeter
-    port: 8080
-    enableCommonService: true
+  - name: greeter                                      # Required
+    port: 1949                                         # Optional
+    commonService:
+      enabled: true                                    # Optional, default: false
+    cert:
+      ref: "local-cert"                                # Optional, default: "", reference of cert entry declared above
     gw:
-      enabled: true
-      port: 8081
-      insecure: true
-      enableCommonService: true
-      enableTV: true
-    sw:
-      enabled: true
-      port: 8090
-      path: sw
-      jsonPath: "example/api/v1"
-      insecure: true
-      enableCommonService: true
-    loggingInterceptor:
-      enabled: true
-      enableLogging: true
-      enableMetrics: true
-      enablePayloadLogging: false
-prom:
-  enabled: true
-  port: 1608
-  path: metrics
-  pushGateway:
-    enabled: false
-    remoteAddr: xxx
-    intervalMS: 2000
-    jobName: xxx
-proto:
-  source:
-    - api/v1/*.proto
-  import:
-    - third-party/googleapis
-  doc:
-    output: docs
-    name: rk-server-demo
-    type:
-      - html
-      - markdown
-ut:
-  output: docs
+      enabled: true                                    # Optional, default: false
+      port: 8080                                       # Required
+      gwMappingFilePaths:
+        - "example/grpc/api/v1/gw_mapping.yaml"
+      cert:
+        ref: "local-cert"                              # Optional, default: "", reference of cert entry declared above
+      tv:
+        enabled: true                                  # Optional, default: false
+      sw:
+        enabled: true                                  # Optional, default: false
+        path: "sw"                                     # Optional, default: "sw"
+        jsonPath: "example/grpc/api/gen/v1"            # Optional
+        headers: [ "sw:rk" ]                           # Optional, default: []
+      prom:
+        enabled: true                                  # Optional, default: false
+        path: "metrics"                                # Optional, default: ""
+        pusher:
+          enabled: false                               # Optional, default: false
+          jobName: "greeter-pusher"                    # Required
+          remoteAddress: "localhost:9091"              # Required
+          basicAuth: "user:pass"                       # Optional, default: ""
+          intervalMS: 1000                             # Optional, default: 1000
+          cert:
+            ref: "local-cert"                          # Optional, default: "", reference of cert entry declared above
+    logger:                                            # Optional
+      zapLogger:                                       # Optional
+        ref: zap-logger                                # Optional, default: logger of STDOUT, reference of logger entry declared above
+      eventLogger:                                     # Optional
+        ref: event-logger                              # Optional, default: logger of STDOUT, reference of logger entry declared above
+    interceptors:
+      loggingZap:
+        enabled: true                                  # Optional, default: false
+      metricsProm:
+        enabled: true                                  # Optional, default: false
+      basicAuth:
+        enabled: false                                 # Optional, default: false
+        credentials:
+          - "user:pass"                                # Optional, default: ""
+      tokenAuth:
+        enabled: false
+        tokens:
+          - token: ""
+            expired: false                             # Optional, default: ""
 ```
 
 ```go
-// Copyright (c) 2020 rookie-ninja
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file.
 package main
 
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/example/api/v1"
+	"github.com/rookie-ninja/rk-boot/example/grpc/api/gen/v1"
 	"google.golang.org/grpc"
-	"time"
 )
 
 func main() {
-	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/configs/boot.yaml"))
+	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/grpc/boot.yaml"))
 
 	// register gRpc
-	boot.GetGRpcEntry("greeter").AddRegFuncs(registerGreeter)
-	boot.GetGRpcEntry("greeter").AddGWRegFuncs(hello_v1.RegisterGreeterHandlerFromEndpoint)
+	boot.GetGrpcEntry("greeter").AddGrpcRegFuncs(registerGreeter)
+	boot.GetGrpcEntry("greeter").AddGwRegFuncs(hello.RegisterGreeterHandlerFromEndpoint)
 
-	boot.Bootstrap()
-	boot.Quitter(5 * time.Second)
+	// Bootstrap
+	boot.Bootstrap(context.TODO())
 }
 
 func registerGreeter(server *grpc.Server) {
-	hello_v1.RegisterGreeterServer(server, &GreeterServer{})
+	hello.RegisterGreeterServer(server, &GreeterServer{})
 }
 
 type GreeterServer struct{}
 
-func (server *GreeterServer) SayHello(ctx context.Context, request *hello_v1.HelloRequest) (*hello_v1.HelloResponse, error) {
-	return &hello_v1.HelloResponse{
-		Message: "hello",
+func (server *GreeterServer) SayHello(ctx context.Context, request *hello.HelloRequest) (*hello.HelloResponse, error) {
+	return &hello.HelloResponse{
+		Message: "Hello " + request.Name,
 	}, nil
 }
+
 ```
 
 YAML config Explanation
 
-| Name | Description | Option |
-| ------ | ------ | ------ |
-| appName | Your application name, would be logged into logger | string |
-| event.format | The format of event data, please refer [rk-query](https://github.com/rookie-ninja/rk-query) for details | RK, JSON |
-| event.quiet | Set event to quiet mode, please refer [rk-query](https://github.com/rookie-ninja/rk-query) for details | true, false |
-| logger.name | Zap logger name | string |
-| logger.confPath | Zap logger config path, if relative path was given, then os.GetWd() would be used for abs path | string |
-| logger.forBoot | Use this logger for log while bootstrapping | true, false |
-| logger.forEvent | Use this logger for rk-query | true, false |
-| config.name | Viper config name | string |
-| config.path | Viper config file path | string |
-| config.format | Config format, viper support standard yaml, hcl, toml, json. For RK format please refer [rk-config](https://github.com/uber-go/zap) | RK, Viper |
-| config.global | Whether access config globally, like rk_config.Get() | true, false |
-| grpc.name | The name of gRpc server | string |
-| grpc.port | The port of gRpc server | integer |
-| grpc.enableCommonService | Enable embedded common service | true, false |
-| grpc.gw.enabled | Enable gateway service over gRpc server | true, false |
-| grpc.gw.port | The port of gRpc gateway | true, false |
-| grpc.gw.enableTV | Enable RK TV | true, false |
-| grpc.gw.insecure | Run gateway with insecure mode | true, false |
-| grpc.gw.enableCommonService | Enable embedded common service | true, false |
-| grpc.sw.enabled | Enable swagger service over gRpc server | true, false |
-| grpc.sw.port | The port of swagger | true, false |
-| grpc.sw.insecure | Run swagger with insecure mode | true, false |
-| grpc.sw.enableCommonService | Enable embedded common service | true, false |
-| grpc.sw.path | The path access swagger service from web | string |
-| grpc.sw.jsonPath | Where the swagger.json files are stored locally | string |
-| grpc.loggingInterceptor.enabled | Enable rk-interceptor logging interceptor | true, false |
-| grpc.loggingInterceptor.enableLogging | Enable rk-interceptor logging interceptor specifically for each Rpc with rk-query | true, false |
-| grpc.loggingInterceptor.enableMetrics | Enable rk-interceptor logging interceptor specifically for each Rpc with prometheus | true, false |
-| grpc.loggingInterceptor.enablePayloadLogging | Enable rk-interceptor logging interceptor specifically for each Rpc's payload | true, false |
-| gin.name | name of gin server entry| string | unknown application |
-| gin.port | port of server | integer | nil, server won't start |
-| gin.tls.enabled | enable tls or not | boolean | false | 
-| gin.tls.user.enabled | enable user provided CA file? | boolean | false |
-| gin.tls.user.certFile | cert file path | string | empty string |
-| gin.tls.user.keyFile | key file path | string | empty string | 
-| gin.tls.auth.enabled | server will generate CA files | string | false |
-| gin.tls.auth.certOutput | cert file output path | string | current working directory | 
-| gin.sw.enabled | enable swagger | boolean | false | 
-| gin.sw.path | swagger path | string | / |
-| gin.sw.jsonPath | swagger json file path | string | / |
-| gin.sw.headers | headers will send with swagger response | array | empty array |
-| gin.enableCommonService | enable common service | boolean | false |
-| gin.enableTV | enable RK TV whose path is /v1/rk/tv | boolean | false |
-| gin.loggingInterceptor.enabled | enable logging interceptor | boolean | false |
-| gin.loggingInterceptor.enableLogging | enable logging for every request | boolean | false |
-| gin.loggingInterceptor.enableMetrics | enable prometheus metrics for every request | boolean | false |
-| gin.authInterceptor.enabled | enable auth interceptor | boolean | false |
-| gin.authInterceptor.realm | realm for basic auth interceptor | string | Authorization Required |
-| gin.authInterceptor.credentials | array of credentials such as "user:pass" | string array | empty array |
-| prom.enabled | Enable local prometheus client | true, false |
-| prom.port | The port of prometheus client | integer |
-| prom.path | The path of prometheus client | string |
-| prom.pusher.enabled | Enable pushGateway jobs locally | true, false |
-| prom.pusher.url | pushGateway remote address | string |
-| prom.pusher.interval | Push job intervals with seconds | integer |
-| prom.pusher.job | pushGateway job name | string |
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.name | The name of gRpc server | string | N/A |
+| grpc.port | The port of gRpc server | integer | nil, server won't start |
+| grpc.commonService.enabled | Enable embedded common service | boolean | false |
+| grpc.cert.ref | Reference of cert entry declared in cert section | string | "" |
+| grpc.gw.enabled | Enable gateway service over gRpc server | boolean | false |
+| grpc.gw.port | The port of gRpc gateway | integer | nil, server won't start |
+| grpc.gw.gwMappingFilePaths | The grpc gateway mapping file path | string array | empty array |
+| grpc.gw.cert.ref | Reference of cert entry declared in cert section | string | "" |
+| grpc.gw.tv.enabled | Enable RK TV | boolean | false |
+| grpc.gw.sw.enabled | Enable swagger service over gRpc server | boolean | false |
+| grpc.sw.path | The path access swagger service from web | string | sw |
+| grpc.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
+| grpc.sw.headers | Headers would be sent to caller | map<string, string> | nil |
+| grpc.prom.enabled | Enable prometheus | boolean | false |
+| grpc.prom.path | Path of prometheus | string | metrics |
+| grpc.prom.pusher.enabled | Enable prometheus pusher | bool | false |
+| grpc.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
+| grpc.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
+| grpc.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
+| grpc.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of \<user:pass\> | string | "" |
+| grpc.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
+| grpc.logger.zapLogger.ref | Reference of logger entry declared above | string | "" |
+| grpc.logger.eventLogger.ref | Reference of logger entry declared above | string | "" |
+| grpc.interceptors.loggingZap.enabled | Enable logging interceptor | boolean | false |
+| grpc.interceptors.metricsProm.enabled | Enable prometheus metrics for every request | boolean | false |
+| grpc.interceptors.basicAuth.enabled | Enable auth interceptor | boolean | false |
+| grpc.interceptors.basicAuth.credentials | Provide basic auth credentials, form of \<user:pass\> | string | false |
 
 #### gin
 
 Example:
 ```yaml
 ---
-application: rk-server
-event:
-  format: RK
-  quiet: false
-  outputPaths:
-    - stdout
-  loggerConf: "example/gin/configs/query.yaml"
-logger:
-  - name: app
-    quiet: false
-    outputPath: stdout
-    loggerConf: "example/gin/configs/app.yaml"
-    maxsize: 1
-    maxage: 7
-    maxbackups: 3
-    localtime: true
-    compress: true
+# Bellow sections are RK common entries which is not necessary.
+rk: # NOT required
+  appName: rk-example-entry                           # Optional, default: "rkApp"
+  version: v0.0.1                                     # Optional, default: "v0.0.0"
+  description: "this is description"                  # Optional, default: ""
+  keywords: ["rk", "golang"]                          # Optional, default: []
+  homeUrl: "http://example.com"                       # Optional, default: ""
+  iconUrl: "http://example.com"                       # Optional, default: ""
+  docsUrl: ["http://example.com"]                     # Optional, default: []
+  maintainers: ["rk-dev"]                             # Optional, default: []
+zapLogger:                                            # Optional
+  - name: zap-logger                                  # Required
+    description: "Description of entry"               # Optional
+eventLogger:                                          # Optional
+  - name: event-logger                                # Required
+    description: "Description of entry"               # Optional
+cert:                                                 # Optional
+  - name: "local-cert"                                # Required
+    description: "Description of entry"               # Optional
+    provider: "localFs"                               # Required, etcd, consul, localFs, remoteFs are supported options
+    locale: "*::*::*::*"                              # Optional, default: *::*::*::*
+    serverCertPath: "example/gin/certs/server.pem"    # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "example/gin/certs/server-key.pem" # Optional, default: "", path of certificate on local FS
+#    clientCertPath: "example/client.pem"             # Optional, default: "", path of certificate on local FS
+#    clientKeyPath: "example/client.pem"              # Optional, default: "", path of certificate on local FS
 config:
-  - name: rk-main
-    path: "example/gin/configs/app.yaml"
-    format: RK
-    global: false
-env:
-  REALM: rk
-  DOMAIN: dev
-  REGION: cn-north-pek
-  AZ: cn-north-pek-1
+  - name: rk-main                                     # Required
+    path: "example/gin/config/config.yaml"            # Required
+    description: "Description of entry"               # Optional
+    locale: "*::*::*::*"                              # Optional, default: *::*::*::*
+# Gin entry
 gin:
-  - name: greeter
-    port: 8080
-    tls:
-      enabled: false
-      user:
-        enabled: false
-        certFile: "example/gin/server/cert/server.pem"
-        keyFile: "example/gin/server/cert/server-key.pem"
-      auto:
-        enabled: true
-        certOutput: "example/gin/server/cert"
-    sw:
-      enabled: true
-      path: "sw"
-      jsonPath: "example/gin/server/docs"
-      headers:
-        - "cache-control: no-cache"
-    enableCommonService: true
-    enableTV: true
-    loggingInterceptor:
-      enabled: true
-      enableLogging: true
-      enableMetrics: true
-    authInterceptor:
-      enabled: false
-      realm: "rk"
-      credentials:
-        - "foo:pass"
-        - "bar:pass"
-prom:
-  enabled: true
-  port: 1608
-  path: metrics
-ut:
-  output: docs
-build:
-  goos: darwin
-  goarch: amd64
+  - name: greeter                                     # Required
+    port: 8080                                        # Required
+    cert:                                             # Optional
+      ref: "local-cert"                               # Optional, default: "", reference of cert entry declared above
+    sw:                                               # Optional
+      enabled: true                                   # Optional, default: false
+      jsonPath: "example/gin/docs"
+      path: "sw"                                      # Optional, default: "sw"
+      headers: ["sw:rk"]                              # Optional, default: []
+    commonService:                                    # Optional
+      enabled: true                                   # Optional, default: false
+    tv:                                               # Optional
+      enabled:  true                                  # Optional, default: false
+    prom:                                             # Optional
+      enabled: true                                   # Optional, default: false
+      path: "metrics"                                 # Optional, default: ""
+      pusher:                                         # Optional
+        enabled: false                                # Optional, default: false
+        jobName: "greeter-pusher"                     # Required
+        remoteAddress: "localhost:9091"               # Required
+        basicAuth: "user:pass"                        # Optional, default: ""
+        intervalMs: 1000                              # Optional, default: 1000
+        cert:                                         # Optional
+          ref: "local-cert"                           # Optional, default: "", reference of cert entry declared above
+    logger:                                           # Optional
+      zapLogger:                                      # Optional
+        ref: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
+      eventLogger:                                    # Optional
+        ref: event-logger                             # Optional, default: logger of STDOUT, reference of logger entry declared above
+    interceptors:                                     # Optional
+      loggingZap:
+        enabled: true                                 # Optional, default: false
+      metricsProm:
+        enabled: true                                 # Optional, default: false
+#      basicAuth:
+#        enabled: true                                # Optional, default: false
+#       credentials:
+#         - "user:pass"                               # Optional, default: ""
 
 ```
 
 ```go
-// Copyright (c) 2020 rookie-ninja
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file.
 package main
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot"
 	"net/http"
-	"time"
 )
 
 // @title Swagger Example API
@@ -304,14 +291,16 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
-	boot := rk_boot.NewBoot(rk_boot.WithBootConfigPath("example/gin/configs/boot.yaml"))
+	// Create a new boot instance.
+	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/gin/boot.yaml"))
 
-	boot.GetGinEntry("greeter").GetRouter().GET("/v1/hello", hello)
+	// Register handler
+	boot.GetGinEntry("greeter").Router.GET("/v1/hello", hello)
 
-	boot.Bootstrap()
-	boot.Wait(5 * time.Second)
+	// Bootstrap
+	boot.Bootstrap(context.TODO())
 }
-	
+
 // @Summary Hello
 // @Id 1
 // @Tags Hello
@@ -331,63 +320,69 @@ User can start multiple servers at the same time
 
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.name | name of gin server entry| string | unknown application |
-| gin.port | port of server | integer | nil, server won't start |
-| gin.tls.enabled | enable tls or not | boolean | false | 
-| gin.tls.user.enabled | enable user provided CA file? | boolean | false |
-| gin.tls.user.certFile | cert file path | string | empty string |
-| gin.tls.user.keyFile | key file path | string | empty string | 
-| gin.tls.auth.enabled | server will generate CA files | string | false |
-| gin.tls.auth.certOutput | cert file output path | string | current working directory | 
-| gin.sw.enabled | enable swagger | boolean | false | 
-| gin.sw.path | swagger path | string | / |
-| gin.sw.jsonPath | swagger json file path | string | / |
-| gin.sw.headers | headers will send with swagger response | array | empty array |
-| gin.enableCommonService | enable common service | boolean | false |
-| gin.enableTV | enable RK TV whose path is /v1/rk/tv | boolean | false |
-| gin.loggingInterceptor.enabled | enable logging interceptor | boolean | false |
-| gin.loggingInterceptor.enableLogging | enable logging for every request | boolean | false |
-| gin.loggingInterceptor.enableMetrics | enable prometheus metrics for every request | boolean | false |
-| gin.authInterceptor.enabled | enable auth interceptor | boolean | false |
-| gin.authInterceptor.realm | realm for basic auth interceptor | string | Authorization Required |
-| gin.authInterceptor.credentials | array of credentials such as "user:pass" | string array | empty array |
+| gin.name | Name of gin server entry | string | N/A |
+| gin.port | Port of server | integer | nil, server won't start |
+| gin.cert.ref | Reference of cert entry declared in cert section | string | "" |
+| gin.sw.enabled | Enable swagger | boolean | false | 
+| gin.sw.path | Swagger path | string | / |
+| gin.sw.jsonPath | Swagger json file path | string | / |
+| gin.sw.headers | Headers will send with swagger response | array | [] |
+| gin.commonService.enabled | Enable common service | boolean | false |
+| gin.tv.enabled | Enable RK TV whose path is /rk/v1/tv | boolean | false |
+| gin.prom.enabled | Enable prometheus | boolean | false |
+| gin.prom.path | Path of prometheus | string | metrics |
+| gin.prom.cert.ref |  Reference of cert entry declared in cert section | string | "" |
+| gin.prom.pusher.enabled | Enable prometheus pusher | bool | false |
+| gin.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
+| gin.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
+| gin.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
+| gin.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of \<user:pass\> | string | "" |
+| gin.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
+| gin.logger.zapLogger.ref | Reference of logger entry declared above | string | "" |
+| gin.logger.eventLogger.ref | Reference of logger entry declared above | string | "" |
+| gin.interceptors.loggingZap.enabled | Enable logging interceptor | boolean | false |
+| gin.interceptors.metricsProm.enabled | Enable prometheus metrics for every request | boolean | false |
+| gin.interceptors.basicAuth.enabled | Enable auth interceptor | boolean | false |
+| gin.interceptors.basicAuth.credentials | Provide basic auth credentials, form of \<user:pass\> | string | false |
 
-### Common Services
-User can start multiple servers at the same time
+### Common Service
 
 | path | description |
 | ------ | ------ |
-| /v1/rk/healthy | always return true if service is available |
-| /v1/rk/gc | trigger gc and return memory stats |
-| /v1/rk/info | return basic info |
-| /v1/rk/config | return configs in memory |
-| /v1/rk/apis | list all apis |
-| /v1/rk/sys | return system information including cpu and memory usage |
-| /v1/rk/req | return requests stats recorded by prometheus client |
-| /v1/rk/tv | web ui for metrics |
+| /rk/v1/apis | List API |
+| /rk/v1/certs | List CertEntry |
+| /rk/v1/configs | List ConfigEntry |
+| /rk/v1/entries | List all Entry |
+| /rk/v1/gc | Trigger GC |
+| /rk/v1/healthy | Get application healthy status, returns true if application is running |
+| /rk/v1/info | Get application and process info |
+| /rk/v1/logs | List logger related entries |
+| /rk/v1/req | List prometheus metrics of requests |
+| /rk/v1/sys | Get OS stat |
+| /rk/v1/tv | Get HTML page of /tv |
+
+### TV Service
+
+| path | description |
+| ------ | ------ |
+| /rk/v1/tv or /rk/v1/tv/overview | Get application and process info of HTML page |
+| /rk/v1/tv/api | Get API of HTML page |
+| /rk/v1/tv/entry | Get entry of HTML page |
+| /rk/v1/tv/config | Get config of HTML page |
+| /rk/v1/tv/cert | Get cert of HTML page |
+| /rk/v1/tv/os | Get OS of HTML page |
+| /rk/v1/tv/env | Get Go environment of HTML page |
+| /rk/v1/tv/prometheus | Get metrics of HTML page |
+| /rk/v1/log | Get log of HTML page |
 
 ### Development Status: Stable
 
 ### Appendix
 #### Proto file compilation
-With rk command line tools.
-Please refer [rk-cmd](https://github.com/rookie-ninja/rk-cmd)
+Use bellow command to rebuild proto files, we are using [buf](https://docs.buf.build/generate-usage) to generate proto related files.
+Configuration could be found at root path of project.
 
-With ptoroc command
-Compile to go file
-```shell script
-protoc -I. -I third-party/googleapis --go_out=plugins=grpc:. --go_opt=paths=source_relative api/v1/*.proto
-```
-
-Compile to gw.go file
-```shell script
-protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. api/v1/*.proto
-```
-
-Compile to gw.go and swagger.json file
-```shell script
-protoc -I. -I third-party/googleapis --grpc-gateway_out=logtostderr=true,paths=source_relative:. --swagger_out=logtostderr=true:. api/v1/*.proto
-```
+- make buf
 
 ### Contributing
 We encourage and support an active, healthy community of contributors &mdash;

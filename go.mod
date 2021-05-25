@@ -5,20 +5,13 @@ go 1.14
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/gin-gonic/gin v1.6.3
-	github.com/google/uuid v1.1.2
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.0.1
-	github.com/rookie-ninja/rk-common v1.0.6
-	github.com/rookie-ninja/rk-config v1.0.0
-	github.com/rookie-ninja/rk-gin v1.1.6
-	github.com/rookie-ninja/rk-grpc v1.1.7
-	github.com/rookie-ninja/rk-logger v1.0.6
-	github.com/rookie-ninja/rk-prom v1.0.8
-	github.com/rookie-ninja/rk-query v1.0.7
-	github.com/spf13/viper v1.7.1
-	github.com/swaggo/swag v1.5.1
-	go.uber.org/zap v1.16.0
-	google.golang.org/genproto v0.0.0-20201019141844-1ed22bb0c154
-	google.golang.org/grpc v1.33.1
-	google.golang.org/protobuf v1.25.0
-	gopkg.in/yaml.v2 v2.3.0
+	github.com/golang/protobuf v1.4.3
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.3.0
+	github.com/rookie-ninja/rk-entry v0.0.0-20210520121815-eb1697a9f1d0
+	github.com/rookie-ninja/rk-gin v1.1.7-0.20210525143033-ca34fef4245e
+	github.com/rookie-ninja/rk-grpc v1.1.8-0.20210525180137-4c702e110510
+	github.com/rookie-ninja/rk-prom v1.0.9-0.20210513200458-71f3441f11e8
+	github.com/swaggo/swag v1.7.0
+	google.golang.org/grpc v1.37.0
+	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8
 )
