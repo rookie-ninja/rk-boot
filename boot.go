@@ -63,14 +63,13 @@ func NewBoot(opts ...BootOption) *Boot {
 func (boot *Boot) Bootstrap(ctx context.Context) {
 	// Bootstrap external entries
 	for _, entry := range rkentry.GlobalAppCtx.ListEntries() {
-		go entry.Bootstrap(ctx)
+		entry.Bootstrap(ctx)
 	}
+}
 
-	// Wait for shutdown signal
+// Wait for shutdown signal
+func (boot *Boot) WaitForShutdownSig() {
 	rkentry.GlobalAppCtx.WaitForShutdownSig()
-
-	// Interrupt all entries
-	boot.Interrupt(ctx)
 }
 
 // Interrupt entries in rkentry.GlobalAppCtx including bellow:

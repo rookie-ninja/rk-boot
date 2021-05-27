@@ -33,6 +33,12 @@ func main() {
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
+
+	// Wait for shutdown signal
+	boot.WaitForShutdownSig()
+
+	// Interrupt all entries
+	boot.Interrupt(context.TODO())
 }
 
 // @Summary Hello
