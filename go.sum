@@ -506,6 +506,8 @@ github.com/rookie-ninja/rk-gin v1.1.7-0.20210527055720-7ba587fc6b17 h1:h+D7TJtkX
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210527055720-7ba587fc6b17/go.mod h1:z12OHqGE7rQimfyhi/Ppw5tJXhvqLUrqbM65UlQSsE4=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210527091756-9779afc3ce0e h1:Tp9+iY6BJ5+L97ttYnKp+Wu75Oo1IuSUO9qrQeLQGTs=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210527091756-9779afc3ce0e/go.mod h1:z12OHqGE7rQimfyhi/Ppw5tJXhvqLUrqbM65UlQSsE4=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210527132934-2a1a004dd58b h1:9zPotnSRzW39oFiCfn3/vGadPywsnuv5Wd9yUiKF5Vw=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210527132934-2a1a004dd58b/go.mod h1:z12OHqGE7rQimfyhi/Ppw5tJXhvqLUrqbM65UlQSsE4=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210525180137-4c702e110510 h1:zyQDSTB2PU3mSQzjDLjJRif5nuqBu70vUpdk7g7SEYE=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210525180137-4c702e110510/go.mod h1:2Do9uiEHEumFrCpn7HqEb5/Z9vxthR4C5TOJzkhGHB4=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210527055843-e84eca27f905 h1:QtpsCW6m1KHkmY5d4VmBnIjGN5FNeWuog9Q62q/ipLI=
