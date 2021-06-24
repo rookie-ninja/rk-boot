@@ -1,82 +1,97 @@
 ---
 # Bellow sections are RK common entries which is not necessary.
 rk:
-  appName: myapp
-  version: v0.0.1                                      # Optional, default: "v0.0.0"
-  description: "this is description"                   # Optional, default: ""
-  keywords: [ "rk", "golang" ]                         # Optional, default: []
-  homeURL: "http://example.com"                        # Optional, default: ""
-  iconURL: "http://example.com"                        # Optional, default: ""
-  docsURL: [ "http://example.com" ]                    # Optional, default: []
-  maintainers: [ "rk-dev" ]                            # Optional, default: []
-zapLogger:                                             # Optional
-  - name: zap-logger                                   # Required
-    description: "Description of entry"                # Optional
-eventLogger:                                           # Optional
-  - name: event-logger                                 # Required
-    description: "Description of entry"                # Optional
-cert:                                                  # Optional
-  - name: "local-cert"                                 # Required
-    description: "Description of entry"                # Optional
-    provider: "localFs"                                # Required, etcd, consul, localFs, remoteFs are supported options
-    locale: "*::*::*::*"                               # Optional, default: *::*::*::*
-    serverCertPath: "example/grpc/certs/server.pem"    # Optional, default: "", path of certificate on local FS
-    serverKeyPath: "example/grpc/certs/server-key.pem" # Optional, default: "", path of certificate on local FS
-    clientCertPath: "example/grpc/certs/server.pem"    # Optional, default: "", path of certificate on local FS
+  appName: myapp                                     # Optional, default: rk
+  version: v0.0.1                                    # Optional, default: "v0.0.0"
+  description: "this is description"                 # Optional, default: ""
+  keywords: [ "rk", "golang" ]                       # Optional, default: []
+  homeURL: "http://example.com"                      # Optional, default: ""
+  iconURL: "http://example.com"                      # Optional, default: ""
+  docsURL: [ "http://example.com" ]                  # Optional, default: []
+  maintainers: [ "rk-dev" ]                          # Optional, default: []
+zapLogger:                                           # Optional
+  - name: zap-logger                                 # Required
+    description: "Description of entry"              # Optional
+eventLogger:                                         # Optional
+  - name: event-logger                               # Required
+    description: "Description of entry"              # Optional
+cert:                                                # Optional
+  - name: "local-cert"                               # Required
+    description: "Description of entry"              # Optional
+    provider: "localFs"                              # Required, etcd, consul, localFs, remoteFs are supported options
+    locale: "*::*::*::*"                             # Optional, default: *::*::*::*
+    serverCertPath: "example/grpc/certs/server.pem"        # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "example/grpc/certs/server-key.pem"     # Optional, default: "", path of certificate on local FS
+#    clientCertPath: "example/grpc/certs/server.pem"        # Optional, default: "", path of certificate on local FS
 config:
-  - name: rk-main                                      # Required
+  - name: rk-main                                    # Required
     path: "example/grpc/config/config.yaml"            # Required
-    description: "Description of entry"                # Optional
-    locale: "*::*::*::*"                               # Optional, default: *::*::*::*
+    description: "Description of entry"              # Optional
+    locale: "*::*::*::*"                             # Optional, default: *::*::*::*
 # Grpc entry
 grpc:
-  - name: greeter                                      # Required
-    port: 1949                                         # Optional
+  - name: greeter                                    # Required
+    port: 1949                                       # Optional
+    reflection: true                                 # Optional, defualt: false
     commonService:
-      enabled: true                                    # Optional, default: false
-    cert:
-      ref: "local-cert"                                # Optional, default: "", reference of cert entry declared above
+      enabled: true                                  # Optional, default: false
+#    cert:
+#      ref: "local-cert"                              # Optional, default: "", reference of cert entry declared above
     gw:
-      enabled: true                                    # Optional, default: false
-      port: 8080                                       # Required
-      gwMappingFilePaths:
+      enabled: true                                  # Optional, default: false
+      port: 8080                                     # Required
+      rkServerOption: true                           # Optional, default: false
+      gwMappingFilePaths:                            # Optional
         - "example/grpc/api/v1/gw_mapping.yaml"
-      cert:
-        ref: "local-cert"                              # Optional, default: "", reference of cert entry declared above
+#      cert:
+#        ref: "local-cert"                           # Optional, default: "", reference of cert entry declared above
       tv:
-        enabled: true                                  # Optional, default: false
+        enabled: true                                # Optional, default: false
       sw:
-        enabled: true                                  # Optional, default: false
-        path: "sw"                                     # Optional, default: "sw"
-        jsonPath: "example/grpc/api/gen/v1"            # Optional
-        headers: [ "sw:rk" ]                           # Optional, default: []
+        enabled: true                                # Optional, default: false
+        path: "sw"                                   # Optional, default: "sw"
+        jsonPath: "example/grpc/api/gen/v1"          # Optional
+        headers: [ "sw:rk" ]                         # Optional, default: []
       prom:
-        enabled: true                                  # Optional, default: false
-        path: "metrics"                                # Optional, default: ""
+        enabled: true                                # Optional, default: false
+#        path: ""                                     # Optional, default: "metrics"
         pusher:
-          enabled: false                               # Optional, default: false
-          jobName: "greeter-pusher"                    # Required
-          remoteAddress: "localhost:9091"              # Required
-          basicAuth: "user:pass"                       # Optional, default: ""
-          intervalMS: 1000                             # Optional, default: 1000
-          cert:
-            ref: "local-cert"                          # Optional, default: "", reference of cert entry declared above
-    logger:                                            # Optional
-      zapLogger:                                       # Optional
-        ref: zap-logger                                # Optional, default: logger of STDOUT, reference of logger entry declared above
-      eventLogger:                                     # Optional
-        ref: event-logger                              # Optional, default: logger of STDOUT, reference of logger entry declared above
+          enabled: false                             # Optional, default: false
+          jobName: "greeter-pusher"                  # Required
+          remoteAddress: "localhost:9091"            # Required
+          basicAuth: "user:pass"                     # Optional, default: ""
+          intervalMs: 1000                           # Optional, default: 1000
+#          cert:
+#            ref: "local-cert"                        # Optional, default: "", reference of cert entry declared above
+    logger:                                          # Optional
+      zapLogger:                                     # Optional
+        ref: zap-logger                              # Optional, default: logger of STDOUT, reference of logger entry declared above
+      eventLogger:                                   # Optional
+        ref: event-logger                            # Optional, default: logger of STDOUT, reference of logger entry declared above
     interceptors:
       loggingZap:
-        enabled: true                                  # Optional, default: false
+        enabled: true                                # Optional, default: false
       metricsProm:
-        enabled: true                                  # Optional, default: false
-      basicAuth:
-        enabled: false                                 # Optional, default: false
-        credentials:
-          - "user:pass"                                # Optional, default: ""
-      tokenAuth:
-        enabled: false
-        tokens:
-          - token: ""
-            expired: false                             # Optional, default: ""
+        enabled: true                                # Optional, default: false
+      auth:
+        enabled: false                               # Optional, default: false
+        basic:
+          - "user:pass"                              # Optional, default: []
+        bearer:
+          - "tokens"                                 # Optional, default: []
+        api:
+          - "keys"                                   # Optional, default: []
+      meta:
+        enabled: true                                # Optional, default: false
+        prefix: "rk"                                 # Optional, default: "rk"
+      tracingTelemetry:
+        enabled: false                                # Optional, default: false
+        exporter:                                    # Optional, default will create a stdout exporter
+          file:
+            enabled: true                            # Optional, default: false
+#            outputPath: "logs/trace.log"            # Optional, default: stdout
+#          jaeger:
+#            enabled: true                           # Optional, default: false
+#            collectorEndpoint: ""                   # Optional, default: localhost:14268
+#            collectorUsername: ""                   # Optional, default: ""
+#            collectorPassword: ""                   # Optional, default: ""

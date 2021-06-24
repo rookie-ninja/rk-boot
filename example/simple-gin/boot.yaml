@@ -1,0 +1,23 @@
+---
+rk:
+  appName: myapp
+gin:
+  - name: greeter
+    port: 8080
+    sw:
+      enabled: true
+      jsonPath: "docs"
+    commonService:
+      enabled: true
+    tv:
+      enabled:  true
+    prom:
+      enabled: true
+    interceptors:
+      loggingZap:
+        enabled: true
+      metricsProm:
+        enabled: true
+      meta:
+        enabled: true
+

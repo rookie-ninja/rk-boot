@@ -7,19 +7,25 @@ package main
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/example/grpc/api/gen/v1"
+	"github.com/rookie-ninja/rk-example/api/gen/v1"
 	"google.golang.org/grpc"
 )
 
 func main() {
 	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/grpc/boot.yaml"))
 
-	// register gRpc
+	// register grpc
 	boot.GetGrpcEntry("greeter").AddGrpcRegFuncs(registerGreeter)
 	boot.GetGrpcEntry("greeter").AddGwRegFuncs(hello.RegisterGreeterHandlerFromEndpoint)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
+
+	// Wait for shutdown sig
+	boot.WaitForShutdownSig()
+
+	// Interrupt all entries
+	boot.Interrupt(context.TODO())
 }
 
 func registerGreeter(server *grpc.Server) {

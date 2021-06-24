@@ -26,7 +26,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
-	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/gin/boot.yaml"))
+	boot := rkboot.NewBoot()
 
 	// Register handler
 	boot.GetGinEntry("greeter").Router.GET("/v1/hello", hello)
@@ -34,7 +34,6 @@ func main() {
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
 
-	// Wait for shutdown signal
 	boot.WaitForShutdownSig()
 
 	// Interrupt all entries
