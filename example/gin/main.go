@@ -34,10 +34,7 @@ func main() {
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
 
-	boot.WaitForShutdownSig()
-
-	// Interrupt all entries
-	boot.Interrupt(context.TODO())
+	boot.WaitForShutdownSig(context.TODO())
 }
 
 // @Summary Hello

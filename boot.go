@@ -67,9 +67,24 @@ func (boot *Boot) Bootstrap(ctx context.Context) {
 	}
 }
 
-// Wait for shutdown signal
-func (boot *Boot) WaitForShutdownSig() {
+// Wait for shutdown signal.
+// 1: Call shutdown hook function added by user.
+// 2: Call interrupt function of entries in rkentry.GlobalAppCtx.
+func (boot *Boot) WaitForShutdownSig(ctx context.Context) {
 	rkentry.GlobalAppCtx.WaitForShutdownSig()
+
+	// Call shutdown hook function
+	for _, f := range rkentry.GlobalAppCtx.ListShutdownHooks()  {
+		f()
+	}
+
+	// Call interrupt
+	boot.interrupt(ctx)
+}
+
+// Add shutdown hook function
+func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
+	rkentry.GlobalAppCtx.AddShutdownHook(name, f)
 }
 
 // Interrupt entries in rkentry.GlobalAppCtx including bellow:
@@ -83,7 +98,7 @@ func (boot *Boot) WaitForShutdownSig() {
 //
 // External entries:
 // User defined entries
-func (boot *Boot) Interrupt(ctx context.Context) {
+func (boot *Boot) interrupt(ctx context.Context) {
 	// Interrupt internal entries
 	rkentry.GlobalAppCtx.GetAppInfoEntry().Interrupt(ctx)
 	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListZapLoggerEntriesRaw())

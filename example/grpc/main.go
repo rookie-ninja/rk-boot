@@ -22,10 +22,7 @@ func main() {
 	boot.Bootstrap(context.TODO())
 
 	// Wait for shutdown sig
-	boot.WaitForShutdownSig()
-
-	// Interrupt all entries
-	boot.Interrupt(context.TODO())
+	boot.WaitForShutdownSig(context.TODO())
 }
 
 func registerGreeter(server *grpc.Server) {
