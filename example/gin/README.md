@@ -71,6 +71,7 @@ User can start multiple gin servers at the same time. Please make sure use diffe
 | /rk/v1/readme | Get README file |
 | /rk/v1/req | List prometheus metrics of requests |
 | /rk/v1/sys | Get OS stat |
+| /rk/v1/git | Get git information |
 | /rk/v1/tv | Get HTML page of /tv |
 
 | name | description | type | default value |
@@ -145,7 +146,7 @@ startTime=2021-06-25T01:30:45.143767+08:00
 elapsedNano=255948
 timezone=CST
 ids={"eventId":"3332e575-43d8-4bfe-84dd-45b5fc5fb104","requestId":"3332e575-43d8-4bfe-84dd-45b5fc5fb104","traceId":"65b9aa7a9705268bba492fdf4a0e5652"}
-app={"appName":"myapp","appVersion":"v0.0.1","entryName":"greeter","entryType":"GinEntry"}
+app={"appName":"rk-boot","appVersion":"master-xxx","entryName":"greeter","entryType":"GinEntry"}
 env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
 payloads={"apiMethod":"GET","apiPath":"/rk/v1/healthy","apiProtocol":"HTTP/1.1","apiQuery":"","userAgent":"curl/7.64.1"}
 error={}

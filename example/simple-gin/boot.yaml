@@ -1,6 +1,4 @@
 ---
-rk:
-  appName: myapp
 gin:
   - name: greeter
     port: 8080

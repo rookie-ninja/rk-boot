@@ -74,7 +74,7 @@ func (boot *Boot) WaitForShutdownSig(ctx context.Context) {
 	rkentry.GlobalAppCtx.WaitForShutdownSig()
 
 	// Call shutdown hook function
-	for _, f := range rkentry.GlobalAppCtx.ListShutdownHooks()  {
+	for _, f := range rkentry.GlobalAppCtx.ListShutdownHooks() {
 		f()
 	}
 

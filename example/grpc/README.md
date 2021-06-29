@@ -89,6 +89,8 @@ http:
       get: /rk/v1/license
     - selector: rk.api.v1.RkCommonService.Readme
       get: /rk/v1/readme
+    - selector: rk.api.v1.RkCommonService.Git
+      get: /rk/v1/git
     - selector: rk.api.v1.RkCommonService.GwErrorMapping
       get: /rk/v1/gwErrorMapping
 ```
@@ -174,7 +176,7 @@ startTime=2021-06-24T05:58:48.28204+08:00
 elapsedNano=153005
 timezone=CST
 ids={"eventId":"573ce6a8-308b-4fc0-9255-33608b9e41d4","requestId":"573ce6a8-308b-4fc0-9255-33608b9e41d4"}
-app={"appName":"rk-example-entry","appVersion":"v0.0.0","entryName":"greeter","entryType":"GrpcEntry"}
+app={"appName":"rk-boot","appVersion":"master-xxx","entryName":"greeter","entryType":"GrpcEntry"}
 env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.6","os":"darwin","realm":"*","region":"*"}
 payloads={"grpcMethod":"Healthy","grpcService":"rk.api.v1.RkCommonService","grpcType":"unaryServer","gwMethod":"GET","gwPath":"/rk/v1/healthy","gwScheme":"http","gwUserAgent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36"}
 error={}
