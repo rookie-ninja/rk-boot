@@ -1,6 +1,6 @@
 ---
 # Bellow sections are RK common entries which is not necessary.
-rk: # NOT required
+app: # NOT required
   description: "this is description"  # Optional, default: ""
   keywords: ["rk", "golang"]          # Optional, default: []
   homeUrl: "http://example.com"       # Optional, default: ""
