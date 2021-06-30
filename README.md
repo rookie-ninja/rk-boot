@@ -31,6 +31,8 @@ All you need to do is compile .proto file with buf.
 There is example in Makefile.
 
 #### gin
+Since we are using gin framework, please refer [rk-gin](https://github.com/rookie-ninja/rk-gin) for details.
+
 - [boot.yaml](example/simple-gin/boot.yaml)
 
 ```yaml
@@ -114,6 +116,8 @@ func hello(ctx *gin.Context) {
 ```
 
 #### grpc
+Since we are using grpc framework, please refer [rk-grpc](https://github.com/rookie-ninja/rk-grpc) for details.
+
 - [boot.yaml](example/grpc/boot.yaml)
 - [main.go](example/grpc/main.go)
 
