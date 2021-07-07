@@ -522,6 +522,8 @@ github.com/rookie-ninja/rk-gin v1.1.7-0.20210707093234-fcac2df357e6 h1:c0wN1CU9A
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210707093234-fcac2df357e6/go.mod h1:L9jk0St7kMOgIFwzHCXSxuu9mNhgD7vQul3k6FFabiU=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210707164724-941dbb402d21 h1:QO0HteWfIGqX+YrBTjnrhTDG1wSp8ipIO9P+omIu5wg=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210707164724-941dbb402d21/go.mod h1:4In921uxqOAEsrsc+oIDhOxJP+9G+v5dzqhh9MpyL1I=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210707191223-9461c00cab07 h1:xUSl3Lmn1PiPI0OpOyYqqBaShtgwSpwx1WqzZwBeXX8=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210707191223-9461c00cab07/go.mod h1:4In921uxqOAEsrsc+oIDhOxJP+9G+v5dzqhh9MpyL1I=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630173854-9f0e4dc24fd4 h1:YMZ313slgvUyZGRos7/OfU6omI66MObXOnRJWOE681E=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630173854-9f0e4dc24fd4/go.mod h1:IhLrF54eEk8viL1EP2c2oycKK4XekaXQEl4kbQ2U+30=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630180234-7849b8279fc5 h1:H1r4EDFO5eGbN2j7nO1tkA2GbdFvw555LNXp7shOjCI=
@@ -540,6 +542,8 @@ github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707093307-1dc85fd9ecb6 h1:EI3NYutV
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707093307-1dc85fd9ecb6/go.mod h1:KqNHf4ExI8qwA18qSJD1A/fqxO8PzZ0nOj0fvUmTg4A=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707164751-14aee7b2ba16 h1:UjIdzAJ+BkQl58KZkP+2n2qt5+wUd/Umorn45Qv5K/U=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707164751-14aee7b2ba16/go.mod h1:Wynhe2/L3ipll8DM6sAA1/hhKxDELZBeGW8jS3h/ymU=
+github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707191525-72da14b8ef17 h1:PrmLfFbec0VrLsF97oFHmBJtRVxZNmZ/N/fpdhgEJFQ=
+github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707191525-72da14b8ef17/go.mod h1:Wynhe2/L3ipll8DM6sAA1/hhKxDELZBeGW8jS3h/ymU=
 github.com/rookie-ninja/rk-logger v1.0.10-0.20210527055114-0f92ffe223bd h1:7EAo8jPqrQ95d5f1v27PRd3shnEBkf6k+UlZw8E5cIU=
 github.com/rookie-ninja/rk-logger v1.0.10-0.20210527055114-0f92ffe223bd/go.mod h1:NDRMGnXMO/PBsFQc+N4LQgTmIxOKaFE1c7pDRmQUGjc=
 github.com/rookie-ninja/rk-prom v1.0.9-0.20210623102541-1f31500c9f12 h1:9pjXZ+ZqM6/xtraBA8FqH+IcKEkVivnhGeVPyxjXHoU=
