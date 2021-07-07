@@ -503,6 +503,7 @@ github.com/rookie-ninja/rk-entry v0.0.0-20210630172113-abd870673153/go.mod h1:F4
 github.com/rookie-ninja/rk-entry v0.0.0-20210630180059-341e0517e5a2 h1:H5J6XoB/hV2Gkph+Xj/u9D3WWukj9M8IEIZCy5Kt1xg=
 github.com/rookie-ninja/rk-entry v0.0.0-20210630180059-341e0517e5a2/go.mod h1:43ChPNpT6hYwjOOzjCf3d1D/fMux3+1u2rvBEToSEzA=
 github.com/rookie-ninja/rk-entry v0.0.0-20210707090955-91f5b42b7d19/go.mod h1:G0xvbC2EdkjFEkjkDIL9UFmPOi4NHYKUAtcyvLeLcns=
+github.com/rookie-ninja/rk-entry v0.0.0-20210707093119-693a950d55d2/go.mod h1:qEcGfYS8FF9zEXG6VTHuQrm+QvHhKGNtwZU3Gg0YwXA=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210630173308-cafd53a79eb7 h1:+ImJ2stHhtbAeqj//7E46NTG7890PEfceNHUGMTcq30=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210630173308-cafd53a79eb7/go.mod h1:5SyjFeX4XOfIwWrKE9hVtisYck86TLJOHdYT6pnqPB8=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210630180157-8836033a8d1c h1:VIswbQ+MetwWBft/mRLsaaWEzZficuvj5x7khE2kCQI=
@@ -515,6 +516,8 @@ github.com/rookie-ninja/rk-gin v1.1.7-0.20210705161606-3c47da3b67f8 h1:rItwvSqfr
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210705161606-3c47da3b67f8/go.mod h1:Inih1RDqytzmxVgl0G0dC0tQQY6oKIG3/vGxeaBL2JE=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210707091117-dd6deab27996 h1:H1kFjRr0Nj69PHDBdE7/6ojVBeFLpCohSVQMocWAZ4Q=
 github.com/rookie-ninja/rk-gin v1.1.7-0.20210707091117-dd6deab27996/go.mod h1:TnhChk8bCT/PJCfuckzVnU2MNpdpK9XJk7a4FcfZUjA=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210707093234-fcac2df357e6 h1:c0wN1CU9A2fEzVwBaTRrvdKQgp2Ztei6uO1it9jbLc4=
+github.com/rookie-ninja/rk-gin v1.1.7-0.20210707093234-fcac2df357e6/go.mod h1:L9jk0St7kMOgIFwzHCXSxuu9mNhgD7vQul3k6FFabiU=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630173854-9f0e4dc24fd4 h1:YMZ313slgvUyZGRos7/OfU6omI66MObXOnRJWOE681E=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630173854-9f0e4dc24fd4/go.mod h1:IhLrF54eEk8viL1EP2c2oycKK4XekaXQEl4kbQ2U+30=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210630180234-7849b8279fc5 h1:H1r4EDFO5eGbN2j7nO1tkA2GbdFvw555LNXp7shOjCI=
@@ -529,12 +532,15 @@ github.com/rookie-ninja/rk-grpc v1.1.8-0.20210705161952-4c8ff6f19431 h1:30+UKoAn
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210705161952-4c8ff6f19431/go.mod h1:+woVf6KXwbiPrCIbI/t+3vtcVeXJxBPjZIhJgtJm/PM=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707091209-7f3acd29148f h1:QfIqopZhG14JOqlfrodHqSiHsfKhclX0BfF6AAcdBdI=
 github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707091209-7f3acd29148f/go.mod h1:PLZNFeoTDl+TwMiKq6e1s2B8MQK9r3hm4a+40vmT40o=
+github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707093307-1dc85fd9ecb6 h1:EI3NYutViVvc1BCmbvaSnq0nlkqI9yoDqWYt5kTvLas=
+github.com/rookie-ninja/rk-grpc v1.1.8-0.20210707093307-1dc85fd9ecb6/go.mod h1:KqNHf4ExI8qwA18qSJD1A/fqxO8PzZ0nOj0fvUmTg4A=
 github.com/rookie-ninja/rk-logger v1.0.10-0.20210527055114-0f92ffe223bd h1:7EAo8jPqrQ95d5f1v27PRd3shnEBkf6k+UlZw8E5cIU=
 github.com/rookie-ninja/rk-logger v1.0.10-0.20210527055114-0f92ffe223bd/go.mod h1:NDRMGnXMO/PBsFQc+N4LQgTmIxOKaFE1c7pDRmQUGjc=
 github.com/rookie-ninja/rk-prom v1.0.9-0.20210623102541-1f31500c9f12 h1:9pjXZ+ZqM6/xtraBA8FqH+IcKEkVivnhGeVPyxjXHoU=
 github.com/rookie-ninja/rk-prom v1.0.9-0.20210623102541-1f31500c9f12/go.mod h1:PpESgcfRktELvWLp9+Kl4gu8Yr2sC2zs/Ff1zl81/QM=
 github.com/rookie-ninja/rk-query v1.0.12-0.20210623102313-b61067b3abf5 h1:BjfMja2twQiIyGP8OTQf6abzo7QUtfEFvkLcBvmN4Hc=
 github.com/rookie-ninja/rk-query v1.0.12-0.20210623102313-b61067b3abf5/go.mod h1:cKU3UcqqiijY+jx8YhGufLjrbqzcoTk/krtFElbGdDE=
+github.com/rookie-ninja/rk-query v1.0.12-0.20210707092918-fda347faf939/go.mod h1:cKU3UcqqiijY+jx8YhGufLjrbqzcoTk/krtFElbGdDE=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
 github.com/samuel/go-zookeeper v0.0.0-20190923202752-2cc03de413da/go.mod h1:gi+0XIa01GRL2eRQVjQkKGqKF3SF9vZR/HnPullcV2E=
