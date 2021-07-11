@@ -9,11 +9,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Contributing
-
-We'd love your help make rk-query the very best structured logging library in Go!
-
-If you'd like to add new exported APIs, please [open an issue][open-issue]
-describing your proposal &mdash; discussing API changes ahead of time makes
+If you'd like to add new features, please [open an issue][open-issue]
+describing your proposal &mdash; discussing feature changes ahead of time makes
 pull request review much smoother. In your issue, pull request, and any other
 communications, please remember to treat your fellow contributors with
 respect! We take our [code of conduct](CODE_OF_CONDUCT.md) seriously.
@@ -23,7 +20,7 @@ respect! We take our [code of conduct](CODE_OF_CONDUCT.md) seriously.
 [Fork][fork], then clone the repository:
 
 ```
-git clone git@github.com:your_github_username/rookie-ninja/rk-boot.git
+git clone https://github.com/rookie-ninja/rk-boot.git
 cd rk-boot
 git remote add upstream https://github.com/rookie-ninja/rk-boot.git
 git fetch upstream
