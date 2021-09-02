@@ -1,15 +1,14 @@
+# rk-gin
+Simple example of starting Gin server with rk-boot.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [rk-gin](#rk-gin)
-    - [Development Status: Stable](#development-status-stable)
-    - [Contributing](#contributing)
+- [Development Status: Stable](#development-status-stable)
+- [Contributing](#contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# rk-gin
-Simple example of starting Gin server with rk-boot.
 
 ### Development Status: Stable
 

@@ -1,4 +1,7 @@
 # rk-boot
+[![build](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 Bootstrapper for rkentry.Entry.
 With rk-boot, users can start grpc, gin, prometheus client or custom entry service with yaml formatted config file.
 Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.
@@ -128,9 +131,7 @@ We encourage and support an active, healthy community of contributors &mdash;
 including you! Details are in the [contribution guide](CONTRIBUTING.md) and
 the [code of conduct](CODE_OF_CONDUCT.md). The rk maintainers keep an eye on
 issues and pull requests, but you can also report any negative conduct to
-dongxuny@gmail.com. That email list is a private, safe space; even the zap
-maintainers don't have access, so don't hesitate to hold us to a high
-standard.
+lark@rkdev.info.
 
 <hr>
 
