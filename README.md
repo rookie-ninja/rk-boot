@@ -23,7 +23,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Online document
-[rkdev.info](rkdev.info)
+[rkdev.info](https://rkdev.info/docs/)
 
 ## Installation
 `go get -u github.com/rookie-ninja/rk-boot`
