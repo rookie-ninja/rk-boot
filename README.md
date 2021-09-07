@@ -123,6 +123,9 @@ func hello(ctx *gin.Context) {
 	})
 }
 ```
+```shell script
+$ go run main.go
+```
 
 #### grpc
 Since we are using grpc framework, please refer [rk-grpc](https://github.com/rookie-ninja/rk-grpc) for details.
