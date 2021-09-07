@@ -2,30 +2,34 @@
 //
 // Use of this source code is governed by an Apache-style
 // license that can be found in the LICENSE file.
+
+// Package rkboot is bootstrapper for rk style application
 package rkboot
 
 import (
 	"context"
 	"github.com/rookie-ninja/rk-entry/entry"
-	rkgin "github.com/rookie-ninja/rk-gin/boot"
-	rkgrpc "github.com/rookie-ninja/rk-grpc/boot"
-	rkprom "github.com/rookie-ninja/rk-prom"
+	"github.com/rookie-ninja/rk-gin/boot"
+	"github.com/rookie-ninja/rk-grpc/boot"
+	"github.com/rookie-ninja/rk-prom"
 )
 
+// Boot is a structure for bootstrapping rk style application
 type Boot struct {
 	BootConfigPath string `yaml:"bootConfigPath" json:"bootConfigPath"`
 }
 
+// BootOption is used as options while bootstrapping from code
 type BootOption func(*Boot)
 
-// Provide boot config yaml file.
+// WithBootConfigPath provide boot config yaml file.
 func WithBootConfigPath(filePath string) BootOption {
 	return func(boot *Boot) {
 		boot.BootConfigPath = filePath
 	}
 }
 
-// Create a bootstrapper.
+// NewBoot create a bootstrapper.
 func NewBoot(opts ...BootOption) *Boot {
 	boot := &Boot{}
 
@@ -67,7 +71,7 @@ func (boot *Boot) Bootstrap(ctx context.Context) {
 	}
 }
 
-// Wait for shutdown signal.
+// WaitForShutdownSig wait for shutdown signal.
 // 1: Call shutdown hook function added by user.
 // 2: Call interrupt function of entries in rkentry.GlobalAppCtx.
 func (boot *Boot) WaitForShutdownSig(ctx context.Context) {
@@ -82,7 +86,7 @@ func (boot *Boot) WaitForShutdownSig(ctx context.Context) {
 	boot.interrupt(ctx)
 }
 
-// Add shutdown hook function
+// AddShutdownHookFunc add shutdown hook function
 func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
 	rkentry.GlobalAppCtx.AddShutdownHook(name, f)
 }
@@ -117,42 +121,42 @@ func (boot *Boot) interruptHelper(ctx context.Context, m map[string]rkentry.Entr
 	}
 }
 
-// Get rkentry.AppInfoEntry from rkentry.GlobalAppCtx.
+// GetAppInfoEntry returns rkentry.AppInfoEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetAppInfoEntry() *rkentry.AppInfoEntry {
 	return rkentry.GlobalAppCtx.GetAppInfoEntry()
 }
 
-// Get rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
+// GetZapLoggerEntry returns rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetZapLoggerEntry(name string) *rkentry.ZapLoggerEntry {
 	return rkentry.GlobalAppCtx.GetZapLoggerEntry(name)
 }
 
-// Get default rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
+// GetZapLoggerEntryDefault returns default rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetZapLoggerEntryDefault() *rkentry.ZapLoggerEntry {
 	return rkentry.GlobalAppCtx.GetZapLoggerEntryDefault()
 }
 
-// Get rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
+// GetEventLoggerEntry returns rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetEventLoggerEntry(name string) *rkentry.EventLoggerEntry {
 	return rkentry.GlobalAppCtx.GetEventLoggerEntry(name)
 }
 
-// Get default rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
+// GetEventLoggerEntryDefault returns default rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetEventLoggerEntryDefault() *rkentry.EventLoggerEntry {
 	return rkentry.GlobalAppCtx.GetEventLoggerEntryDefault()
 }
 
-// Get rkentry.ConfigEntry from rkentry.GlobalAppCtx.
+// GetConfigEntry returns rkentry.ConfigEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetConfigEntry(name string) *rkentry.ConfigEntry {
 	return rkentry.GlobalAppCtx.GetConfigEntry(name)
 }
 
-// Get rkentry.CertEntry from rkentry.GlobalAppCtx.
+// GetCertEntry returns rkentry.CertEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
 	return rkentry.GlobalAppCtx.GetCertEntry(name)
 }
 
-// Get rkgin.GinEntry from rkentry.GlobalAppCtx.
+// GetGinEntry returns rkgin.GinEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetGinEntry(name string) *rkgin.GinEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
@@ -163,7 +167,7 @@ func (boot *Boot) GetGinEntry(name string) *rkgin.GinEntry {
 	return nil
 }
 
-// Get rkgrpc.GrpcEntry from rkentry.GlobalAppCtx.
+// GetGrpcEntry returns rkgrpc.GrpcEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetGrpcEntry(name string) *rkgrpc.GrpcEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
@@ -174,7 +178,7 @@ func (boot *Boot) GetGrpcEntry(name string) *rkgrpc.GrpcEntry {
 	return nil
 }
 
-// Get rkprom.PromEntry from rkentry.GlobalAppCtx.
+// GetPromEntry returns rkprom.PromEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetPromEntry(name string) *rkprom.PromEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
