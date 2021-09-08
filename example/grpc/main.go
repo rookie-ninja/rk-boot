@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/grpc/boot.yaml"))
+	boot := rkboot.NewBoot()
 
 	// register grpc
 	boot.GetGrpcEntry("greeter").AddGrpcRegFuncs(registerGreeter)
