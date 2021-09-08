@@ -18,12 +18,12 @@ cert:                                                # Optional
     description: "Description of entry"              # Optional
     provider: "localFs"                              # Required, etcd, consul, localFs, remoteFs are supported options
     locale: "*::*::*::*"                             # Optional, default: *::*::*::*
-    serverCertPath: "example/grpc/certs/server.pem"        # Optional, default: "", path of certificate on local FS
-    serverKeyPath: "example/grpc/certs/server-key.pem"     # Optional, default: "", path of certificate on local FS
+    serverCertPath: "certs/server.pem"        # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "certs/server-key.pem"     # Optional, default: "", path of certificate on local FS
 #    clientCertPath: "example/grpc/certs/server.pem"        # Optional, default: "", path of certificate on local FS
 config:
   - name: rk-main                                    # Required
-    path: "example/grpc/config/config.yaml"            # Required
+    path: "config/config.yaml"            # Required
     description: "Description of entry"              # Optional
     locale: "*::*::*::*"                             # Optional, default: *::*::*::*
 # Grpc entry
@@ -40,7 +40,7 @@ grpc:
       port: 8080                                     # Required
       rkServerOption: true                           # Optional, default: false
       gwMappingFilePaths:                            # Optional
-        - "example/grpc/api/v1/gw_mapping.yaml"
+        - "api/v1/gw_mapping.yaml"
 #      cert:
 #        ref: "local-cert"                           # Optional, default: "", reference of cert entry declared above
       tv:
@@ -48,7 +48,7 @@ grpc:
       sw:
         enabled: true                                # Optional, default: false
         path: "sw"                                   # Optional, default: "sw"
-        jsonPath: "example/grpc/api/gen/v1"          # Optional
+        jsonPath: "api/gen/v1"          # Optional
         headers: [ "sw:rk" ]                         # Optional, default: []
       prom:
         enabled: true                                # Optional, default: false
