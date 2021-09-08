@@ -13,18 +13,37 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Online document](#online-document)
+- [Concept](#concept)
+  - [Why do I want it?](#why-do-i-want-it)
 - [Installation](#installation)
 - [Quick Start](#quick-start)
-  - [YAML config](#yaml-config)
-    - [gin](#gin)
-    - [grpc](#grpc)
-  - [Development Status: Stable](#development-status-stable)
-  - [Contributing](#contributing)
+  - [Start gin server from YAML](#start-gin-server-from-yaml)
+  - [Start grpc server from YAML](#start-grpc-server-from-yaml)
+- [Gin middleware](#gin-middleware)
+  - [Logging middleware](#logging-middleware)
+  - [Other middleware](#other-middleware)
+- [Grpc interceptor](#grpc-interceptor)
+    - [Logging interceptor](#logging-interceptor)
+  - [Other interceptors](#other-interceptors)
+- [Development Status: Stable](#development-status-stable)
+- [Contributing](#contributing)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Online document
 [rkdev.info](https://rkdev.info/docs/)
+
+## Concept
+rk-boot is a library which support bootstrapping server at runtime. It is a little like [spring boot](https://spring.io/quickstart) way.
+
+### Why do I want it? 
+- Build application with unified project layout at enterprise level .
+- Build API with the unified format of logging, metrics, tracing, authorization at enterprise level.
+- Make application replace core dependencies quickly.
+- Save learning time of writing initializing procedure of popular frameworks and libraries.
+- User defined Entry for customization.
+
+![arch](img/boot-arch.png)
 
 ## Installation
 `go get -u github.com/rookie-ninja/rk-boot`
@@ -33,115 +52,215 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 There are two ways users can run gRpc or Gin service. one is yaml formatted config file.
 The other one is through golang code.
 
-### YAML config
-With human readable yaml config.
-All you need to do is compile .proto file with buf.
-
-There is example in Makefile.
-
-#### gin
-Since we are using gin framework, please refer [rk-gin](https://github.com/rookie-ninja/rk-gin) for details.
-
-- [boot.yaml](example/simple-gin/boot.yaml)
-
+### Start gin server from YAML
 ```yaml
 ---
-rk:
-  appName: myapp
 gin:
   - name: greeter
     port: 8080
     sw:
-      enabled: true
-      jsonPath: "docs"
+      enabled: true     # Enable swagger UI
     commonService:
-      enabled: true
+      enabled: true     # Enable common service
     tv:
-      enabled:  true
-    prom:
-      enabled: true
-    interceptors:
-      loggingZap:
-        enabled: true
-      metricsProm:
-        enabled: true
-      meta:
-        enabled: true
+      enabled:  true    # Enable RK TV
 ```
-
-- [main.go](example/simple-gin/main.go)
 ```go
 package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot"
-	"net/http"
 )
 
-// @title Swagger Example API
-// @version 1.0
-// @description This is a sample rk-demo server.
-// @termsOfService http://swagger.io/terms/
-
-// @securityDefinitions.basic BasicAuth
-
-// @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
 	boot := rkboot.NewBoot()
 
-	// Register handler
-	boot.GetGinEntry("greeter").Router.GET("/v1/hello", hello)
-
 	// Bootstrap
-	boot.Bootstrap(context.TODO())
+	boot.Bootstrap(context.Background())
 
 	// Wait for shutdown sig
-	boot.WaitForShutdownSig()
-
-	// Interrupt all entries
-	boot.Interrupt(context.TODO())
-}
-
-// @Summary Hello
-// @Id 1
-// @Tags Hello
-// @version 1.0
-// @produce application/json
-// @Success 200 string string
-// @Router /v1/hello [get]
-func hello(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "hello!",
-	})
+	boot.WaitForShutdownSig(context.Background())
 }
 ```
 ```shell script
 $ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+![gin-sw](img/gin-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+![gin-tv](img/gin-tv.png)
+
+### Start grpc server from YAML
+```yaml
+---
+grpc:
+  - name: greeter       # Name of grpc entry
+    port: 1949          # Port of grpc entry
+    reflection: true    # Enable grpc server reflection, https://github.com/grpc/grpc/blob/master/doc/server-reflection.md
+    commonService:
+      enabled: true     # Enable common service
+    gw:
+      enabled: true     # Enable grpc-gateway, https://github.com/grpc-ecosystem/grpc-gateway
+      port: 8080        # Port of grpc-gateway
+      tv:
+        enabled: true   # Enable RK TV
+      sw:
+        enabled: true   # Enable Swagger UI
+```
+```go
+package main
+
+import (
+	"context"
+	"github.com/rookie-ninja/rk-boot"
+)
+
+// Application entrance.
+func main() {
+	// Create a new boot instance.
+	boot := rkboot.NewBoot()
+
+	// Bootstrap
+	boot.Bootstrap(context.Background())
+
+	// Wait for shutdown sig
+	boot.WaitForShutdownSig(context.Background())
+}
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+![grpc-sw](img/grpc-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+![grpc-tv](img/grpc-tv.png)
+
+## Gin middleware
+rk-boot depends on rk-gin which contains some commonly used middlewares can be used with gin framework directly. 
+[rk-gin](https://github.com/rookie-ninja/rk-gin)
+- logging middleware
+- prometheus metrics middleware
+- auth middleware
+- tracing middleware
+- panic middleware
+- metadata middleware
+
+### Logging middleware
+**No codes needed!**
+
+Enable middleware in boot.yaml file as bellow.
+Please refer [online docs](https://rkdev.info/docs) for details.
+
+```yaml
+gin:
+  - name: greeter                             # Required
+    port: 8080                                # Required
+    commonService:                            # Optional
+      enabled: true                           # Optional, default: false
+    interceptors:                             # Optional
+      loggingZap:
+        enabled: true                         # Enable logging middleware
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+```shell script
+# logs would be printed as bellow.
+------------------------------------------------------------------------
+endTime=2021-07-05T23:42:35.588164+08:00
+startTime=2021-07-05T23:42:35.588095+08:00
+elapsedNano=69414
+timezone=CST
+ids={"eventId":"9b874eea-b16b-4c46-b0f5-d2b7cff6844e"}
+app={"appName":"rk-demo","appVersion":"master-f414049","entryName":"greeter","entryType":"GinEntry"}
+env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
+payloads={"apiMethod":"GET","apiPath":"/rk/v1/healthy","apiProtocol":"HTTP/1.1","apiQuery":"","userAgent":"curl/7.64.1"}
+error={}
+counters={}
+pairs={}
+timing={}
+remoteAddr=localhost:56274
+operation=/rk/v1/healthy
+resCode=200
+eventStatus=Ended
+EOE
 ```
 
-#### grpc
-Since we are using grpc framework, please refer [rk-grpc](https://github.com/rookie-ninja/rk-grpc) for details.
+### Other middleware
+Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/grpc-golang/basic/)
 
-- [boot.yaml](example/grpc/boot.yaml)
-- [main.go](example/grpc/main.go)
+## Grpc interceptor
+rk-boot depends on rk-grpc which contains some commonly used middlewares can be used with gin framework directly. 
+[rk-grpc](https://github.com/rookie-ninja/rk-grpc)
+- logging interceptor
+- prometheus metrics interceptor
+- auth interceptor
+- tracing interceptor
+- panic interceptor
+- metadata interceptor
 
-### Development Status: Stable
+#### Logging interceptor
+```yaml
+---
+grpc:
+  - name: greeter                   # Name of grpc entry
+    port: 1949                      # Port of grpc entry
+    commonService:
+      enabled: true                 # Enable common service for testing
+    gw:
+      enabled: true                 # Enable grpc-gateway, https://github.com/grpc-ecosystem/grpc-gateway
+      port: 8080                    # Port of grpc-gateway
+    interceptors:
+      loggingZap:
+        enabled: true
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+```shell script
+# logs would be printed as bellow.
+------------------------------------------------------------------------
+endTime=2021-07-09T23:44:09.81483+08:00
+startTime=2021-07-09T23:44:09.814784+08:00
+elapsedNano=46065
+timezone=CST
+ids={"eventId":"67d64dab-f3ea-4b77-93d0-6782caf4cfee"}
+app={"appName":"rk-demo","appVersion":"master-f414049","entryName":"greeter","entryType":"GrpcEntry"}
+env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
+payloads={"grpcMethod":"Healthy","grpcService":"rk.api.v1.RkCommonService","grpcType":"unaryServer","gwMethod":"","gwPath":"","gwScheme":"","gwUserAgent":""}
+error={}
+counters={}
+pairs={"healthy":"true"}
+timing={}
+remoteAddr=localhost:58205
+operation=/rk.api.v1.RkCommonService/Healthy
+resCode=OK
+eventStatus=Ended
+EOE
+```
 
-### Contributing
+### Other interceptors
+Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/gin-golang/basic/)
+
+## Development Status: Stable
+
+## Contributing
 We encourage and support an active, healthy community of contributors &mdash;
 including you! Details are in the [contribution guide](CONTRIBUTING.md) and
 the [code of conduct](CODE_OF_CONDUCT.md). The rk maintainers keep an eye on
 issues and pull requests, but you can also report any negative conduct to
 lark@rkdev.info.
-
-<hr>
 
 Released under the [Apache 2.0 License](LICENSE).
