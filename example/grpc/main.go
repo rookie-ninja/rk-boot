@@ -8,7 +8,7 @@ package main
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-example/api/gen/v1"
+	hello "github.com/rookie-ninja/rk-example/api/gen/v1"
 	"google.golang.org/grpc"
 )
 
@@ -30,9 +30,11 @@ func registerGreeter(server *grpc.Server) {
 	hello.RegisterGreeterServer(server, &GreeterServer{})
 }
 
+//GreeterServer GreeterServer struct
 type GreeterServer struct{}
 
-func (server *GreeterServer) SayHello(ctx context.Context, request *hello.HelloRequest) (*hello.HelloResponse, error) {
+// SayHello response with hello message
+func (server *GreeterServer) SayHello(_ context.Context, request *hello.HelloRequest) (*hello.HelloResponse, error) {
 	return &hello.HelloResponse{
 		Message: "Hello " + request.Name,
 	}, nil
