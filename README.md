@@ -46,7 +46,7 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 ![arch](img/boot-arch.png)
 
 ## Installation
-`go get -u github.com/rookie-ninja/rk-boot`
+`go get github.com/rookie-ninja/rk-boot`
 
 ## Quick Start
 There are two ways users can run gRpc or Gin service. one is yaml formatted config file.
