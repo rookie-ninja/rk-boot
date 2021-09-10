@@ -22,13 +22,14 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Installation](#installation)
+- [Quick start](#quick-start)
 - [YAML Config](#yaml-config)
   - [GRPC Service](#grpc-service)
   - [Common Service](#common-service)
   - [GRPC Gateway Service](#grpc-gateway-service)
-    - [Swagger Service](#swagger-service)
     - [Prom Client](#prom-client)
     - [TV Service](#tv-service)
+    - [Swagger Service](#swagger-service)
   - [Interceptors](#interceptors)
     - [Log](#log)
     - [Metrics](#metrics)
@@ -42,7 +43,55 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
-`go get -u github.com/rookie-ninja/rk-grpc`
+`go get github.com/rookie-ninja/rk-boot`
+
+## Quick start
+- boot.yaml
+```yaml
+---
+grpc:
+  - name: greeter             # Required, Name of grpc entry
+    port: 8080                # Required, Port of grpc entry
+    commonService:
+      enabled: true           # Optional, Enable common service
+    tv:
+      enabled: true           # Optional, Enable RK TV
+    sw:
+      enabled: true           # Optional, Enable Swagger UI
+```
+- main.go
+```go
+package main
+
+import (
+	"context"
+	"github.com/rookie-ninja/rk-boot"
+)
+
+// Application entrance.
+func main() {
+	// Create a new boot instance.
+	boot := rkboot.NewBoot()
+
+	// Bootstrap
+	boot.Bootstrap(context.Background())
+
+	// Wait for shutdown sig
+	boot.WaitForShutdownSig(context.Background())
+}
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+
+![grpc-sw](../../img/grpc-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+
+![grpc-tv](../../img/grpc-tv.png)
 
 ## YAML Config
 Available configuration
@@ -54,7 +103,9 @@ User can start multiple grpc servers at the same time. Please make sure use diff
 | grpc.name | The name of grpc server | string | N/A |
 | grpc.port | The port of grpc server | integer | nil, server won't start |
 | grpc.description | Description of grpc entry. | string | "" |
-| grpc.reflection | Enable grpc server reflection | boolean | false |
+| grpc.enableReflection | Enable grpc server reflection | boolean | false |
+| grpc.enableRkGwOption | Enable RK style gateway server options. [detail](boot/gw_server_options.go) | false |
+| grpc.gwMappingFilePaths | The grpc gateway mapping file path. [example](boot/api/v1/gw_mapping.yaml) | string array | [] |
 | grpc.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
 | grpc.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
 | grpc.logger.eventLogger.ref | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
@@ -100,38 +151,32 @@ http:
 | grpc.commonService.enabled | Enable embedded common service | boolean | false |
 
 ### GRPC Gateway Service
-| name | description | type | default value |
-| ------ | ------ | ------ | ------ |
-| grpc.gw.enabled | Enable gateway service over gRpc server | boolean | false |
-| grpc.gw.port | The port of gRpc gateway | integer | 0 |
-| grpc.gw.rkServerOption | Enable RK style gateway server options. [detail](boot/gw_server_options.go) | false |
-| grpc.gw.gwMappingFilePaths | The grpc gateway mapping file path. [example](boot/api/v1/gw_mapping.yaml) | string array | [] |
-| grpc.gw.cert.ref | Reference of cert entry declared in cert section | string | "" |
-
-#### Swagger Service
-| name | description | type | default value |
-| ------ | ------ | ------ | ------ |
-| grpc.gw.sw.enabled | Enable swagger service over gRpc server | boolean | false |
-| grpc.gw.sw.path | The path access swagger service from web | string | /sw |
-| grpc.gw.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
-| grpc.gw.sw.headers | Headers would be sent to caller as scheme of [key:value] | []string | [] |
+By default, gateway will always be started with grpc with same port. 
 
 #### Prom Client
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| grpc.gw.prom.enabled | Enable prometheus | boolean | false |
-| grpc.gw.prom.path | Path of prometheus | string | /metrics |
-| grpc.gw.prom.pusher.enabled | Enable prometheus pusher | bool | false |
-| grpc.gw.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
-| grpc.gw.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
-| grpc.gw.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
-| grpc.gw.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of [user:pass] | string | "" |
-| grpc.gw.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
+| grpc.prom.enabled | Enable prometheus | boolean | false |
+| grpc.prom.path | Path of prometheus | string | /metrics |
+| grpc.prom.pusher.enabled | Enable prometheus pusher | bool | false |
+| grpc.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
+| grpc.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
+| grpc.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
+| grpc.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of [user:pass] | string | "" |
+| grpc.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
 
 #### TV Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| grpc.gw.tv.enabled | Enable RK TV | boolean | false |
+| grpc.tv.enabled | Enable RK TV | boolean | false |
+
+#### Swagger Service
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.sw.enabled | Enable swagger service over gRpc server | boolean | false |
+| grpc.sw.path | The path access swagger service from web | string | /sw |
+| grpc.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
+| grpc.sw.headers | Headers would be sent to caller as scheme of [key:value] | []string | [] |
 
 ### Interceptors
 #### Log

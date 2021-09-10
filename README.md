@@ -53,18 +53,20 @@ There are two ways users can run gRpc or Gin service. one is yaml formatted conf
 The other one is through golang code.
 
 ### Start gin server from YAML
+- boot.yaml
 ```yaml
 ---
 gin:
-  - name: greeter
-    port: 8080
+  - name: greeter       # Required, Name of gin entry
+    port: 8080          # Required, Port of gin entry
     sw:
-      enabled: true     # Enable swagger UI
+      enabled: true     # Optional, Enable swagger UI
     commonService:
-      enabled: true     # Enable common service
+      enabled: true     # Optional, Enable common service
     tv:
-      enabled:  true    # Enable RK TV
+      enabled:  true    # Optional, Enable RK TV
 ```
+- main.go
 ```go
 package main
 
@@ -96,22 +98,20 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![gin-tv](img/gin-tv.png)
 
 ### Start grpc server from YAML
+- boot.yaml
 ```yaml
 ---
 grpc:
-  - name: greeter       # Name of grpc entry
-    port: 1949          # Port of grpc entry
-    reflection: true    # Enable grpc server reflection, https://github.com/grpc/grpc/blob/master/doc/server-reflection.md
+  - name: greeter             # Required, Name of grpc entry
+    port: 8080                # Required, Port of grpc entry
     commonService:
-      enabled: true     # Enable common service
-    gw:
-      enabled: true     # Enable grpc-gateway, https://github.com/grpc-ecosystem/grpc-gateway
-      port: 8080        # Port of grpc-gateway
-      tv:
-        enabled: true   # Enable RK TV
-      sw:
-        enabled: true   # Enable Swagger UI
+      enabled: true           # Optional, Enable common service
+    tv:
+      enabled: true           # Optional, Enable RK TV
+    sw:
+      enabled: true           # Optional, Enable Swagger UI
 ```
+- main.go
 ```go
 package main
 
@@ -159,6 +159,7 @@ rk-boot depends on rk-gin which contains some commonly used middlewares can be u
 Enable middleware in boot.yaml file as bellow.
 Please refer [online docs](https://rkdev.info/docs) for details.
 
+- boot.yaml
 ```yaml
 gin:
   - name: greeter                             # Required
@@ -210,6 +211,7 @@ rk-boot depends on rk-grpc which contains some commonly used middlewares can be 
 - metadata interceptor
 
 #### Logging interceptor
+- boot.yaml
 ```yaml
 ---
 grpc:

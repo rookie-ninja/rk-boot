@@ -16,8 +16,8 @@ func main() {
 	boot := rkboot.NewBoot()
 
 	// register grpc
-	boot.GetGrpcEntry("greeter").AddGrpcRegFuncs(registerGreeter)
-	boot.GetGrpcEntry("greeter").AddGwRegFuncs(hello.RegisterGreeterHandlerFromEndpoint)
+	boot.GetGrpcEntry("greeter").AddRegFuncGrpc(registerGreeter)
+	boot.GetGrpcEntry("greeter").AddRegFuncGw(hello.RegisterGreeterHandlerFromEndpoint)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())

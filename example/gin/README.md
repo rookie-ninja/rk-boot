@@ -21,6 +21,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Installation](#installation)
+- [Quick start](#quick-start)
 - [YAML Config](#yaml-config)
   - [Gin Service](#gin-service)
   - [Common Service](#common-service)
@@ -39,7 +40,53 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
-`go get -u github.com/rookie-ninja/rk-gin`
+`go get github.com/rookie-ninja/rk-boot`
+
+## Quick start
+
+- boot.yaml
+```yaml
+---
+gin:
+  - name: greeter       # Required, Name of gin entry
+    port: 8080          # Required, Port of gin entry
+    sw:
+      enabled: true     # Optional, Enable swagger UI
+    commonService:
+      enabled: true     # Optional, Enable common service
+    tv:
+      enabled: true     # Optional, Enable RK TV
+```
+- main.go
+```go
+package main
+
+import (
+	"context"
+	"github.com/rookie-ninja/rk-boot"
+)
+
+func main() {
+	// Create a new boot instance.
+	boot := rkboot.NewBoot()
+
+	// Bootstrap
+	boot.Bootstrap(context.Background())
+
+	// Wait for shutdown sig
+	boot.WaitForShutdownSig(context.Background())
+}
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+![gin-sw](../../img/gin-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+![gin-tv](../../img/gin-tv.png)
 
 ## YAML Config
 Available configuration
