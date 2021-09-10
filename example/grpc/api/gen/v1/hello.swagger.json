@@ -4,6 +4,11 @@
     "title": "v1/hello.proto",
     "version": "version not set"
   },
+  "tags": [
+    {
+      "name": "Greeter"
+    }
+  ],
   "consumes": [
     "application/json"
   ],
