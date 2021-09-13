@@ -216,12 +216,9 @@ rk-boot depends on rk-grpc which contains some commonly used middlewares can be 
 ---
 grpc:
   - name: greeter                   # Name of grpc entry
-    port: 1949                      # Port of grpc entry
+    port: 8080                      # Port of grpc entry
     commonService:
       enabled: true                 # Enable common service for testing
-    gw:
-      enabled: true                 # Enable grpc-gateway, https://github.com/grpc-ecosystem/grpc-gateway
-      port: 8080                    # Port of grpc-gateway
     interceptors:
       loggingZap:
         enabled: true
