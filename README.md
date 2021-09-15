@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Bootstrapper for rkentry.Entry.
+Bootstrapper for golang microservice.
 With rk-boot, users can start grpc, gin, prometheus client or custom entry service with yaml formatted config file.
 Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.
 
