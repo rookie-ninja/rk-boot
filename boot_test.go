@@ -23,6 +23,7 @@ func TestNewBoot_HappyCase(t *testing.T) {
 gin:
   - name: ut-gin
     port: 8080
+    enabled: true
 `
 
 	filePath := createFileAtTestTempDir(t, config)

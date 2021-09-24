@@ -59,6 +59,7 @@ The other one is through golang code.
 gin:
   - name: greeter       # Required, Name of gin entry
     port: 8080          # Required, Port of gin entry
+    enabled: true       # Required, Enable gin entry
     sw:
       enabled: true     # Optional, Enable swagger UI
     commonService:
@@ -104,6 +105,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 grpc:
   - name: greeter             # Required, Name of grpc entry
     port: 8080                # Required, Port of grpc entry
+    enabled: true             # Required, Enable grpc entry
     commonService:
       enabled: true           # Optional, Enable common service
     tv:
@@ -164,6 +166,7 @@ Please refer [online docs](https://rkdev.info/docs) for details.
 gin:
   - name: greeter                             # Required
     port: 8080                                # Required
+    enabled: true                             # Required
     commonService:                            # Optional
       enabled: true                           # Optional, default: false
     interceptors:                             # Optional
@@ -217,6 +220,7 @@ rk-boot depends on rk-grpc which contains some commonly used middlewares can be 
 grpc:
   - name: greeter                   # Name of grpc entry
     port: 8080                      # Port of grpc entry
+    enabled: true                   # Enable grpc entry
     commonService:
       enabled: true                 # Enable common service for testing
     interceptors:
