@@ -1,12 +1,12 @@
 ---
 # Bellow sections are RK common entries which is not necessary.
 app: # NOT required
-  description: "this is description"  # Optional, default: ""
-  keywords: ["rk", "golang"]          # Optional, default: []
-  homeUrl: "http://example.com"       # Optional, default: ""
-  iconUrl: "http://example.com"       # Optional, default: ""
-  docsUrl: ["http://example.com"]     # Optional, default: []
-  maintainers: ["rk-dev"]             # Optional, default: []
+  description: "this is description"          # Optional, default: ""
+  keywords: ["rk", "golang"]                  # Optional, default: []
+  homeUrl: "http://example.com"               # Optional, default: ""
+  iconUrl: "http://example.com"               # Optional, default: ""
+  docsUrl: ["http://example.com"]             # Optional, default: []
+  maintainers: ["rk-dev"]                     # Optional, default: []
 zapLogger:                                    # Optional
   - name: zap-logger                          # Required
     description: "Description of entry"       # Optional
@@ -18,8 +18,8 @@ cert:                                         # Optional
     description: "Description of entry"       # Optional
     provider: "localFs"                       # Required, etcd, consul, localFs, remoteFs are supported options
     locale: "*::*::*::*"                      # Optional, default: *::*::*::*
-    serverCertPath: "certs/server.pem"      # Optional, default: "", path of certificate on local FS
-    serverKeyPath: "certs/server-key.pem"   # Optional, default: "", path of certificate on local FS
+    serverCertPath: "certs/server.pem"        # Optional, default: "", path of certificate on local FS
+    serverKeyPath: "certs/server-key.pem"     # Optional, default: "", path of certificate on local FS
 #    clientCertPath: "example/client.pem"     # Optional, default: "", path of certificate on local FS
 #    clientKeyPath: "example/client.pem"      # Optional, default: "", path of certificate on local FS
 config:
@@ -31,9 +31,10 @@ config:
 gin:
   - name: greeter                             # Required
     port: 8080                                # Required
+    enabled: true                             # Required
     description: "greeter server"             # Optional, default: ""
-#    cert:                                     # Optional
-#      ref: "local-cert"                       # Optional, default: "", reference of cert entry declared above
+#    cert:                                    # Optional
+#      ref: "local-cert"                      # Optional, default: "", reference of cert entry declared above
     sw:                                       # Optional
       enabled: true                           # Optional, default: false
       path: "sw"                              # Optional, default: "sw"
@@ -44,16 +45,16 @@ gin:
     tv:                                       # Optional
       enabled:  true                          # Optional, default: false
     prom:                                     # Optional
-      enabled: true                          # Optional, default: false
-#      path: ""                                # Optional, default: "metrics"
+      enabled: true                           # Optional, default: false
+#      path: ""                               # Optional, default: "metrics"
       pusher:                                 # Optional
         enabled: false                        # Optional, default: false
         jobName: "greeter-pusher"             # Required
         remoteAddress: "localhost:9091"       # Required
-#        basicAuth: "user:pass"                # Optional, default: ""
-        intervalMs: 10000                      # Optional, default: 1000
-#        cert:                                 # Optional
-#          ref: "local-test"                   # Optional, default: "", reference of cert entry declared above
+#        basicAuth: "user:pass"               # Optional, default: ""
+        intervalMs: 10000                     # Optional, default: 1000
+#        cert:                                # Optional
+#          ref: "local-test"                  # Optional, default: "", reference of cert entry declared above
     logger:                                   # Optional
       zapLogger:                              # Optional
         ref: zap-logger                       # Optional, default: logger of STDOUT, reference of logger entry declared above
@@ -63,26 +64,26 @@ gin:
       loggingZap:
         enabled: true                         # Optional, default: false
       metricsProm:
-        enabled: true                        # Optional, default: false
+        enabled: true                         # Optional, default: false
       auth:
-        enabled: true                               # Optional, default: false
+        enabled: true                         # Optional, default: false
         basic:
-          - "user:pass"                              # Optional, default: []
+          - "user:pass"                       # Optional, default: []
 #        bearer:
-#          - "tokens"                                 # Optional, default: []
+#          - "tokens"                         # Optional, default: []
 #        api:
-#          - "keys"                                   # Optional, default: []
+#          - "keys"                           # Optional, default: []
       meta:
-        enabled: true                                # Optional, default: false
-        prefix: "rk"                                 # Optional, default: "rk"
+        enabled: true                         # Optional, default: false
+        prefix: "rk"                          # Optional, default: "rk"
       tracingTelemetry:
-        enabled: false                                # Optional, default: false
-        exporter:                                    # Optional, default will create a stdout exporter
+        enabled: false                        # Optional, default: false
+        exporter:                             # Optional, default will create a stdout exporter
 #          file:
-#            enabled: true                            # Optional, default: false
-#            outputPath: "logs/trace.log"            # Optional, default: stdout
+#            enabled: true                    # Optional, default: false
+#            outputPath: "logs/trace.log"     # Optional, default: stdout
           jaeger:
-            enabled: true                           # Optional, default: false
-#            collectorEndpoint: ""                   # Optional, default: localhost:14268
-#            collectorUsername: ""                   # Optional, default: ""
-#            collectorPassword: ""                   # Optional, default: ""
+            enabled: true                     # Optional, default: false
+#            collectorEndpoint: ""            # Optional, default: localhost:14268
+#            collectorUsername: ""            # Optional, default: ""
+#            collectorPassword: ""            # Optional, default: ""

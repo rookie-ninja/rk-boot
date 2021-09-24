@@ -52,6 +52,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 grpc:
   - name: greeter             # Required, Name of grpc entry
     port: 8080                # Required, Port of grpc entry
+    enabled: true             # Required, Enable grpc entry
     commonService:
       enabled: true           # Optional, Enable common service
     tv:
@@ -102,6 +103,7 @@ User can start multiple grpc servers at the same time. Please make sure use diff
 | ------ | ------ | ------ | ------ |
 | grpc.name | The name of grpc server | string | N/A |
 | grpc.port | The port of grpc server | integer | nil, server won't start |
+| grpc.enabled | Enable grpc entry | bool | false |
 | grpc.description | Description of grpc entry. | string | "" |
 | grpc.enableReflection | Enable grpc server reflection | boolean | false |
 | grpc.enableRkGwOption | Enable RK style gateway server options. [detail](boot/gw_server_options.go) | false |

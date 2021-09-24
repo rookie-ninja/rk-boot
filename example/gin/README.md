@@ -50,6 +50,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 gin:
   - name: greeter       # Required, Name of gin entry
     port: 8080          # Required, Port of gin entry
+    enabled: true       # Required, Enable gin entry
     sw:
       enabled: true     # Optional, Enable swagger UI
     commonService:
@@ -97,6 +98,7 @@ User can start multiple gin servers at the same time. Please make sure use diffe
 | ------ | ------ | ------ | ------ |
 | gin.name | The name of gin server | string | N/A |
 | gin.port | The port of gin server | integer | nil, server won't start |
+| gin.enabled | Enable gin entry | bool | false |
 | gin.description | Description of gin entry. | string | "" |
 | gin.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
 | gin.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
