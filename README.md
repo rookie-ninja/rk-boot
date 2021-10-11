@@ -31,7 +31,8 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Online document
-[rkdev.info](https://rkdev.info/docs/)
+- [rkdev.info](https://rkdev.info/docs/)
+- [rkdocs.netlify.app](https://rkdocs.netlify.app) (Backup)
 
 ## Concept
 rk-boot is a library which support bootstrapping server at runtime. It is a little like [spring boot](https://spring.io/quickstart) way.
