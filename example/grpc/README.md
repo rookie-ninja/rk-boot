@@ -264,12 +264,15 @@ Send application metadata as header to client and GRPC Gateway.
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
 | grpc.interceptors.tracingTelemetry.enabled | Enable tracing interceptor | boolean | false |
-| grpc.interceptors.exporter.file.enabled | Enable file exporter | boolean | RK |
-| grpc.interceptors.exporter.file.outputPath | Export tracing info to files | string | stdout |
-| grpc.interceptors.exporter.jaeger.enabled | Export tracing info jaeger | boolean | false |
-| grpc.interceptors.exporter.jaeger.collectorEndpoint | As name described | string | localhost:16368/api/trace |
-| grpc.interceptors.exporter.jaeger.collectorUsername | As name described | string | "" |
-| grpc.interceptors.exporter.jaeger.collectorPassword | As name described | string | "" |
+| grpc.interceptors.tracingTelemetry.exporter.file.enabled | Enable file exporter | boolean | RK |
+| grpc.interceptors.tracingTelemetry.exporter.file.outputPath | Export tracing info to files | string | stdout |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.agent.enabled | Export tracing info to jaeger agent | boolean | false |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.agent.host | As name described | string | localhost |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.agent.port | As name described | int | 6831 |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.enabled | Export tracing info to jaeger collector | boolean | false |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.endpoint | As name described | string | http://localhost:16368/api/trace |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.username | As name described | string | "" |
+| grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.password | As name described | string | "" |
 
 ### Development Status: Stable
 
