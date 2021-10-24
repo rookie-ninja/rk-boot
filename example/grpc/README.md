@@ -16,6 +16,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 | Panic interceptor | Recover from panic for RPC requests and log it. |
 | Meta interceptor | Send application metadata as header to client and GRPC Gateway. |
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
+| RateLimit interceptor | Limit request rate from interceptor. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -36,6 +37,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
     - [Auth](#auth)
     - [Meta](#meta)
     - [Tracing](#tracing)
+    - [RateLimit](#ratelimit)
   - [Development Status: Stable](#development-status-stable)
   - [Appendix](#appendix)
   - [Contributing](#contributing)
@@ -273,6 +275,15 @@ Send application metadata as header to client and GRPC Gateway.
 | grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.endpoint | As name described | string | http://localhost:16368/api/trace |
 | grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.username | As name described | string | "" |
 | grpc.interceptors.tracingTelemetry.exporter.jaeger.collector.password | As name described | string | "" |
+
+#### RateLimit
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.rateLimit.enabled | Enable rate limit interceptor | boolean | false |
+| grpc.interceptors.rateLimit.algorithm | Provide algorithm, tokenBucket and leakyBucket are available options | string | tokenBucket |
+| grpc.interceptors.rateLimit.reqPerSec | Request per second globally | int | 0 |
+| grpc.interceptors.rateLimit.paths.path | gRPC full name | string | "" |
+| grpc.interceptors.rateLimit.paths.reqPerSec | Request per second by gRPC full method name | int | 0 |
 
 ### Development Status: Stable
 

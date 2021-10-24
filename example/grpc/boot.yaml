@@ -94,3 +94,10 @@ grpc:
 #              endpoint: ""                            # Optional, default: http://localhost:14268/api/traces
 #              username: ""                            # Optional, default: ""
 #              password: ""                            # Optional, default: ""
+      rateLimit:
+        enabled: false
+        algorithm: "leakyBucket"
+        reqPerSec: 0
+        paths:
+          - path: "/rk.api.v1.RkCommonService/Healthy"
+            reqPerSec: 0
