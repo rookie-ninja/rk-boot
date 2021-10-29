@@ -33,6 +33,7 @@ grpc:
     port: 8080                                         # Optional
     enableReflection: true                             # Optional, default: false
     enableRkGwOption: true                             # Optional, default: false
+    noRecvMsgSizeLimit: false                          # Optional, default: false
     commonService:
       enabled: true                                    # Optional, default: false
 #    cert:
@@ -101,3 +102,9 @@ grpc:
         paths:
           - path: "/rk.api.v1.RkCommonService/Healthy"
             reqPerSec: 0
+      timeout:
+        enabled: false
+        timeoutMs: 5000
+        paths:
+          - path: "/rk.api.v1.RkCommonService/Healthy"
+            timeoutMs: 100
