@@ -33,6 +33,7 @@ grpc:
     port: 8080                                         # Optional
     enableReflection: true                             # Optional, default: false
     enableRkGwOption: true                             # Optional, default: false
+    noRecvMsgSizeLimit: false                          # Optional, default: false
     commonService:
       enabled: true                                    # Optional, default: false
 #    cert:
