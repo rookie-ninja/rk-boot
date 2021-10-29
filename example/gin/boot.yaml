@@ -99,3 +99,9 @@ gin:
         paths:
           - path: "/rk/v1/healthy"
             reqPerSec: 0
+      timeout:
+        enabled: false
+        timeoutMs: 5000
+        paths:
+          - path: "/rk.api.v1.RkCommonService/Healthy"
+            timeoutMs: 100
