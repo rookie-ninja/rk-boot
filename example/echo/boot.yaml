@@ -33,7 +33,7 @@
 #    path: "example/boot/full/config.yaml"                 # Required
 #    locale: "*::*::*::*"                                  # Required, default: *::*::*::*
 #    description: "Description of entry"                   # Optional
-gin:
+echo:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required

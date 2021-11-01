@@ -19,12 +19,16 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 - [Quick Start](#quick-start)
   - [Start grpc server from YAML](#start-grpc-server-from-yaml)
   - [Start gin server from YAML](#start-gin-server-from-yaml)
+  - [Start echo server from YAML](#start-echo-server-from-yaml)
 - [Grpc interceptor](#grpc-interceptor)
     - [Logging interceptor](#logging-interceptor)
   - [Other interceptors](#other-interceptors)
 - [Gin middleware](#gin-middleware)
   - [Logging middleware](#logging-middleware)
   - [Other middleware](#other-middleware)
+- [Echo middleware](#echo-middleware)
+  - [Logging middleware](#logging-middleware-1)
+  - [Other interceptors](#other-interceptors-1)
 - [Development Status: Stable](#development-status-stable)
 - [Build instruction](#build-instruction)
 - [Test instruction](#test-instruction)
@@ -148,6 +152,52 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 - TV: http://localhost:8080/rk/v1/tv
 ![gin-tv](img/gin-tv.png)
 
+### Start echo server from YAML
+- boot.yaml
+```yaml
+---
+echo:
+  - name: greeter       # Required, Name of gin entry
+    port: 8080          # Required, Port of gin entry
+    enabled: true       # Required, Enable gin entry
+    sw:
+      enabled: true     # Optional, Enable swagger UI
+    commonService:
+      enabled: true     # Optional, Enable common service
+    tv:
+      enabled:  true    # Optional, Enable RK TV
+```
+- main.go
+```go
+package main
+
+import (
+   "context"
+   "github.com/rookie-ninja/rk-boot"
+)
+
+func main() {
+   // Create a new boot instance.
+   boot := rkboot.NewBoot()
+
+   // Bootstrap
+   boot.Bootstrap(context.Background())
+
+   // Wait for shutdown sig
+   boot.WaitForShutdownSig(context.Background())
+}
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+![echo-sw](img/gin-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+![echo-tv](img/gin-tv.png)
+
 ## Grpc interceptor
 rk-boot depends on rk-grpc which contains some commonly used middlewares can be used with gin framework directly.
 [rk-grpc](https://github.com/rookie-ninja/rk-grpc)
@@ -157,6 +207,8 @@ rk-boot depends on rk-grpc which contains some commonly used middlewares can be 
 - tracing interceptor
 - panic interceptor
 - metadata interceptor
+- rate limit interceptor
+- timeout interceptor
 
 #### Logging interceptor
 - boot.yaml
@@ -211,6 +263,8 @@ rk-boot depends on rk-gin which contains some commonly used middlewares can be u
 - tracing middleware
 - panic middleware
 - metadata middleware
+- rate limit middleware
+- timeout middleware
 
 ### Logging middleware
 **No codes needed!**
@@ -260,6 +314,68 @@ EOE
 ### Other middleware
 Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/grpc-golang/basic/)
 
+## Echo middleware
+rk-boot depends on rk-echo which contains some commonly used middlewares can be used with echo framework directly.
+[rk-gin](https://github.com/rookie-ninja/rk-gin)
+- logging middleware
+- prometheus metrics middleware
+- auth middleware
+- tracing middleware
+- panic middleware
+- metadata middleware
+- rate limit middleware
+- timeout middleware
+- rate limit middleware
+- timeout middleware
+
+### Logging middleware
+**No codes needed!**
+
+Enable middleware in boot.yaml file as bellow.
+Please refer [online docs](https://rkdev.info/docs) for details.
+
+- boot.yaml
+```yaml
+echo:
+  - name: greeter                             # Required
+    port: 8080                                # Required
+    enabled: true                             # Required
+    commonService:                            # Optional
+      enabled: true                           # Optional, default: false
+    interceptors:                             # Optional
+      loggingZap:
+        enabled: true                         # Enable logging middleware
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+```shell script
+# logs would be printed as bellow.
+------------------------------------------------------------------------
+endTime=2021-07-05T23:42:35.588164+08:00
+startTime=2021-07-05T23:42:35.588095+08:00
+elapsedNano=69414
+timezone=CST
+ids={"eventId":"9b874eea-b16b-4c46-b0f5-d2b7cff6844e"}
+app={"appName":"rk-demo","appVersion":"master-f414049","entryName":"greeter","entryType":"EchoEntry"}
+env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
+payloads={"apiMethod":"GET","apiPath":"/rk/v1/healthy","apiProtocol":"HTTP/1.1","apiQuery":"","userAgent":"curl/7.64.1"}
+error={}
+counters={}
+pairs={}
+timing={}
+remoteAddr=localhost:56274
+operation=/rk/v1/healthy
+resCode=200
+eventStatus=Ended
+EOE
+```
+
+### Other interceptors
+Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/echo-golang/basic/)
+
 ## Development Status: Stable
 
 ## Build instruction
@@ -274,11 +390,25 @@ Run unit test with **make test** command.
 github workflow will automatically run unit test and golangci-lint for testing and lint validation.
 
 ## Dependencies
-- github.com/rookie-ninja/rk-entry v1.0.3
-- github.com/rookie-ninja/rk-gin v1.2.6
-- github.com/rookie-ninja/rk-grpc v1.2.8
-- github.com/rookie-ninja/rk-prom v1.1.3
-- github.com/stretchr/testify v1.7.0
+```
+module github.com/rookie-ninja/rk-boot
+
+go 1.16
+
+require (
+	github.com/gin-gonic/gin v1.7.2
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.5.0
+	github.com/labstack/echo/v4 v4.6.1
+	github.com/rookie-ninja/rk-echo v0.0.1
+	github.com/rookie-ninja/rk-entry v1.0.3
+	github.com/rookie-ninja/rk-gin v1.2.8
+	github.com/rookie-ninja/rk-grpc v1.2.9
+	github.com/rookie-ninja/rk-prom v1.1.3
+	github.com/stretchr/testify v1.7.0
+	google.golang.org/grpc v1.38.0
+	google.golang.org/protobuf v1.26.0
+)
+```
 
 ## Contributing
 We encourage and support an active, healthy community of contributors &mdash;

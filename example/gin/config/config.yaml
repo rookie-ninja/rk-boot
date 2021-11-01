@@ -1,6 +1,0 @@
-key: value
-nested:
-  level: one
-list:
-  - "one"
-  - "two"

@@ -1,23 +1,28 @@
 .PHONY: all
-all: lint readme fmt
+all: lint doctoc fmt
 
 .PHONY: lint
 lint:
-	@echo "running golangci-lint..."
+	@echo "[golangci-lint] Running golangci-lint..."
 	@golangci-lint run 2>&1
+	@echo "------------------------------------[Done]"
 
 .PHONY: fmt
 fmt:
-	@echo "format go project..."
+	@echo "[fmt] Format go project..."
 	@gofmt -s -w . 2>&1
+	@echo "------------------------------------[Done]"
 
 .PHONY: swag
 swag:
-	@echo "running swag..."
-	@swag init --generalInfo gin.go --propertyStrategy camelcase
+	@echo "[swag] Running swag..."
+	@swag init --generalInfo main.go --propertyStrategy camelcase
+	@rm -rf docs/docs.go
+	@echo "------------------------------------[Done]"
 
-.PHONY: readme
-readme:
-	@echo "running doctoc..."
+.PHONY: doctoc
+doctoc:
+	@echo "[doctoc] Running doctoc..."
 	@doctoc . 2>&1
+	@echo "------------------------------------[Done]"
 

@@ -15,6 +15,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 | Panic interceptor | Recover from panic for RPC requests and log it. |
 | Meta interceptor | Send application metadata as header to client. |
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
+| Timeout interceptor | Timing out request based on configuration. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -34,6 +35,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
     - [Auth](#auth)
     - [Meta](#meta)
     - [Tracing](#tracing)
+    - [Timeout](#timeout)
   - [Development Status: Stable](#development-status-stable)
   - [Contributing](#contributing)
 
@@ -242,6 +244,14 @@ Send application metadata as header to client.
 | gin.interceptors.exporter.jaeger.collectorEndpoint | As name described | string | localhost:16368/api/trace |
 | gin.interceptors.exporter.jaeger.collectorUsername | As name described | string | "" |
 | gin.interceptors.exporter.jaeger.collectorPassword | As name described | string | "" |
+
+#### Timeout
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.timeout.enabled | Enable timeout interceptor | boolean | false |
+| gin.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
+| gin.interceptors.timeout.paths.path | Full path | string | "" |
+| gin.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
 
 ### Development Status: Stable
 

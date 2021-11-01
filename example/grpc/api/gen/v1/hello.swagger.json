@@ -16,9 +16,9 @@
     "application/json"
   ],
   "paths": {
-    "/api/v1/SayHello": {
-      "post": {
-        "operationId": "Greeter_SayHello",
+    "/v1/hello": {
+      "get": {
+        "operationId": "Greeter_Hello",
         "responses": {
           "200": {
             "description": "A successful response.",
@@ -33,16 +33,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1HelloRequest"
-            }
-          }
-        ],
         "tags": [
           "Greeter"
         ]
@@ -77,14 +67,6 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
-        }
-      }
-    },
-    "v1HelloRequest": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
         }
       }
     },
