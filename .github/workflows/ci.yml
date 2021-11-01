@@ -20,6 +20,6 @@ jobs:
     - name: Run linter
       run: make lint
     - name: Run test coverage
-      run: go test $(go list ./... | grep -v example) -race -coverprofile=coverage.txt -covermode=atomic
+      run: go test $(go list ./... | grep -v example) -coverprofile=coverage.txt -covermode=atomic
     - name: Upload coverage to Codecov
       run: bash <(curl -s https://codecov.io/bash)
