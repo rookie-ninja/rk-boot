@@ -8,6 +8,7 @@ package rkboot
 
 import (
 	"context"
+	"github.com/rookie-ninja/rk-echo/boot"
 	"github.com/rookie-ninja/rk-entry/entry"
 	"github.com/rookie-ninja/rk-gin/boot"
 	"github.com/rookie-ninja/rk-grpc/boot"
@@ -172,6 +173,17 @@ func (boot *Boot) GetGrpcEntry(name string) *rkgrpc.GrpcEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
 	if entry, ok := entryRaw.(*rkgrpc.GrpcEntry); ok {
+		return entry
+	}
+
+	return nil
+}
+
+// GetEchoEntry returns rkecho.EchoEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetEchoEntry(name string) *rkecho.EchoEntry {
+	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
+
+	if entry, ok := entryRaw.(*rkecho.EchoEntry); ok {
 		return entry
 	}
 

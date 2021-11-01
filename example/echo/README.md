@@ -1,13 +1,13 @@
-# rk-gin
-Interceptor & bootstrapper designed for gin framework. Currently, supports bellow functionalities.
+# rk-echo
+Interceptor & bootstrapper designed for echo framework. Currently, supports bellow functionalities.
 
 | Name | Description |
 | ---- | ---- |
 | Start with YAML | Start service with YAML config. |
 | Start with code | Start service from code. |
-| Gin Service | Gin service. |
+| Echo Service | Echo service. |
 | Swagger Service | Swagger UI. |
-| Common Service | List of common API available on Gin. |
+| Common Service | List of common API available on Echo. |
 | TV Service | A Web UI shows application and environment information. |
 | Metrics interceptor | Collect RPC metrics and export as prometheus client. |
 | Log interceptor | Log every RPC requests as event with rk-query. |
@@ -16,7 +16,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 | Meta interceptor | Send application metadata as header to client. |
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
 | RateLimit interceptor | Limiting RPC rate |
-| Timeout interceptor | Timing out request based on configuration. |
+| Timeout interceptor | Timing out request by configuration. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -25,7 +25,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 - [Installation](#installation)
 - [Quick start](#quick-start)
 - [YAML Config](#yaml-config)
-  - [Gin Service](#gin-service)
+  - [Echo Service](#echo-service)
   - [Common Service](#common-service)
   - [Swagger Service](#swagger-service)
   - [Prom Client](#prom-client)
@@ -51,10 +51,10 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 - boot.yaml
 ```yaml
 ---
-gin:
-  - name: greeter       # Required, Name of gin entry
-    port: 8080          # Required, Port of gin entry
-    enabled: true       # Required, Enable gin entry
+echo:
+  - name: greeter       # Required, Name of echo entry
+    port: 8080          # Required, Port of echo entry
+    enabled: true       # Required, Enable echo entry
     sw:
       enabled: true     # Optional, Enable swagger UI
     commonService:
@@ -88,25 +88,25 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 {"healthy":true}
 ```
 - Swagger: http://localhost:8080/sw
-![gin-sw](../../img/gin-sw.png)
+![echo-sw](../../img/gin-sw.png)
 
 - TV: http://localhost:8080/rk/v1/tv
-![gin-tv](../../img/gin-tv.png)
+![echo-tv](../../img/gin-tv.png)
 
 ## YAML Config
 Available configuration
-User can start multiple gin servers at the same time. Please make sure use different port and name.
+User can start multiple echo servers at the same time. Please make sure use different port and name.
 
-### Gin Service
+### Echo Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.name | The name of gin server | string | N/A |
-| gin.port | The port of gin server | integer | nil, server won't start |
-| gin.enabled | Enable gin entry | bool | false |
-| gin.description | Description of gin entry. | string | "" |
-| gin.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
-| gin.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
-| gin.logger.eventLogger.ref | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
+| echo.name | The name of echo server | string | N/A |
+| echo.port | The port of echo server | integer | nil, server won't start |
+| echo.enabled | Enable echo entry | bool | false |
+| echo.description | Description of echo entry. | string | "" |
+| echo.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
+| echo.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
+| echo.logger.eventLogger.ref | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
 
 ### Common Service
 | Path | Description |
@@ -129,38 +129,38 @@ User can start multiple gin servers at the same time. Please make sure use diffe
 
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.commonService.enabled | Enable embedded common service | boolean | false |
+| echo.commonService.enabled | Enable embedded common service | boolean | false |
 
 ### Swagger Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.sw.enabled | Enable swagger service over gin server | boolean | false |
-| gin.sw.path | The path access swagger service from web | string | /sw |
-| gin.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
-| gin.sw.headers | Headers would be sent to caller as scheme of [key:value] | []string | [] |
+| echo.sw.enabled | Enable swagger service over echo server | boolean | false |
+| echo.sw.path | The path access swagger service from web | string | /sw |
+| echo.sw.jsonPath | Where the swagger.json files are stored locally | string | "" |
+| echo.sw.headers | Headers would be sent to caller as scheme of [key:value] | []string | [] |
 
 ### Prom Client
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.prom.enabled | Enable prometheus | boolean | false |
-| gin.prom.path | Path of prometheus | string | /metrics |
-| gin.prom.pusher.enabled | Enable prometheus pusher | bool | false |
-| gin.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
-| gin.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
-| gin.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
-| gin.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of [user:pass] | string | "" |
-| gin.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
+| echo.prom.enabled | Enable prometheus | boolean | false |
+| echo.prom.path | Path of prometheus | string | /metrics |
+| echo.prom.pusher.enabled | Enable prometheus pusher | bool | false |
+| echo.prom.pusher.jobName | Job name would be attached as label while pushing to remote pushgateway | string | "" |
+| echo.prom.pusher.remoteAddress | PushGateWay address, could be form of http://x.x.x.x or x.x.x.x | string | "" |
+| echo.prom.pusher.intervalMs | Push interval in milliseconds | string | 1000 |
+| echo.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of [user:pass] | string | "" |
+| echo.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
 
 ### TV Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.tv.enabled | Enable RK TV | boolean | false |
+| echo.tv.enabled | Enable RK TV | boolean | false |
 
 ### Interceptors
 #### Log
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.loggingZap.enabled | Enable log interceptor | boolean | false |
+| echo.interceptors.loggingZap.enabled | Enable log interceptor | boolean | false |
 
 We will log two types of log for every RPC call.
 - zapLogger
@@ -199,7 +199,7 @@ startTime=2021-06-25T01:30:45.143767+08:00
 elapsedNano=255948
 timezone=CST
 ids={"eventId":"3332e575-43d8-4bfe-84dd-45b5fc5fb104","requestId":"3332e575-43d8-4bfe-84dd-45b5fc5fb104","traceId":"65b9aa7a9705268bba492fdf4a0e5652"}
-app={"appName":"rk-boot","appVersion":"master-xxx","entryName":"greeter","entryType":"GinEntry"}
+app={"appName":"rk-boot","appVersion":"master-xxx","entryName":"greeter","entryType":"EchoEntry"}
 env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
 payloads={"apiMethod":"GET","apiPath":"/rk/v1/healthy","apiProtocol":"HTTP/1.1","apiQuery":"","userAgent":"curl/7.64.1"}
 error={}
@@ -216,56 +216,56 @@ EOE
 #### Metrics
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.metricsProm.enabled | Enable metrics interceptor | boolean | false |
+| echo.interceptors.metricsProm.enabled | Enable metrics interceptor | boolean | false |
 
 #### Auth
 Enable the server side auth. codes.Unauthenticated would be returned to client if not authorized with user defined credential.
 
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.auth.enabled | Enable auth interceptor | boolean | false |
-| gin.interceptors.auth.basic | Basic auth credentials as scheme of <user:pass> | []string | [] |
-| gin.interceptors.auth.bearer | Bearer auth tokens | []string | [] |
-| gin.interceptors.auth.api | API key | []string | [] |
+| echo.interceptors.auth.enabled | Enable auth interceptor | boolean | false |
+| echo.interceptors.auth.basic | Basic auth credentials as scheme of <user:pass> | []string | [] |
+| echo.interceptors.auth.bearer | Bearer auth tokens | []string | [] |
+| echo.interceptors.auth.api | API key | []string | [] |
 
 #### Meta
 Send application metadata as header to client.
 
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.meta.enabled | Enable meta interceptor | boolean | false |
-| gin.interceptors.meta.prefix | Header key was formed as X-<Prefix>-XXX | string | RK |
+| echo.interceptors.meta.enabled | Enable meta interceptor | boolean | false |
+| echo.interceptors.meta.prefix | Header key was formed as X-<Prefix>-XXX | string | RK |
 
 #### Tracing
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.tracingTelemetry.enabled | Enable tracing interceptor | boolean | false |
-| gin.interceptors.tracingTelemetry.exporter.file.enabled | Enable file exporter | boolean | RK |
-| gin.interceptors.tracingTelemetry.exporter.file.outputPath | Export tracing info to files | string | stdout |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.agent.enabled | Export tracing info to jaeger agent | boolean | false |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.agent.host | As name described | string | localhost |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.agent.port | As name described | int | 6831 |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.collector.enabled | Export tracing info to jaeger collector | boolean | false |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.collector.endpoint | As name described | string | http://localhost:16368/api/trace |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.collector.username | As name described | string | "" |
-| gin.interceptors.tracingTelemetry.exporter.jaeger.collector.password | As name described | string | "" |
+| echo.interceptors.tracingTelemetry.enabled | Enable tracing interceptor | boolean | false |
+| echo.interceptors.tracingTelemetry.exporter.file.enabled | Enable file exporter | boolean | false |
+| echo.interceptors.tracingTelemetry.exporter.file.outputPath | Export tracing info to files | string | stdout |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.agent.enabled | Export tracing info to jaeger agent | boolean | false |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.agent.host | As name described | string | localhost |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.agent.port | As name described | int | 6831 |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.collector.enabled | Export tracing info to jaeger collector | boolean | false |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.collector.endpoint | As name described | string | http://localhost:16368/api/trace |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.collector.username | As name described | string | "" |
+| echo.interceptors.tracingTelemetry.exporter.jaeger.collector.password | As name described | string | "" |
 
 #### RateLimit
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.rateLimit.enabled | Enable rate limit interceptor | boolean | false |
-| gin.interceptors.rateLimit.algorithm | Provide algorithm, tokenBucket and leakyBucket are available options | string | tokenBucket |
-| gin.interceptors.rateLimit.reqPerSec | Request per second globally | int | 0 |
-| gin.interceptors.rateLimit.paths.path | Full path | string | "" |
-| gin.interceptors.rateLimit.paths.reqPerSec | Request per second by full path | int | 0 |
+| echo.interceptors.rateLimit.enabled | Enable rate limit interceptor | boolean | false |
+| echo.interceptors.rateLimit.algorithm | Provide algorithm, tokenBucket and leakyBucket are available options | string | tokenBucket |
+| echo.interceptors.rateLimit.reqPerSec | Request per second globally | int | 0 |
+| echo.interceptors.rateLimit.paths.path | Full path | string | "" |
+| echo.interceptors.rateLimit.paths.reqPerSec | Request per second by full path | int | 0 |
 
 #### Timeout
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
-| gin.interceptors.timeout.enabled | Enable timeout interceptor | boolean | false |
-| gin.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
-| gin.interceptors.timeout.paths.path | Full path | string | "" |
-| gin.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
+| echo.interceptors.timeout.enabled | Enable timeout interceptor | boolean | false |
+| echo.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
+| echo.interceptors.timeout.paths.path | Full path | string | "" |
+| echo.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
 
 ### Development Status: Stable
 

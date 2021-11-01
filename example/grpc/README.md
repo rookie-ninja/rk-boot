@@ -17,6 +17,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 | Meta interceptor | Send application metadata as header to client and GRPC Gateway. |
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
 | RateLimit interceptor | Limit request rate from interceptor. |
+| Timeout interceptor | Timing out request based on configuration. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -38,6 +39,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
     - [Meta](#meta)
     - [Tracing](#tracing)
     - [RateLimit](#ratelimit)
+    - [Timeout](#timeout)
   - [Development Status: Stable](#development-status-stable)
   - [Appendix](#appendix)
   - [Contributing](#contributing)
@@ -284,6 +286,14 @@ Send application metadata as header to client and GRPC Gateway.
 | grpc.interceptors.rateLimit.reqPerSec | Request per second globally | int | 0 |
 | grpc.interceptors.rateLimit.paths.path | gRPC full name | string | "" |
 | grpc.interceptors.rateLimit.paths.reqPerSec | Request per second by gRPC full method name | int | 0 |
+
+#### Timeout
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.timeout.enabled | Enable timeout interceptor | boolean | false |
+| grpc.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
+| grpc.interceptors.timeout.paths.path | Full path | string | "" |
+| grpc.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
 
 ### Development Status: Stable
 
