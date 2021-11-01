@@ -54,7 +54,7 @@ gin:
 
 	time.Sleep(1 * time.Second)
 	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 	rkentry.GlobalAppCtx.RemoveEntry("ut-gin")
 }
 
@@ -94,7 +94,7 @@ echo:
 
 	time.Sleep(1 * time.Second)
 	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 	rkentry.GlobalAppCtx.RemoveEntry("ut-echo")
 }
 
@@ -135,7 +135,7 @@ grpc:
 
 	time.Sleep(1 * time.Second)
 	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
+	time.Sleep(3 * time.Second)
 	rkentry.GlobalAppCtx.RemoveEntry("ut-grpc")
 
 }
