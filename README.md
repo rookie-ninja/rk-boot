@@ -30,6 +30,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 - [Echo middleware](#echo-middleware)
   - [Logging middleware](#logging-middleware-1)
   - [Other interceptors](#other-interceptors-1)
+- [gRPC proxy](#grpc-proxy)
 - [Development Status: Stable](#development-status-stable)
 - [Build instruction](#build-instruction)
 - [Test instruction](#test-instruction)
@@ -376,6 +377,11 @@ EOE
 
 ### Other interceptors
 Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/echo-golang/basic/)
+
+## gRPC proxy
+User can start a gRPC server as proxy server which proxies request to backend gRPC servers.
+
+It is under experimental where docs can be found [here](https://github.com/rookie-ninja/rk-grpc/tree/master/example/boot/proxy).
 
 ## Development Status: Stable
 
