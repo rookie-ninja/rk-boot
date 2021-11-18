@@ -113,3 +113,6 @@ echo:
 #        paths:
 #          - path: "/rk/v1/healthy"                        # Optional, default: ""
 #            timeoutMs: 1000                               # Optional, default: 5000
+#      gzip:
+#        enabled: true                                     # Optional, default: false
+#        level: defaultCompression                         # Optional, default: defaultCompression, options: [noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly]

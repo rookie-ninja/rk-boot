@@ -73,7 +73,7 @@
     "v1HelloResponse": {
       "type": "object",
       "properties": {
-        "message": {
+        "myMessage": {
           "type": "string"
         }
       }

@@ -36,6 +36,6 @@ type GreeterServer struct{}
 // Hello response with hello message
 func (server *GreeterServer) Hello(_ context.Context, _ *hello.HelloRequest) (*hello.HelloResponse, error) {
 	return &hello.HelloResponse{
-		Message: "hello!",
+		MyMessage: "hello!",
 	}, nil
 }

@@ -29,9 +29,9 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
   - [GRPC Service](#grpc-service)
   - [Common Service](#common-service)
   - [GRPC Gateway Service](#grpc-gateway-service)
-    - [Prom Client](#prom-client)
-    - [TV Service](#tv-service)
-    - [Swagger Service](#swagger-service)
+  - [Prom Client](#prom-client)
+  - [TV Service](#tv-service)
+  - [Swagger Service](#swagger-service)
   - [Interceptors](#interceptors)
     - [Log](#log)
     - [Metrics](#metrics)
@@ -159,7 +159,22 @@ http:
 ### GRPC Gateway Service
 By default, gateway will always be started with grpc with same port. 
 
-#### Prom Client
+Please refer to bellow repository for detailed explanations.
+- [protobuf-go/encoding/protojson/encode.go](https://github.com/protocolbuffers/protobuf-go/blob/master/encoding/protojson/encode.go#L43)
+- [protobuf-go/encoding/protojson/decode.go ](https://github.com/protocolbuffers/protobuf-go/blob/master/encoding/protojson/decode.go#L33)
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.gwOption.marshal.multiline | Enable multiline in grpc-gateway marshaller | bool | false |
+| grpc.gwOption.marshal.emitUnpopulated | Enable emitUnpopulated in grpc-gateway marshaller | bool | false |
+| grpc.gwOption.marshal.indent | Set indent in grpc-gateway marshaller | string | "  " |
+| grpc.gwOption.marshal.allowPartial | Enable allowPartial in grpc-gateway marshaller | bool | false |
+| grpc.gwOption.marshal.useProtoNames | Enable useProtoNames in grpc-gateway marshaller | bool | false |
+| grpc.gwOption.marshal.useEnumNumbers | Enable useEnumNumbers in grpc-gateway marshaller | bool | false |
+| grpc.gwOption.unmarshal.allowPartial | Enable allowPartial in grpc-gateway unmarshaler | bool | false |
+| grpc.gwOption.unmarshal.discardUnknown | Enable discardUnknown in grpc-gateway unmarshaler | bool | false |
+
+### Prom Client
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
 | grpc.prom.enabled | Enable prometheus | boolean | false |
@@ -171,12 +186,12 @@ By default, gateway will always be started with grpc with same port.
 | grpc.prom.pusher.basicAuth | Basic auth used to interact with remote pushgateway, form of [user:pass] | string | "" |
 | grpc.prom.pusher.cert.ref | Reference of rkentry.CertEntry | string | "" |
 
-#### TV Service
+### TV Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
 | grpc.tv.enabled | Enable RK TV | boolean | false |
 
-#### Swagger Service
+### Swagger Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
 | grpc.sw.enabled | Enable swagger service over gRpc server | boolean | false |

@@ -38,6 +38,7 @@ Interceptor & bootstrapper designed for echo framework. Currently, supports bell
     - [Tracing](#tracing)
     - [RateLimit](#ratelimit)
     - [Timeout](#timeout)
+    - [Gzip](#gzip)
   - [Development Status: Stable](#development-status-stable)
   - [Contributing](#contributing)
 
@@ -266,6 +267,12 @@ Send application metadata as header to client.
 | echo.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
 | echo.interceptors.timeout.paths.path | Full path | string | "" |
 | echo.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
+
+#### Gzip
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| echo.interceptors.gzip.enabled | Enable gzip interceptor | boolean | false |
+| echo.interceptors.gzip.level | Provide level of compression, options are noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly. | string | defaultCompression |
 
 ### Development Status: Stable
 

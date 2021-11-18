@@ -38,6 +38,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
     - [Tracing](#tracing)
     - [RateLimit](#ratelimit)
     - [Timeout](#timeout)
+    - [Gzip](#gzip)
   - [Development Status: Stable](#development-status-stable)
   - [Contributing](#contributing)
 
@@ -266,6 +267,12 @@ Send application metadata as header to client.
 | gin.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
 | gin.interceptors.timeout.paths.path | Full path | string | "" |
 | gin.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
+
+#### Gzip
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.gzip.enabled | Enable gzip interceptor | boolean | false |
+| gin.interceptors.gzip.level | Provide level of compression, options are noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly. | string | defaultCompression |
 
 ### Development Status: Stable
 
