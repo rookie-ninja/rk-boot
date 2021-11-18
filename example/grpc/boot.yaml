@@ -33,6 +33,17 @@ grpc:
     port: 8080                                         # Optional
     enableReflection: true                             # Optional, default: false
     enableRkGwOption: true                             # Optional, default: false
+#    gwOption:                                         # Optional, default: nil
+#      marshal:                                        # Optional, default: nil
+#        multiline: false                              # Optional, default: false
+#        emitUnpopulated: false                        # Optional, default: false
+#        indent: ""                                    # Optional, default: false
+#        allowPartial: false                           # Optional, default: false
+#        useProtoNames: false                          # Optional, default: false
+#        useEnumNumbers: false                         # Optional, default: false
+#      unmarshal:                                      # Optional, default: nil
+#        allowPartial: false                           # Optional, default: false
+#        discardUnknown: false                         # Optional, default: false
     noRecvMsgSizeLimit: false                          # Optional, default: false
     commonService:
       enabled: true                                    # Optional, default: false
@@ -79,12 +90,12 @@ grpc:
 #          - "tokens"                                  # Optional, default: []
 #        api:
 #          - "keys"                                    # Optional, default: []
-      tracingTelemetry:
-        enabled: true                                  # Optional, default: false
-        exporter:                                      # Optional, default will create a stdout exporter
-          file:
-            enabled: true                              # Optional, default: false
-            outputPath: "logs/trace.log"               # Optional, default: stdout
+#      tracingTelemetry:
+#        enabled: true                                  # Optional, default: false
+#        exporter:                                      # Optional, default will create a stdout exporter
+#          file:
+#            enabled: true                              # Optional, default: false
+#            outputPath: "logs/trace.log"               # Optional, default: stdout
 #          jaeger:
 #            agent:
 #              enabled: true                           # Optional, default: false
@@ -95,16 +106,16 @@ grpc:
 #              endpoint: ""                            # Optional, default: http://localhost:14268/api/traces
 #              username: ""                            # Optional, default: ""
 #              password: ""                            # Optional, default: ""
-      rateLimit:
-        enabled: false
-        algorithm: "leakyBucket"
-        reqPerSec: 0
-        paths:
-          - path: "/rk.api.v1.RkCommonService/Healthy"
-            reqPerSec: 0
-      timeout:
-        enabled: false
-        timeoutMs: 5000
-        paths:
-          - path: "/rk.api.v1.RkCommonService/Healthy"
-            timeoutMs: 100
+#      rateLimit:
+#        enabled: false
+#        algorithm: "leakyBucket"
+#        reqPerSec: 0
+#        paths:
+#          - path: "/rk.api.v1.RkCommonService/Healthy"
+#            reqPerSec: 0
+#      timeout:
+#        enabled: false
+#        timeoutMs: 5000
+#        paths:
+#          - path: "/rk.api.v1.RkCommonService/Healthy"
+#            timeoutMs: 100

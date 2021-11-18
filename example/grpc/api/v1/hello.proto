@@ -11,5 +11,5 @@ service Greeter {
 message HelloRequest {}
 
 message HelloResponse {
-  string message = 1;
+  string my_message = 1;
 }
