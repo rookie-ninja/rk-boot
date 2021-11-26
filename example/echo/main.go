@@ -27,7 +27,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
-	boot := rkboot.NewBoot()
+	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/echo/boot.yaml"))
 
 	// Register handler
 	boot.GetEchoEntry("greeter").Echo.GET("/v1/hello", hello)

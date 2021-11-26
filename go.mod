@@ -6,7 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.7.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.5.0
 	github.com/labstack/echo/v4 v4.6.1
-	github.com/rookie-ninja/rk-echo v0.0.2
+	github.com/rookie-ninja/rk-echo v0.0.3
 	github.com/rookie-ninja/rk-entry v1.0.3
 	github.com/rookie-ninja/rk-gin v1.2.10
 	github.com/rookie-ninja/rk-grpc v1.2.12
