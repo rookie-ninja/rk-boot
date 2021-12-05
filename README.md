@@ -20,7 +20,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
   - [Start grpc server from YAML](#start-grpc-server-from-yaml)
   - [Start gin server from YAML](#start-gin-server-from-yaml)
   - [Start echo server from YAML](#start-echo-server-from-yaml)
-  - [Start GoFrame server](#start-goframe-server)
+  - [Start GoFrame server from YAML](#start-goframe-server-from-yaml)
 - [Grpc interceptor](#grpc-interceptor)
     - [Logging interceptor](#logging-interceptor)
   - [Other interceptors](#other-interceptors)
@@ -202,7 +202,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 - TV: http://localhost:8080/rk/v1/tv
 ![echo-tv](img/gin-tv.png)
 
-### Start GoFrame server
+### Start GoFrame server from YAML
 - boot.yaml
 ```yaml
 ---
