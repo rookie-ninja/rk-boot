@@ -11,7 +11,7 @@ require (
 	github.com/rookie-ninja/rk-entry v1.0.3
 	github.com/rookie-ninja/rk-gf v0.0.2
 	github.com/rookie-ninja/rk-gin v1.2.11
-	github.com/rookie-ninja/rk-grpc v1.2.13
+	github.com/rookie-ninja/rk-grpc v1.2.14
 	github.com/rookie-ninja/rk-prom v1.1.3
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.38.0
