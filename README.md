@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Bootstrapper for rkentry.Entry.
-With rk-boot, users can start gRPC, gin, prometheus client or custom entry service with yaml formatted config file.
+With rk-boot, users can start gRPC, gin, echo, GoFrame, prometheus client or custom entry service with yaml formatted config file.
 Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -20,6 +20,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
   - [Start grpc server from YAML](#start-grpc-server-from-yaml)
   - [Start gin server from YAML](#start-gin-server-from-yaml)
   - [Start echo server from YAML](#start-echo-server-from-yaml)
+  - [Start GoFrame server](#start-goframe-server)
 - [Grpc interceptor](#grpc-interceptor)
     - [Logging interceptor](#logging-interceptor)
   - [Other interceptors](#other-interceptors)
@@ -29,6 +30,8 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 - [Echo middleware](#echo-middleware)
   - [Logging middleware](#logging-middleware-1)
   - [Other interceptors](#other-interceptors-1)
+- [GoFrame middleware](#goframe-middleware)
+  - [Logging middleware](#logging-middleware-2)
 - [gRPC proxy](#grpc-proxy)
 - [Development Status: Stable](#development-status-stable)
 - [Build instruction](#build-instruction)
@@ -199,6 +202,52 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 - TV: http://localhost:8080/rk/v1/tv
 ![echo-tv](img/gin-tv.png)
 
+### Start GoFrame server
+- boot.yaml
+```yaml
+---
+gf:
+  - name: greeter       # Required, Name of gin entry
+    port: 8080          # Required, Port of gin entry
+    enabled: true       # Required, Enable gin entry
+    sw:
+      enabled: true     # Optional, Enable swagger UI
+    commonService:
+      enabled: true     # Optional, Enable common service
+    tv:
+      enabled:  true    # Optional, Enable RK TV
+```
+- main.go
+```go
+package main
+
+import (
+   "context"
+   "github.com/rookie-ninja/rk-boot"
+)
+
+func main() {
+   // Create a new boot instance.
+   boot := rkboot.NewBoot()
+
+   // Bootstrap
+   boot.Bootstrap(context.Background())
+
+   // Wait for shutdown sig
+   boot.WaitForShutdownSig(context.Background())
+}
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+- Swagger: http://localhost:8080/sw
+![echo-sw](img/gin-sw.png)
+
+- TV: http://localhost:8080/rk/v1/tv
+![echo-tv](img/gin-tv.png)
+
 ## Grpc interceptor
 rk-boot depends on rk-grpc which contains some commonly used middlewares can be used with gin framework directly.
 [rk-grpc](https://github.com/rookie-ninja/rk-grpc)
@@ -210,6 +259,10 @@ rk-boot depends on rk-grpc which contains some commonly used middlewares can be 
 - metadata interceptor
 - rate limit interceptor
 - timeout interceptor
+- cors interceptor
+- jwt interceptor
+- secure interceptor
+- csrf interceptor
 
 #### Logging interceptor
 - boot.yaml
@@ -267,6 +320,10 @@ rk-boot depends on rk-gin which contains some commonly used middlewares can be u
 - rate limit middleware
 - timeout middleware
 - gzip middleware
+- cors interceptor
+- jwt interceptor
+- secure interceptor
+- csrf interceptor
 
 ### Logging middleware
 **No codes needed!**
@@ -330,6 +387,10 @@ rk-boot depends on rk-echo which contains some commonly used middlewares can be 
 - rate limit middleware
 - timeout middleware
 - gzip middleware
+- cors interceptor
+- jwt interceptor
+- secure interceptor
+- csrf interceptor
 
 ### Logging middleware
 **No codes needed!**
@@ -379,6 +440,68 @@ EOE
 ### Other interceptors
 Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/echo-golang/basic/)
 
+## GoFrame middleware
+rk-boot depends on rk-echo which contains some commonly used middlewares can be used with GoFrame framework directly.
+[rk-gin](https://github.com/rookie-ninja/rk-gin)
+- logging middleware
+- prometheus metrics middleware
+- auth middleware
+- tracing middleware
+- panic middleware
+- metadata middleware
+- rate limit middleware
+- timeout middleware
+- rate limit middleware
+- cors interceptor
+- jwt interceptor
+- secure interceptor
+- csrf interceptor
+
+### Logging middleware
+**No codes needed!**
+
+Enable middleware in boot.yaml file as bellow.
+Please refer [online docs](https://rkdev.info/docs) for details.
+
+- boot.yaml
+```yaml
+gf:
+  - name: greeter                             # Required
+    port: 8080                                # Required
+    enabled: true                             # Required
+    commonService:                            # Optional
+      enabled: true                           # Optional, default: false
+    interceptors:                             # Optional
+      loggingZap:
+        enabled: true                         # Enable logging middleware
+```
+```shell script
+$ go run main.go
+$ curl -X GET localhost:8080/rk/v1/healthy
+{"healthy":true}
+```
+```shell script
+# logs would be printed as bellow.
+------------------------------------------------------------------------
+endTime=2021-12-05T21:03:40.983602+08:00
+startTime=2021-12-05T21:03:40.983493+08:00
+elapsedNano=108745
+timezone=CST
+ids={"eventId":"c240ca5c-439e-4235-aacf-1136d7f65965"}
+app={"appName":"rk-boot","appVersion":"master-506a2f8","entryName":"greeter","entryType":"GfEntry"}
+env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"192.168.1.102","os":"darwin","realm":"*","region":"*"}
+payloads={"apiMethod":"GET","apiPath":"/rk/v1/healthy","apiProtocol":"HTTP/1.1","apiQuery":"","userAgent":"curl/7.64.1"}
+error={}
+counters={}
+pairs={}
+timing={}
+remoteAddr=localhost:51750
+operation=/rk/v1/healthy
+resCode=200
+eventStatus=Ended
+EOE
+```
+
 ## gRPC proxy
 User can start a gRPC server as proxy server which proxies request to backend gRPC servers.
 
@@ -405,12 +528,14 @@ go 1.16
 
 require (
 	github.com/gin-gonic/gin v1.7.2
+	github.com/gogf/gf/v2 v2.0.0-beta
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.5.0
 	github.com/labstack/echo/v4 v4.6.1
-	github.com/rookie-ninja/rk-echo v0.0.2
+	github.com/rookie-ninja/rk-echo v0.0.4
 	github.com/rookie-ninja/rk-entry v1.0.3
-	github.com/rookie-ninja/rk-gin v1.2.10
-	github.com/rookie-ninja/rk-grpc v1.2.12
+	github.com/rookie-ninja/rk-gf v0.0.2
+	github.com/rookie-ninja/rk-gin v1.2.11
+	github.com/rookie-ninja/rk-grpc v1.2.13
 	github.com/rookie-ninja/rk-prom v1.1.3
 	github.com/stretchr/testify v1.7.0
 	google.golang.org/grpc v1.38.0

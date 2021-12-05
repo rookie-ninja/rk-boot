@@ -46,6 +46,11 @@ gin:
 #      headers: ["sw:rk"]                                  # Optional, default: []
 #    commonService:
 #      enabled: true                                       # Optional, default: false
+#    static:
+#      enabled: true                                       # Optional, default: false
+#      path: "/rk/v1/static"                               # Optional, default: /rk/v1/static
+#      sourceType: local                                   # Required, options: pkger, local
+#      sourcePath: "."                                     # Required, full path of source directory
 #    tv:
 #      enabled:  true                                      # Optional, default: false
 #    prom:
@@ -116,3 +121,38 @@ gin:
 #      gzip:
 #        enabled: true                                     # Optional, default: false
 #        level: defaultCompression                         # Optional, default: defaultCompression, options: [noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly]
+#      jwt:
+#        enabled: true                                     # Optional, default: false
+#        signingKey: "my-secret"                           # Required
+#        ignorePrefix:                                     # Optional, default: []
+#          - "/rk/v1/tv"
+#          - "/sw"
+#          - "/rk/v1/assets"
+#        signingKeys:                                      # Optional
+#          - "key:value"
+#        signingAlgo: ""                                   # Optional, default: "HS256"
+#        tokenLookup: "header:<name>"                      # Optional, default: "header:Authorization"
+#        authScheme: "Bearer"                              # Optional, default: "Bearer"
+#      secure:
+#        enabled: true                                     # Optional, default: false
+#        xssProtection: ""                                 # Optional, default: "1; mode=block"
+#        contentTypeNosniff: ""                            # Optional, default: nosniff
+#        xFrameOptions: ""                                 # Optional, default: SAMEORIGIN
+#        hstsMaxAge: 0                                     # Optional, default: 0
+#        hstsExcludeSubdomains: false                      # Optional, default: false
+#        hstsPreloadEnabled: false                         # Optional, default: false
+#        contentSecurityPolicy: ""                         # Optional, default: ""
+#        cspReportOnly: false                              # Optional, default: false
+#        referrerPolicy: ""                                # Optional, default: ""
+#        ignorePrefix: []                                  # Optional, default: []
+#      csrf:
+#        enabled: true
+#        tokenLength: 32                                   # Optional, default: 32
+#        tokenLookup: "header:X-CSRF-Token"                # Optional, default: "header:X-CSRF-Token"
+#        cookieName: "_csrf"                               # Optional, default: _csrf
+#        cookieDomain: ""                                  # Optional, default: ""
+#        cookiePath: ""                                    # Optional, default: ""
+#        cookieMaxAge: 86400                               # Optional, default: 86400
+#        cookieHttpOnly: false                             # Optional, default: false
+#        cookieSameSite: "default"                         # Optional, default: "default", options: lax, strict, none, default
+#        ignorePrefix: []                                  # Optional, default: []
