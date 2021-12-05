@@ -32,6 +32,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
   - [Other interceptors](#other-interceptors-1)
 - [GoFrame middleware](#goframe-middleware)
   - [Logging middleware](#logging-middleware-2)
+  - [Other interceptors](#other-interceptors-2)
 - [gRPC proxy](#grpc-proxy)
 - [Development Status: Stable](#development-status-stable)
 - [Build instruction](#build-instruction)
