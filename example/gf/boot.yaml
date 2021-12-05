@@ -33,26 +33,27 @@
 #    path: "example/boot/full/config.yaml"                 # Required
 #    locale: "*::*::*::*"                                  # Required, default: *::*::*::*
 #    description: "Description of entry"                   # Optional
-echo:
+gf:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required
+#    description: "greeter server"                         # Optional, default: ""
 #    cert:
 #      ref: "local-cert"                                   # Optional, default: "", reference of cert entry declared above
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
-#      jsonPath: ""                                        # Optional
+#      jsonPath: "example/gf/docs"                         # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
 #    commonService:
 #      enabled: true                                       # Optional, default: false
-#    tv:
-#      enabled:  true                                      # Optional, default: false
 #    static:
 #      enabled: true                                       # Optional, default: false
 #      path: "/rk/v1/static"                               # Optional, default: /rk/v1/static
 #      sourceType: local                                   # Required, options: pkger, local
 #      sourcePath: "."                                     # Required, full path of source directory
+#    tv:
+#      enabled:  true                                      # Optional, default: false
 #    prom:
 #      enabled: true                                       # Optional, default: false
 #      path: ""                                            # Optional, default: "metrics"
@@ -112,15 +113,6 @@ echo:
 #        paths:
 #          - path: "/rk/v1/healthy"                        # Optional, default: ""
 #            reqPerSec: 0                                  # Optional, default: 1000000
-#      timeout:
-#        enabled: false                                    # Optional, default: false
-#        timeoutMs: 5000                                   # Optional, default: 5000
-#        paths:
-#          - path: "/rk/v1/healthy"                        # Optional, default: ""
-#            timeoutMs: 1000                               # Optional, default: 5000
-#      gzip:
-#        enabled: true                                     # Optional, default: false
-#        level: defaultCompression                         # Optional, default: defaultCompression, options: [noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly]
 #      jwt:
 #        enabled: true                                     # Optional, default: false
 #        signingKey: "my-secret"                           # Required

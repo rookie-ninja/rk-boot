@@ -47,6 +47,11 @@ grpc:
     noRecvMsgSizeLimit: false                          # Optional, default: false
     commonService:
       enabled: true                                    # Optional, default: false
+#    static:
+#      enabled: true                                   # Optional, default: false
+#      path: "/rk/v1/static"                           # Optional, default: /rk/v1/static
+#      sourceType: local                               # Required, options: pkger, local
+#      sourcePath: "."                                 # Required, full path of source directory
 #    cert:
 #      ref: "local-cert"                               # Optional, default: "", reference of cert entry declared above
     gwMappingFilePaths:                                # Optional
@@ -58,8 +63,8 @@ grpc:
       jsonPath: "api/gen/v1"                           # Optional
 #      path: "sw"                                      # Optional, default: "sw"
 #      headers: [ "sw:rk" ]                            # Optional, default: []
-    prom:
-      enabled: true                                    # Optional, default: false
+#    prom:
+#      enabled: true                                   # Optional, default: false
 #      path: ""                                        # Optional, default: "metrics"
 #      pusher:
 #        enabled: false                                # Optional, default: false
@@ -74,13 +79,13 @@ grpc:
 #        ref: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
 #      eventLogger:                                    # Optional
 #        ref: event-logger                             # Optional, default: logger of STDOUT, reference of logger entry declared above
-    interceptors:
-      loggingZap:
-        enabled: true                                  # Optional, default: false
-      metricsProm:
-        enabled: true                                  # Optional, default: false
-      meta:
-        enabled: true                                  # Optional, default: false
+#    interceptors:
+#      loggingZap:
+#        enabled: true                                 # Optional, default: false
+#      metricsProm:
+#        enabled: true                                 # Optional, default: false
+#      meta:
+#        enabled: true                                 # Optional, default: false
 #        prefix: "rk"                                  # Optional, default: "rk"
 #      auth:
 #        enabled: false                                # Optional, default: false
@@ -91,11 +96,11 @@ grpc:
 #        api:
 #          - "keys"                                    # Optional, default: []
 #      tracingTelemetry:
-#        enabled: true                                  # Optional, default: false
-#        exporter:                                      # Optional, default will create a stdout exporter
+#        enabled: true                                 # Optional, default: false
+#        exporter:                                     # Optional, default will create a stdout exporter
 #          file:
-#            enabled: true                              # Optional, default: false
-#            outputPath: "logs/trace.log"               # Optional, default: stdout
+#            enabled: true                             # Optional, default: false
+#            outputPath: "logs/trace.log"              # Optional, default: stdout
 #          jaeger:
 #            agent:
 #              enabled: true                           # Optional, default: false

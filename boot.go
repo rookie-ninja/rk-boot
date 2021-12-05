@@ -10,6 +10,7 @@ import (
 	"context"
 	"github.com/rookie-ninja/rk-echo/boot"
 	"github.com/rookie-ninja/rk-entry/entry"
+	rkgf "github.com/rookie-ninja/rk-gf/boot"
 	"github.com/rookie-ninja/rk-gin/boot"
 	"github.com/rookie-ninja/rk-grpc/boot"
 	"github.com/rookie-ninja/rk-prom"
@@ -184,6 +185,17 @@ func (boot *Boot) GetEchoEntry(name string) *rkecho.EchoEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
 
 	if entry, ok := entryRaw.(*rkecho.EchoEntry); ok {
+		return entry
+	}
+
+	return nil
+}
+
+// GetGfEntry returns rkgf.GfEntry from rkentry.GlobalAppCtx.
+func (boot *Boot) GetGfEntry(name string) *rkgf.GfEntry {
+	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
+
+	if entry, ok := entryRaw.(*rkgf.GfEntry); ok {
 		return entry
 	}
 

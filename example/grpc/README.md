@@ -11,6 +11,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 | Common Service | List of common API available on GRPC, GRPC Gateway and swagger. |
 | TV Service | A Web UI shows application and environment information. |
 | Metrics interceptor | Collect RPC metrics and export as prometheus client with same port of GRPC gateway. |
+| Static file handler | A Web UI shows files could be downloaded from server, currently support source of local and pkger. |
 | Log interceptor | Log every RPC requests as event with rk-query. |
 | Trace interceptor | Collect RPC trace and export it to stdout, file or jaeger. |
 | Panic interceptor | Recover from panic for RPC requests and log it. |
@@ -18,6 +19,10 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
 | RateLimit interceptor | Limit request rate from interceptor. |
 | Timeout interceptor | Timing out request based on configuration. |
+| CORS interceptor | CORS interceptor for grpc-gateway. |
+| JWT interceptor | JWT interceptor on server side. |
+| Secure interceptor | Secure interceptor for grpc-gateway. |
+| CSRF interceptor | CSRF interceptor for grpc-gateway. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -31,6 +36,7 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
   - [GRPC Gateway Service](#grpc-gateway-service)
   - [Prom Client](#prom-client)
   - [TV Service](#tv-service)
+  - [Static file handler Service](#static-file-handler-service)
   - [Swagger Service](#swagger-service)
   - [Interceptors](#interceptors)
     - [Log](#log)
@@ -40,6 +46,10 @@ Interceptor & bootstrapper designed for grpc. Currently, supports bellow functio
     - [Tracing](#tracing)
     - [RateLimit](#ratelimit)
     - [Timeout](#timeout)
+    - [CORS](#cors)
+    - [JWT](#jwt)
+    - [Secure](#secure)
+    - [CSRF](#csrf)
   - [Development Status: Stable](#development-status-stable)
   - [Appendix](#appendix)
   - [Contributing](#contributing)
@@ -191,6 +201,19 @@ Please refer to bellow repository for detailed explanations.
 | ------ | ------ | ------ | ------ |
 | grpc.tv.enabled | Enable RK TV | boolean | false |
 
+### Static file handler Service
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.static.enabled | Optional, Enable static file handler | boolean | false |
+| grpc.static.path | Optional, path of static file handler | string | /rk/v1/static |
+| grpc.static.sourceType | Required, local and pkger supported | string | "" |
+| grpc.static.sourcePath | Required, full path of source directory | string | "" |
+
+- About [pkger](https://github.com/markbates/pkger)
+User can use pkger command line tool to embed static files into .go files.
+
+Please use sourcePath like: github.com/rookie-ninja/rk-grpc:/boot/assets
+
 ### Swagger Service
 | name | description | type | default value |
 | ------ | ------ | ------ | ------ |
@@ -309,6 +332,73 @@ Send application metadata as header to client and GRPC Gateway.
 | grpc.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
 | grpc.interceptors.timeout.paths.path | Full path | string | "" |
 | grpc.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
+
+#### CORS
+Interceptor for grpc-gateway.
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.cors.enabled | Enable cors interceptor | boolean | false |
+| grpc.interceptors.cors.allowOrigins | Provide allowed origins with wildcard enabled. | []string | * |
+| grpc.interceptors.cors.allowMethods | Provide allowed methods returns as response header of OPTIONS request. | []string | All http methods |
+| grpc.interceptors.cors.allowHeaders | Provide allowed headers returns as response header of OPTIONS request. | []string | Headers from request |
+| grpc.interceptors.cors.allowCredentials | Returns as response header of OPTIONS request. | bool | false |
+| grpc.interceptors.cors.exposeHeaders | Provide exposed headers returns as response header of OPTIONS request. | []string | "" |
+| grpc.interceptors.cors.maxAge | Provide max age returns as response header of OPTIONS request. | int | 0 |
+
+#### JWT
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.jwt.enabled | Enable JWT interceptor | boolean | false |
+| grpc.interceptors.jwt.signingKey | Required, Provide signing key. | string | "" |
+| grpc.interceptors.jwt.ignorePrefix | Provide ignoring path prefix. | []string | [] |
+| grpc.interceptors.jwt.signingKeys | Provide signing keys as scheme of <key>:<value>. | []string | [] |
+| grpc.interceptors.jwt.signingAlgo | Provide signing algorithm. | string | HS256 |
+| grpc.interceptors.jwt.tokenLookup | Provide token lookup scheme, please see bellow description. | string | "header:Authorization" |
+| grpc.interceptors.jwt.authScheme | Provide auth scheme. | string | Bearer |
+
+The supported scheme of **tokenLookup** 
+
+```
+// Optional. Default value "header:Authorization".
+// Possible values:
+// - "header:<name>"
+// Multiply sources example:
+// - "header: Authorization,cookie: myowncookie"
+```
+
+#### Secure
+Interceptor for grpc-gateway.
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.secure.enabled | Enable secure interceptor | boolean | false |
+| grpc.interceptors.secure.xssProtection | X-XSS-Protection header value. | string | "1; mode=block" |
+| grpc.interceptors.secure.contentTypeNosniff | X-Content-Type-Options header value. | string | nosniff |
+| grpc.interceptors.secure.xFrameOptions | X-Frame-Options header value. | string | SAMEORIGIN |
+| grpc.interceptors.secure.hstsMaxAge | Strict-Transport-Security header value. | int | 0 |
+| grpc.interceptors.secure.hstsExcludeSubdomains | Excluding subdomains of HSTS. | bool | false |
+| grpc.interceptors.secure.hstsPreloadEnabled | Enabling HSTS preload. | bool | false |
+| grpc.interceptors.secure.contentSecurityPolicy | Content-Security-Policy header value. | string | "" |
+| grpc.interceptors.secure.cspReportOnly | Content-Security-Policy-Report-Only header value. | bool | false |
+| grpc.interceptors.secure.referrerPolicy | Referrer-Policy header value. | string | "" |
+| grpc.interceptors.secure.ignorePrefix | Ignoring path prefix. | []string | [] |
+
+#### CSRF
+Interceptor for grpc-gateway.
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| grpc.interceptors.csrf.enabled | Enable csrf interceptor | boolean | false |
+| grpc.interceptors.csrf.tokenLength | Provide the length of the generated token. | int | 32 |
+| grpc.interceptors.csrf.tokenLookup | Provide csrf token lookup rules, please see code comments for details. | string | "header:X-CSRF-Token" |
+| grpc.interceptors.csrf.cookieName | Provide name of the CSRF cookie. This cookie will store CSRF token. | string | _csrf |
+| grpc.interceptors.csrf.cookieDomain | Domain of the CSRF cookie. | string | "" |
+| grpc.interceptors.csrf.cookiePath | Path of the CSRF cookie. | string | "" |
+| grpc.interceptors.csrf.cookieMaxAge | Provide max age (in seconds) of the CSRF cookie. | int | 86400 |
+| grpc.interceptors.csrf.cookieHttpOnly | Indicates if CSRF cookie is HTTP only. | bool | false |
+| grpc.interceptors.csrf.cookieSameSite | Indicates SameSite mode of the CSRF cookie. Options: lax, strict, none, default | string | default |
+| grpc.interceptors.csrf.ignorePrefix | Ignoring path prefix. | []string | [] |
 
 ### Development Status: Stable
 

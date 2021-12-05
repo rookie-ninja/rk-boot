@@ -9,6 +9,7 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 | Swagger Service | Swagger UI. |
 | Common Service | List of common API available on Gin. |
 | TV Service | A Web UI shows application and environment information. |
+| Static file handler | A Web UI shows files could be downloaded from server, currently support source of local and pkger. |
 | Metrics interceptor | Collect RPC metrics and export as prometheus client. |
 | Log interceptor | Log every RPC requests as event with rk-query. |
 | Trace interceptor | Collect RPC trace and export it to stdout, file or jaeger. |
@@ -16,6 +17,11 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
 | Meta interceptor | Send application metadata as header to client. |
 | Auth interceptor | Support [Basic Auth], [Bearer Token] and [API Key] authrization types. |
 | Timeout interceptor | Timing out request based on configuration. |
+| Gzip interceptor | Compress and Decompress message body based on request header. |
+| CORS interceptor | Server side CORS interceptor. |
+| JWT interceptor | Server side JWT interceptor. |
+| Secure interceptor | Server side secure interceptor. |
+| CSRF interceptor | Server side csrf interceptor. |
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -36,6 +42,11 @@ Interceptor & bootstrapper designed for gin framework. Currently, supports bello
     - [Meta](#meta)
     - [Tracing](#tracing)
     - [Timeout](#timeout)
+    - [Gzip](#gzip)
+    - [CORS](#cors)
+    - [JWT](#jwt)
+    - [Secure](#secure)
+    - [CSRF](#csrf)
   - [Development Status: Stable](#development-status-stable)
   - [Contributing](#contributing)
 
@@ -252,6 +263,88 @@ Send application metadata as header to client.
 | gin.interceptors.timeout.timeoutMs | Global timeout in milliseconds. | int | 5000 |
 | gin.interceptors.timeout.paths.path | Full path | string | "" |
 | gin.interceptors.timeout.paths.timeoutMs | Timeout in milliseconds by full path | int | 5000 |
+
+#### Gzip
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.gzip.enabled | Enable gzip interceptor | boolean | false |
+| gin.interceptors.gzip.level | Provide level of compression, options are noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly. | string | defaultCompression |
+
+#### CORS
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.cors.enabled | Enable cors interceptor | boolean | false |
+| gin.interceptors.cors.allowOrigins | Provide allowed origins with wildcard enabled. | []string | * |
+| gin.interceptors.cors.allowMethods | Provide allowed methods returns as response header of OPTIONS request. | []string | All http methods |
+| gin.interceptors.cors.allowHeaders | Provide allowed headers returns as response header of OPTIONS request. | []string | Headers from request |
+| gin.interceptors.cors.allowCredentials | Returns as response header of OPTIONS request. | bool | false |
+| gin.interceptors.cors.exposeHeaders | Provide exposed headers returns as response header of OPTIONS request. | []string | "" |
+| gin.interceptors.cors.maxAge | Provide max age returns as response header of OPTIONS request. | int | 0 |
+
+#### JWT
+In order to make swagger UI and RK tv work under JWT without JWT token, we need to ignore prefixes of paths as bellow.
+
+```yaml
+jwt:
+  ...
+  ignorePrefix:
+   - "/rk/v1/tv"
+   - "/sw"
+   - "/rk/v1/assets"
+```
+
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.jwt.enabled | Enable JWT interceptor | boolean | false |
+| gin.interceptors.jwt.signingKey | Required, Provide signing key. | string | "" |
+| gin.interceptors.jwt.ignorePrefix | Provide ignoring path prefix. | []string | [] |
+| gin.interceptors.jwt.signingKeys | Provide signing keys as scheme of <key>:<value>. | []string | [] |
+| gin.interceptors.jwt.signingAlgo | Provide signing algorithm. | string | HS256 |
+| gin.interceptors.jwt.tokenLookup | Provide token lookup scheme, please see bellow description. | string | "header:Authorization" |
+| gin.interceptors.jwt.authScheme | Provide auth scheme. | string | Bearer |
+
+The supported scheme of **tokenLookup** 
+
+```
+// Optional. Default value "header:Authorization".
+// Possible values:
+// - "header:<name>"
+// - "query:<name>"
+// - "param:<name>"
+// - "cookie:<name>"
+// - "form:<name>"
+// Multiply sources example:
+// - "header: Authorization,cookie: myowncookie"
+```
+
+#### Secure
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.secure.enabled | Enable secure interceptor | boolean | false |
+| gin.interceptors.secure.xssProtection | X-XSS-Protection header value. | string | "1; mode=block" |
+| gin.interceptors.secure.contentTypeNosniff | X-Content-Type-Options header value. | string | nosniff |
+| gin.interceptors.secure.xFrameOptions | X-Frame-Options header value. | string | SAMEORIGIN |
+| gin.interceptors.secure.hstsMaxAge | Strict-Transport-Security header value. | int | 0 |
+| gin.interceptors.secure.hstsExcludeSubdomains | Excluding subdomains of HSTS. | bool | false |
+| gin.interceptors.secure.hstsPreloadEnabled | Enabling HSTS preload. | bool | false |
+| gin.interceptors.secure.contentSecurityPolicy | Content-Security-Policy header value. | string | "" |
+| gin.interceptors.secure.cspReportOnly | Content-Security-Policy-Report-Only header value. | bool | false |
+| gin.interceptors.secure.referrerPolicy | Referrer-Policy header value. | string | "" |
+| gin.interceptors.secure.ignorePrefix | Ignoring path prefix. | []string | [] |
+
+#### CSRF
+| name | description | type | default value |
+| ------ | ------ | ------ | ------ |
+| gin.interceptors.csrf.enabled | Enable csrf interceptor | boolean | false |
+| gin.interceptors.csrf.tokenLength | Provide the length of the generated token. | int | 32 |
+| gin.interceptors.csrf.tokenLookup | Provide csrf token lookup rules, please see code comments for details. | string | "header:X-CSRF-Token" |
+| gin.interceptors.csrf.cookieName | Provide name of the CSRF cookie. This cookie will store CSRF token. | string | _csrf |
+| gin.interceptors.csrf.cookieDomain | Domain of the CSRF cookie. | string | "" |
+| gin.interceptors.csrf.cookiePath | Path of the CSRF cookie. | string | "" |
+| gin.interceptors.csrf.cookieMaxAge | Provide max age (in seconds) of the CSRF cookie. | int | 86400 |
+| gin.interceptors.csrf.cookieHttpOnly | Indicates if CSRF cookie is HTTP only. | bool | false |
+| gin.interceptors.csrf.cookieSameSite | Indicates SameSite mode of the CSRF cookie. Options: lax, strict, none, default | string | default |
+| gin.interceptors.csrf.ignorePrefix | Ignoring path prefix. | []string | [] |
 
 ### Development Status: Stable
 

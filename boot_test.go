@@ -98,6 +98,47 @@ echo:
 	rkentry.GlobalAppCtx.RemoveEntry("ut-echo")
 }
 
+func TestNewBoot_HappyCase_Gf(t *testing.T) {
+	config := `
+---
+gf:
+  - name: ut-gf
+    port: 8080
+    enabled: true
+`
+
+	filePath := createFileAtTestTempDir(t, "ut-boot-gf.yaml", config)
+
+	boot := NewBoot(WithBootConfigPath(filePath))
+	boot.AddShutdownHookFunc("ut-shutdown", func() {
+		// noop
+	})
+
+	boot.Bootstrap(context.TODO())
+
+	assert.NotNil(t, boot.GetAppInfoEntry())
+	assert.NotNil(t, boot.GetZapLoggerEntry(rkentry.DefaultZapLoggerEntryName))
+	assert.NotNil(t, boot.GetZapLoggerEntryDefault())
+	assert.NotNil(t, boot.GetEventLoggerEntry(rkentry.DefaultEventLoggerEntryName))
+	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
+	assert.Nil(t, boot.GetConfigEntry(""))
+	assert.Nil(t, boot.GetCertEntry(""))
+	assert.Nil(t, boot.GetGinEntry("ut-gf"))
+	assert.Nil(t, boot.GetEchoEntry("ut-gf"))
+	assert.NotNil(t, boot.GetGfEntry("ut-gf"))
+	assert.Nil(t, boot.GetGrpcEntry("ut-gf"))
+	assert.Nil(t, boot.GetPromEntry(""))
+
+	go func() {
+		boot.WaitForShutdownSig(context.TODO())
+	}()
+
+	time.Sleep(1 * time.Second)
+	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
+	time.Sleep(1 * time.Second)
+	rkentry.GlobalAppCtx.RemoveEntry("ut-gf")
+}
+
 func TestNewBoot_HappyCase_Grpc(t *testing.T) {
 	config := `
 ---
