@@ -502,6 +502,9 @@ eventStatus=Ended
 EOE
 ```
 
+### Other interceptors
+Please refer [online docs](https://rkdev.info/docs/bootstrapper/user-guide/gf-golang/basic/)
+
 ## gRPC proxy
 User can start a gRPC server as proxy server which proxies request to backend gRPC servers.
 
