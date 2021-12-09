@@ -4,6 +4,14 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+> TODO:
+>
+> A new version is waiting to be released at master branch. 
+> 
+> The new version will not include direct dependencies of Gin, Echo, GoFrame and gRPC.
+>
+> User needs to go get rk-boot and rk-xxx as needed!
+
 Bootstrapper for rkentry.Entry.
 With rk-boot, users can start gRPC, gin, echo, GoFrame, prometheus client or custom entry service with yaml formatted config file.
 Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.

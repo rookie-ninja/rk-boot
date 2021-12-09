@@ -43,9 +43,6 @@ gin:
 	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
 	assert.Nil(t, boot.GetConfigEntry(""))
 	assert.Nil(t, boot.GetCertEntry(""))
-	assert.NotNil(t, boot.GetGinEntry("ut-gin"))
-	assert.Nil(t, boot.GetEchoEntry("ut-gin"))
-	assert.Nil(t, boot.GetGrpcEntry("ut-gin"))
 	assert.Nil(t, boot.GetPromEntry(""))
 
 	go func() {
@@ -83,9 +80,6 @@ echo:
 	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
 	assert.Nil(t, boot.GetConfigEntry(""))
 	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetGinEntry("ut-echo"))
-	assert.NotNil(t, boot.GetEchoEntry("ut-echo"))
-	assert.Nil(t, boot.GetGrpcEntry("ut-echo"))
 	assert.Nil(t, boot.GetPromEntry(""))
 
 	go func() {
@@ -123,10 +117,6 @@ gf:
 	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
 	assert.Nil(t, boot.GetConfigEntry(""))
 	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetGinEntry("ut-gf"))
-	assert.Nil(t, boot.GetEchoEntry("ut-gf"))
-	assert.NotNil(t, boot.GetGfEntry("ut-gf"))
-	assert.Nil(t, boot.GetGrpcEntry("ut-gf"))
 	assert.Nil(t, boot.GetPromEntry(""))
 
 	go func() {
@@ -165,9 +155,6 @@ grpc:
 	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
 	assert.Nil(t, boot.GetConfigEntry(""))
 	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetGinEntry("ut-grpc"))
-	assert.Nil(t, boot.GetEchoEntry("ut-grpc"))
-	assert.NotNil(t, boot.GetGrpcEntry("ut-grpc"))
 	assert.Nil(t, boot.GetPromEntry(""))
 
 	go func() {
