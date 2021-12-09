@@ -9,6 +9,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/rookie-ninja/rk-boot"
+	"github.com/rookie-ninja/rk-gf/boot"
 	"net/http"
 )
 
@@ -30,7 +31,8 @@ func main() {
 	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/gf/boot.yaml"))
 
 	// Register handler
-	boot.GetGfEntry("greeter").Server.BindHandler("/v1/hello", hello)
+	entry := boot.GetEntry("greeter").(*rkgf.GfEntry)
+	entry.Server.BindHandler("/v1/hello", hello)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
