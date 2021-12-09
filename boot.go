@@ -8,11 +8,7 @@ package rkboot
 
 import (
 	"context"
-	"github.com/rookie-ninja/rk-echo/boot"
 	"github.com/rookie-ninja/rk-entry/entry"
-	rkgf "github.com/rookie-ninja/rk-gf/boot"
-	"github.com/rookie-ninja/rk-gin/boot"
-	"github.com/rookie-ninja/rk-grpc/boot"
 	"github.com/rookie-ninja/rk-prom"
 )
 
@@ -158,50 +154,6 @@ func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
 	return rkentry.GlobalAppCtx.GetCertEntry(name)
 }
 
-// GetGinEntry returns rkgin.GinEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetGinEntry(name string) *rkgin.GinEntry {
-	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
-
-	if entry, ok := entryRaw.(*rkgin.GinEntry); ok {
-		return entry
-	}
-
-	return nil
-}
-
-// GetGrpcEntry returns rkgrpc.GrpcEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetGrpcEntry(name string) *rkgrpc.GrpcEntry {
-	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
-
-	if entry, ok := entryRaw.(*rkgrpc.GrpcEntry); ok {
-		return entry
-	}
-
-	return nil
-}
-
-// GetEchoEntry returns rkecho.EchoEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetEchoEntry(name string) *rkecho.EchoEntry {
-	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
-
-	if entry, ok := entryRaw.(*rkecho.EchoEntry); ok {
-		return entry
-	}
-
-	return nil
-}
-
-// GetGfEntry returns rkgf.GfEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetGfEntry(name string) *rkgf.GfEntry {
-	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
-
-	if entry, ok := entryRaw.(*rkgf.GfEntry); ok {
-		return entry
-	}
-
-	return nil
-}
-
 // GetPromEntry returns rkprom.PromEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetPromEntry(name string) *rkprom.PromEntry {
 	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
@@ -211,4 +163,9 @@ func (boot *Boot) GetPromEntry(name string) *rkprom.PromEntry {
 	}
 
 	return nil
+}
+
+// GetEntry returns rkentry.Entry interface which user needs to convert by himself.
+func (boot *Boot) GetEntry(name string) interface{} {
+	return rkentry.GlobalAppCtx.GetEntry(name)
 }

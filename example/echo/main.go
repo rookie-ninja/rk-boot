@@ -9,6 +9,7 @@ import (
 	"context"
 	"github.com/labstack/echo/v4"
 	"github.com/rookie-ninja/rk-boot"
+	"github.com/rookie-ninja/rk-echo/boot"
 	"net/http"
 )
 
@@ -30,7 +31,8 @@ func main() {
 	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/echo/boot.yaml"))
 
 	// Register handler
-	boot.GetEchoEntry("greeter").Echo.GET("/v1/hello", hello)
+	entry := boot.GetEntry("greeter").(*rkecho.EchoEntry)
+	entry.Echo.GET("/v1/hello", hello)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())

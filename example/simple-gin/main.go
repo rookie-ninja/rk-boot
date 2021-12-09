@@ -9,6 +9,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot"
+	"github.com/rookie-ninja/rk-gin/boot"
 	"net/http"
 )
 
@@ -27,10 +28,11 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
-	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/simple-gin/boot.yaml"))
+	boot := rkboot.NewBoot()
 
 	// Register handler
-	boot.GetGinEntry("greeter").Router.GET("/v1/hello", hello)
+	entry := boot.GetEntry("greeter").(*rkgin.GinEntry)
+	entry.Router.GET("/v1/hello", hello)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
