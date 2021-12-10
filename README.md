@@ -70,10 +70,25 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 `go get github.com/rookie-ninja/rk-boot`
 
 ## Quick Start
-There are two ways users can run gRPC or Gin service. one is yaml formatted config file.
-The other one is through golang code.
+There are two ways users can run service. 
+
+- From YAML
+- From Code
+
+User needs to [go get] web framework as needed. Bellow web frameworks are supported.
+
+**Welcome to contribute your web framework dependencies into rk-boot family.**
+
+- [Gin](https://github.com/gin-gonic/gin)
+- [gRPC](https://grpc.io/)
+- [Echo](https://github.com/labstack/echo)
+- [GoFrame](https://github.com/gogf/gf)
+- [Fiber](https://github.com/gofiber/fiber) Implementing
+- [go-zero](https://github.com/zeromicro/go-zero) Planning
 
 ### Start grpc server from YAML
+`go get github.com/rookie-ninja/rk-grpc`
+
 - boot.yaml
 ```yaml
 ---
@@ -121,6 +136,8 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![grpc-tv](img/grpc-tv.png)
 
 ### Start gin server from YAML
+`go get github.com/rookie-ninja/rk-gin`
+
 - boot.yaml
 ```yaml
 ---
@@ -167,6 +184,8 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![gin-tv](img/gin-tv.png)
 
 ### Start echo server from YAML
+`go get github.com/rookie-ninja/rk-echo`
+
 - boot.yaml
 ```yaml
 ---
@@ -213,6 +232,8 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![echo-tv](img/gin-tv.png)
 
 ### Start GoFrame server from YAML
+`go get github.com/rookie-ninja/rk-gf`
+
 - boot.yaml
 ```yaml
 ---
@@ -540,19 +561,9 @@ module github.com/rookie-ninja/rk-boot
 go 1.16
 
 require (
-	github.com/gin-gonic/gin v1.7.2
-	github.com/gogf/gf/v2 v2.0.0-beta
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.5.0
-	github.com/labstack/echo/v4 v4.6.1
-	github.com/rookie-ninja/rk-echo v0.0.4
-	github.com/rookie-ninja/rk-entry v1.0.3
-	github.com/rookie-ninja/rk-gf v0.0.2
-	github.com/rookie-ninja/rk-gin v1.2.11
-	github.com/rookie-ninja/rk-grpc v1.2.13
-	github.com/rookie-ninja/rk-prom v1.1.3
+	github.com/rookie-ninja/rk-entry v1.0.4
+	github.com/rookie-ninja/rk-prom v1.1.4
 	github.com/stretchr/testify v1.7.0
-	google.golang.org/grpc v1.38.0
-	google.golang.org/protobuf v1.26.0
 )
 ```
 
