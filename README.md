@@ -109,6 +109,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
+   _ "github.com/rookie-ninja/rk-grpc"
 )
 
 // Application entrance.
@@ -158,6 +159,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
+   _ "github.com/rookie-ninja/rk-gin"
 )
 
 func main() {
@@ -206,6 +208,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
+   _ "github.com/rookie-ninja/rk-echo"
 )
 
 func main() {
@@ -254,6 +257,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
+   _ "github.com/rookie-ninja/rk-gf"
 )
 
 func main() {
