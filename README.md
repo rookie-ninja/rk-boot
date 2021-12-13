@@ -5,13 +5,15 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot?ref=badge_shield)
 
-> TODO:
+> Reminder:
 >
-> A new version is waiting to be released at master branch. 
+> The version of v1.3.X imported rk-gin, rk-echo, rk-grpc and rk-gf in the go.mod file initially. User only needs to [go get rk-boot] for starting web framework.
+>
+> From v1.4.X, rk-boot will not include those dependencies. User needs to [go get rk-xxx] dependencies of web framework as needed.
+>
+> Furthermore, import those dependencies in main.go file explicitly as bellow:
 > 
-> The new version will not include direct dependencies of Gin, Echo, GoFrame and gRPC.
->
-> User needs to go get rk-boot and rk-xxx as needed!
+> _ "github.com/rookie-ninja/rk-gin/boot"
 
 Bootstrapper for rkentry.Entry.
 With rk-boot, users can start gRPC, gin, echo, GoFrame, prometheus client or custom entry service with yaml formatted config file.
