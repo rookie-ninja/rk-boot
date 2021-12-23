@@ -1,4 +1,4 @@
-package rkbootgin
+package rkbootgf
 
 import (
 	_ "github.com/rookie-ninja/rk-boot"
