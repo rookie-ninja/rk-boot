@@ -33,7 +33,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 - [Online document](#online-document)
 - [Concept](#concept)
   - [Why do I want it?](#why-do-i-want-it)
-- [Installation](#installation)
+- [Supported web frameworks](#supported-web-frameworks)
 - [Quick Start](#quick-start)
   - [Start grpc server from YAML](#start-grpc-server-from-yaml)
   - [Start gin server from YAML](#start-gin-server-from-yaml)
@@ -75,8 +75,19 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 
 ![arch](img/boot-arch.png)
 
-## Installation
-`go get github.com/rookie-ninja/rk-boot`
+## Supported web frameworks
+**Welcome to contribute your web framework dependencies into rk-boot family.**
+
+**Start with [docs](https://rkdev.info/docs/bootstrapper/user-guide/gin-golang/developer/) and refer [rk-gin](https://github.com/rookie-ninja/rk-gin) as example.**
+
+| Frameworks | Stage | Installation | Dependency |
+| --- | --- | --- | --- |
+| [Gin](https://github.com/gin-gonic/gin) | Stable | go get github.com/rookie-ninja/rk-boot/gin | [rk-gin](https://github.com/rookie-ninja/rk-gin) |
+| [gRPC](https://grpc.io/)  | Stable | go get github.com/rookie-ninja/rk-boot/grpc | [rk-grpc](https://github.com/rookie-ninja/rk-grpc) |
+| [Echo](https://github.com/labstack/echo)  | Stable | go get github.com/rookie-ninja/rk-boot/echo | [rk-echo](https://github.com/rookie-ninja/rk-echo) |
+| [GoFrame](https://github.com/gogf/gf)  | Pre-release | go get github.com/rookie-ninja/rk-boot/gf | [rk-gf](https://github.com/rookie-ninja/rk-gf) |
+| [Fiber](https://github.com/gofiber/fiber) | Testing | TBD | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
+| [go-zero](https://github.com/zeromicro/go-zero) | Implementing | TBD | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
 
 ## Quick Start
 There are two ways users can run service. 
@@ -86,16 +97,9 @@ There are two ways users can run service.
 
 User needs to [go get] web framework as needed. Bellow web frameworks are supported.
 
-**Welcome to contribute your web framework dependencies into rk-boot family.**
-
-- [Gin](https://github.com/gin-gonic/gin)
-- [gRPC](https://grpc.io/)
-- [Echo](https://github.com/labstack/echo)
-- [GoFrame](https://github.com/gogf/gf)
-- [Fiber](https://github.com/gofiber/fiber) Implementing
-- [go-zero](https://github.com/zeromicro/go-zero) Planning
-
 ### Start grpc server from YAML
+- Installation
+
 `go get github.com/rookie-ninja/rk-boot/grpc`
 
 - boot.yaml
@@ -112,6 +116,7 @@ grpc:
     sw:
       enabled: true           # Optional, Enable Swagger UI
 ```
+
 - main.go
 ```go
 package main
@@ -119,7 +124,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
-   _ "github.com/rookie-ninja/rk-grpc"
+   _ "github.com/rookie-ninja/rk-boot/grpc"
 )
 
 // Application entrance.
@@ -134,18 +139,36 @@ func main() {
    boot.WaitForShutdownSig(context.Background())
 }
 ```
+
+- go.mod
+```
+module github.com/rookie-ninja/rk-demo
+
+go 1.16
+
+require (
+	github.com/rookie-ninja/rk-boot v1.4.0
+	github.com/rookie-ninja/rk-boot/grpc v1.2.15 // indirect
+)
+```
+
+- validate
 ```shell script
 $ go run main.go
 $ curl -X GET localhost:8080/rk/v1/healthy
 {"healthy":true}
 ```
 - Swagger: http://localhost:8080/sw
+
 ![grpc-sw](img/grpc-sw.png)
 
 - TV: http://localhost:8080/rk/v1/tv
+
 ![grpc-tv](img/grpc-tv.png)
 
 ### Start gin server from YAML
+- Installation
+
 `go get github.com/rookie-ninja/rk-boot/gin`
 
 - boot.yaml
@@ -162,6 +185,7 @@ gin:
     tv:
       enabled:  true    # Optional, Enable RK TV
 ```
+
 - main.go
 ```go
 package main
@@ -169,7 +193,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
-   _ "github.com/rookie-ninja/rk-gin"
+   _ "github.com/rookie-ninja/rk-boot/gin"
 )
 
 func main() {
@@ -183,18 +207,36 @@ func main() {
    boot.WaitForShutdownSig(context.Background())
 }
 ```
+
+- go.mod
+```
+module github.com/rookie-ninja/rk-demo
+
+go 1.16
+
+require (
+	github.com/rookie-ninja/rk-boot v1.4.0
+	github.com/rookie-ninja/rk-boot/gin v1.2.12 // indirect
+)
+```
+
+- validate
 ```shell script
 $ go run main.go
 $ curl -X GET localhost:8080/rk/v1/healthy
 {"healthy":true}
 ```
 - Swagger: http://localhost:8080/sw
+
 ![gin-sw](img/gin-sw.png)
 
 - TV: http://localhost:8080/rk/v1/tv
+
 ![gin-tv](img/gin-tv.png)
 
 ### Start echo server from YAML
+- Installation
+
 `go get github.com/rookie-ninja/rk-boot/echo`
 
 - boot.yaml
@@ -211,6 +253,7 @@ echo:
     tv:
       enabled:  true    # Optional, Enable RK TV
 ```
+
 - main.go
 ```go
 package main
@@ -218,7 +261,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
-   _ "github.com/rookie-ninja/rk-echo"
+   _ "github.com/rookie-ninja/rk-boot/echo"
 )
 
 func main() {
@@ -232,18 +275,36 @@ func main() {
    boot.WaitForShutdownSig(context.Background())
 }
 ```
+
+- go.mod
+```
+module github.com/rookie-ninja/rk-demo
+
+go 1.16
+
+require (
+	github.com/rookie-ninja/rk-boot v1.4.0
+	github.com/rookie-ninja/rk-boot/echo v0.0.5 // indirect
+)
+```
+
+- validate
 ```shell script
 $ go run main.go
 $ curl -X GET localhost:8080/rk/v1/healthy
 {"healthy":true}
 ```
 - Swagger: http://localhost:8080/sw
+
 ![echo-sw](img/gin-sw.png)
 
 - TV: http://localhost:8080/rk/v1/tv
+
 ![echo-tv](img/gin-tv.png)
 
 ### Start GoFrame server from YAML
+- Installation
+
 `go get github.com/rookie-ninja/rk-boot/gf`
 
 - boot.yaml
@@ -260,6 +321,7 @@ gf:
     tv:
       enabled:  true    # Optional, Enable RK TV
 ```
+
 - main.go
 ```go
 package main
@@ -267,7 +329,7 @@ package main
 import (
    "context"
    "github.com/rookie-ninja/rk-boot"
-   _ "github.com/rookie-ninja/rk-gf"
+   _ "github.com/rookie-ninja/rk-boot/gf"
 )
 
 func main() {
@@ -281,15 +343,31 @@ func main() {
    boot.WaitForShutdownSig(context.Background())
 }
 ```
+
+- go.mod
+```
+module github.com/rookie-ninja/rk-demo
+
+go 1.16
+
+require (
+	github.com/rookie-ninja/rk-boot v1.4.0
+	github.com/rookie-ninja/rk-boot/gf v0.0.3 // indirect
+)
+```
+
+- validate
 ```shell script
 $ go run main.go
 $ curl -X GET localhost:8080/rk/v1/healthy
 {"healthy":true}
 ```
 - Swagger: http://localhost:8080/sw
+
 ![echo-sw](img/gin-sw.png)
 
 - TV: http://localhost:8080/rk/v1/tv
+
 ![echo-tv](img/gin-tv.png)
 
 ## Grpc interceptor
