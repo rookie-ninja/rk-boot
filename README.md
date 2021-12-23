@@ -4,15 +4,22 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-> Reminder:
+> **Important note!**
 >
 > The version of v1.3.X imported rk-gin, rk-echo, rk-grpc and rk-gf in the go.mod file initially. User only needs to [go get rk-boot] for starting web framework.
 >
-> From v1.4.X, rk-boot will not include those dependencies. User needs to [go get rk-xxx] dependencies of web framework as needed.
+> From v1.4.X, rk-boot will not include those dependencies in one place.
 >
-> Furthermore, import those dependencies in main.go file explicitly as bellow:
+> Instead, we use multi-module repository for supported web frameworks.
 > 
-> _ "github.com/rookie-ninja/rk-gin/boot"
+> | Release | Description | Example |
+> | --- | --- | --- |
+> | v1.4.x | Use multi-module repository, [go get] submodule as needed for web frameworks | go get github.com/rookie-ninja/rk-boot/gin |
+> | v1.3.x | Use root-module repository, will import all web frameworks, not suggested! | go get github.com/rookie-ninja/rk-boot |
+> 
+> The version of submodule will follow version of rk-xxx dependencies.
+> 
+> For example, rk-grpc is currently at release of v1.2.15, so the latest version of submodule would be github.com/rookie-ninja/rk-boot/grpc@v1.2.15
 
 Bootstrapper for rkentry.Entry.
 With rk-boot, users can start gRPC, gin, echo, GoFrame, prometheus client or custom entry service with yaml formatted config file.
@@ -88,7 +95,7 @@ User needs to [go get] web framework as needed. Bellow web frameworks are suppor
 - [go-zero](https://github.com/zeromicro/go-zero) Planning
 
 ### Start grpc server from YAML
-`go get github.com/rookie-ninja/rk-grpc`
+`go get github.com/rookie-ninja/rk-boot/grpc`
 
 - boot.yaml
 ```yaml
@@ -138,7 +145,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![grpc-tv](img/grpc-tv.png)
 
 ### Start gin server from YAML
-`go get github.com/rookie-ninja/rk-gin`
+`go get github.com/rookie-ninja/rk-boot/gin`
 
 - boot.yaml
 ```yaml
@@ -187,7 +194,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![gin-tv](img/gin-tv.png)
 
 ### Start echo server from YAML
-`go get github.com/rookie-ninja/rk-echo`
+`go get github.com/rookie-ninja/rk-boot/echo`
 
 - boot.yaml
 ```yaml
@@ -236,7 +243,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 ![echo-tv](img/gin-tv.png)
 
 ### Start GoFrame server from YAML
-`go get github.com/rookie-ninja/rk-gf`
+`go get github.com/rookie-ninja/rk-boot/gf`
 
 - boot.yaml
 ```yaml
