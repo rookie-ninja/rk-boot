@@ -1,4 +1,4 @@
-module github.com/rookie-ninja/rk-boot/grpc
+module github.com/rookie-ninja/rk-boot/gin
 
 go 1.16
 
