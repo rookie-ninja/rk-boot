@@ -31,8 +31,8 @@ grpc:
   - name: greeter                                      # Required
     enabled: true                                      # Required
     port: 8080                                         # Optional
-    enableReflection: true                             # Optional, default: false
     enableRkGwOption: true                             # Optional, default: false
+#    enableReflection: true                            # Optional, default: false
 #    gwOption:                                         # Optional, default: nil
 #      marshal:                                        # Optional, default: nil
 #        multiline: false                              # Optional, default: false
@@ -44,9 +44,9 @@ grpc:
 #      unmarshal:                                      # Optional, default: nil
 #        allowPartial: false                           # Optional, default: false
 #        discardUnknown: false                         # Optional, default: false
-    noRecvMsgSizeLimit: false                          # Optional, default: false
-    commonService:
-      enabled: true                                    # Optional, default: false
+#    noRecvMsgSizeLimit: false                          # Optional, default: false
+#    commonService:
+#      enabled: true                                    # Optional, default: false
 #    static:
 #      enabled: true                                   # Optional, default: false
 #      path: "/rk/v1/static"                           # Optional, default: /rk/v1/static
@@ -54,13 +54,13 @@ grpc:
 #      sourcePath: "."                                 # Required, full path of source directory
 #    cert:
 #      ref: "local-cert"                               # Optional, default: "", reference of cert entry declared above
-    gwMappingFilePaths:                                # Optional
-      - "api/v1/gw_mapping.yaml"
-    tv:
-      enabled: true                                    # Optional, default: false
-    sw:
-      enabled: true                                    # Optional, default: false
-      jsonPath: "api/gen/v1"                           # Optional
+#    gwMappingFilePaths:                                # Optional
+#      - "api/v1/gw_mapping.yaml"
+#    tv:
+#      enabled: true                                    # Optional, default: false
+#    sw:
+#      enabled: true                                    # Optional, default: false
+#      jsonPath: "api/gen/v1"                           # Optional
 #      path: "sw"                                      # Optional, default: "sw"
 #      headers: [ "sw:rk" ]                            # Optional, default: []
 #    prom:

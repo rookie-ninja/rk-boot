@@ -9,7 +9,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-gf/boot"
+	"github.com/rookie-ninja/rk-boot/gf"
 	"net/http"
 )
 
@@ -28,10 +28,10 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
-	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/gf/boot.yaml"))
+	boot := rkboot.NewBoot()
 
 	// Register handler
-	entry := boot.GetEntry("greeter").(*rkgf.GfEntry)
+	entry := rkbootgf.GetGfEntry("greeter")
 	entry.Server.BindHandler("/v1/hello", hello)
 
 	// Bootstrap

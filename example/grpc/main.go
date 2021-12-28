@@ -8,8 +8,8 @@ package main
 import (
 	"context"
 	"github.com/rookie-ninja/rk-boot"
+	"github.com/rookie-ninja/rk-boot/grpc"
 	"github.com/rookie-ninja/rk-demo/api/gen/v1"
-	"github.com/rookie-ninja/rk-grpc/boot"
 	"google.golang.org/grpc"
 )
 
@@ -17,7 +17,7 @@ func main() {
 	boot := rkboot.NewBoot()
 
 	// register grpc
-	entry := boot.GetEntry("greeter").(*rkgrpc.GrpcEntry)
+	entry := rkbootgrpc.GetGrpcEntry("greeter")
 	entry.AddRegFuncGrpc(registerGreeter)
 	entry.AddRegFuncGw(hello.RegisterGreeterHandlerFromEndpoint)
 

@@ -9,7 +9,7 @@ import (
 	"context"
 	"github.com/labstack/echo/v4"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-echo/boot"
+	"github.com/rookie-ninja/rk-boot/echo"
 	"net/http"
 )
 
@@ -28,10 +28,10 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
-	boot := rkboot.NewBoot(rkboot.WithBootConfigPath("example/echo/boot.yaml"))
+	boot := rkboot.NewBoot()
 
 	// Register handler
-	entry := boot.GetEntry("greeter").(*rkecho.EchoEntry)
+	entry := rkbootecho.GetEchoEntry("greeter")
 	entry.Echo.GET("/v1/hello", hello)
 
 	// Bootstrap
