@@ -76,6 +76,7 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 | [GoFrame](https://github.com/gogf/gf)  | Stable | v0.0.4 | go get github.com/rookie-ninja/rk-boot/gf | [rk-gf](https://github.com/rookie-ninja/rk-gf) |
 | [Fiber](https://github.com/gofiber/fiber) | Testing | v0.0.2 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
 | [go-zero](https://github.com/zeromicro/go-zero) | Testing | v0.0.1 | go get github.com/rookie-ninja/rk-boot/zero | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
+| [GorillaMux](https://github.com/gorilla/mux) | Testing | v0.0.1 | go get github.com/rookie-ninja/rk-boot/mux | [rk-mux](https://github.com/rookie-ninja/rk-mux) |
 
 ## Quick Start
 There are two ways users can run service. 
