@@ -1,4 +1,4 @@
-module github.com/rookie-ninja/rk-boot/echo
+module github.com/rookie-ninja/rk-boot/zero
 
 go 1.16
 
