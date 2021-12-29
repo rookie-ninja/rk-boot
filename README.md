@@ -371,6 +371,7 @@ $ curl -X GET localhost:8080/rk/v1/healthy
 | [GoFrame](https://github.com/gogf/gf) | [rk-gf](https://github.com/rookie-ninja/rk-gf) |
 | [Fiber](https://github.com/gofiber/fiber) | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
 | [go-zero](https://github.com/zeromicro/go-zero) | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
+| [GorillaMux](https://github.com/gorilla/mux) | [rk-mux](https://github.com/rookie-ninja/rk-mux) |
 
 ## Development Status: Stable
 
