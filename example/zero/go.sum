@@ -562,8 +562,8 @@ github.com/rookie-ninja/rk-prom v1.1.4 h1:p33XVD9/pK7QtcYNX8nAfm1aiLc/NQI0mQBKgI
 github.com/rookie-ninja/rk-prom v1.1.4/go.mod h1:ZiYyxCmWfVyZMNVAVZiZOzqxx+lutVsnWadj5A+XTEM=
 github.com/rookie-ninja/rk-query v1.2.4 h1:PBM90z5dDWRKNvJHtDUQ2F4um5c4I+WwSml8uLVvfkc=
 github.com/rookie-ninja/rk-query v1.2.4/go.mod h1:nxdqy600ZC996QW0yHflY/hAkG4Qt9lSaDftf540YDI=
-github.com/rookie-ninja/rk-zero v0.0.1 h1:p2NtT1nY4GNp4+jKgVgLj+hyj6NygYe3D4HRnJxOyCQ=
-github.com/rookie-ninja/rk-zero v0.0.1/go.mod h1:XQBOFg/lfRJdnCepC6W1N6LU/HQbJ4jyjpBSdrhRaG4=
+github.com/rookie-ninja/rk-zero v0.0.2 h1:b/7Ko8idBmPjtAhiHVQn2+7dWL7xXFXIuA4w0rSPK08=
+github.com/rookie-ninja/rk-zero v0.0.2/go.mod h1:XQBOFg/lfRJdnCepC6W1N6LU/HQbJ4jyjpBSdrhRaG4=
 github.com/russross/blackfriday/v2 v2.0.1/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/ryanuber/columnize v0.0.0-20160712163229-9b3edd62028f/go.mod h1:sm1tb6uqfes/u+d4ooFouqFdy9/2g9QGwK3SQygK0Ts=
