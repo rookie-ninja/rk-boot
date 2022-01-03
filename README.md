@@ -73,7 +73,7 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 | [gRPC](https://grpc.io/)  | Stable | v1.2.18 | go get github.com/rookie-ninja/rk-boot/grpc | [rk-grpc](https://github.com/rookie-ninja/rk-grpc) |
 | [Echo](https://github.com/labstack/echo)  | Stable | v0.0.8 | go get github.com/rookie-ninja/rk-boot/echo | [rk-echo](https://github.com/rookie-ninja/rk-echo) |
 | [GoFrame](https://github.com/gogf/gf)  | Stable | v0.0.6 | go get github.com/rookie-ninja/rk-boot/gf | [rk-gf](https://github.com/rookie-ninja/rk-gf) |
-| [Fiber](https://github.com/gofiber/fiber) | Testing | v0.0.3 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
+| [Fiber](https://github.com/gofiber/fiber) | Testing | v0.0.4 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
 | [go-zero](https://github.com/zeromicro/go-zero) | Testing | v0.0.2 | go get github.com/rookie-ninja/rk-boot/zero | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
 | [GorillaMux](https://github.com/gorilla/mux) | Testing | v0.0.2 | go get github.com/rookie-ninja/rk-boot/mux | [rk-mux](https://github.com/rookie-ninja/rk-mux) |
 

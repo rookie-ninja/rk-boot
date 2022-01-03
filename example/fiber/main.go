@@ -36,6 +36,8 @@ func main() {
 	// Register handler
 	entry := rkbootfiber.GetFiberEntry("greeter")
 	entry.App.Get("/v1/hello", hello)
+	// This is required!!!
+	entry.RefreshFiberRoutes()
 
 	boot.WaitForShutdownSig(context.TODO())
 }
