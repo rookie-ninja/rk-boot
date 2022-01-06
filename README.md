@@ -25,6 +25,8 @@ Bootstrapper for rkentry.Entry.
 With rk-boot, users can start gRPC, gin, echo, GoFrame, prometheus client or custom entry service with yaml formatted config file.
 Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and rk-tv web UI.
 
+Besides, ORM database instances can also be bootstrapped by rk-boot.
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -33,6 +35,7 @@ Easy to compile, run and debug your grpc service, grpc gateway, swagger UI and r
 - [Concept](#concept)
   - [Why do I want it?](#why-do-i-want-it)
 - [Supported web frameworks](#supported-web-frameworks)
+- [Supported database](#supported-database)
 - [Quick Start](#quick-start)
   - [Start grpc server from YAML](#start-grpc-server-from-yaml)
   - [Start gin server from YAML](#start-gin-server-from-yaml)
@@ -76,6 +79,13 @@ rk-boot is a library which support bootstrapping server at runtime. It is a litt
 | [Fiber](https://github.com/gofiber/fiber) | Testing | v0.0.4 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
 | [go-zero](https://github.com/zeromicro/go-zero) | Testing | v0.0.2 | go get github.com/rookie-ninja/rk-boot/zero | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
 | [GorillaMux](https://github.com/gorilla/mux) | Testing | v0.0.2 | go get github.com/rookie-ninja/rk-boot/mux | [rk-mux](https://github.com/rookie-ninja/rk-mux) |
+
+## Supported database
+Databases still in Testing stage. Please see [examples](example/database) for detail.
+
+| Database | Status | ORM | Import | Dependency | Docs |
+| --- | --- | --- | --- | --- | --- |
+| MySQL | Testing | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) | See [docs](https://github.com/rookie-ninja/rk-db/mysql) |
 
 ## Quick Start
 There are two ways users can run service. 
