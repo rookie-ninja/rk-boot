@@ -1,4 +1,4 @@
-# Example
+# rk-boot/database/mysql
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -284,8 +284,6 @@ $ curl -X GET localhost:8080/v1/user/1
 $ curl -X DELETE localhost:8080/v1/user/1
 success
 ```
-
-![image](img/mysql.png)
 
 ## YAML Options
 User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the same time. Please make sure use different names.
