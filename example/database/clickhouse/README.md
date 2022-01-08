@@ -1,4 +1,4 @@
-# rk-boot/database/sqlserver
+# Example
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -6,19 +6,23 @@
 
 - [Quick Start](#quick-start)
   - [Installation](#installation)
-  - [Start SQL Server with docker](#start-sql-server-with-docker)
+  - [Start ClickHouse with docker](#start-clickhouse-with-docker)
   - [1.Create boot.yaml](#1create-bootyaml)
   - [2.Create main.go](#2create-maingo)
   - [3.Start server](#3start-server)
   - [4.Validation](#4validation)
+    - [4.1 Create user](#41-create-user)
+    - [4.1 Update user](#41-update-user)
+    - [4.1 List users](#41-list-users)
+    - [4.1 Get user](#41-get-user)
+    - [4.1 Delete user](#41-delete-user)
 - [YAML Options](#yaml-options)
   - [Usage of locale](#usage-of-locale)
-- [Development Status: Stable](#development-status-stable)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Quick Start
-In the bellow example, we will run SQL Server locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
+In the bellow example, we will run ClickHouse locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
 
 - GET /v1/user, List users
 - GET /v1/user/:id, Get user
@@ -31,19 +35,19 @@ In this example, we will start a web service with gin. As a result, bellow depen
 
 ```
 go get github.com/rookie-ninja/rk-boot/gin
-go get github.com/rookie-ninja/rk-boot/database/sqlserver
+go get github.com/rookie-ninja/rk-boot/database/clickhouse
 ```
 
-### Start SQL Server with docker
-We are going to use [sa:MyStrongPass$] as credential of SQL Server.
+### Start ClickHouse with docker
+We are going to use [default:"""] as credential of ClickHouse.
 
 ```
-$ docker run --name sql-server -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongPass$" -p 1433:1433 -d mcr.microsoft.com/mssql/server
+$ docker run -d --name clickhouse -p 9000:9000 --ulimit nofile=262144:262144 yandex/clickhouse-server
 ```
 
 ### 1.Create boot.yaml
 - Create web server with Gin framework at port 8080
-- Create SQL Server entry which connects SQL Server at localhost:1433
+- Create ClickHouse entry which connects ClickHouse at localhost:9000
 
 ```yaml
 ---
@@ -51,22 +55,22 @@ gin:
   - name: user-service
     port: 8080
     enabled: true
-sqlServer:
-  - name: user                        # Required
-    enabled: true                     # Required
-    locale: "*::*::*::*"              # Required
-    addr: "localhost:1433"            # Optional, default: localhost:1433
-    user: sa                          # Optional, default: sa
-    pass: MyStrongPass$               # Optional, default: pass
+clickHouse:
+  - name: user                             # Required
+    enabled: true                          # Required
+    locale: "*::*::*::*"                   # Required
+    addr: "localhost:9000"                 # Optional, default: localhost:9000
+    user: default                          # Optional, default: default
+    pass: ""                               # Optional, default: ""
     database:
-      - name: user-meta               # Required
-        autoCreate: true              # Optional, default: false
-#        dryRun: true                 # Optional, default: false
-#        params: []                   # Optional, default: []
+      - name: usermeta                     # Required
+        autoCreate: true                   # Optional, default: false
+#        dryRun: false                     # Optional, default: false
+#        params: []                        # Optional, default: []
 #    logger:
-#      level: info                    # Optional, default: warn
-#      encoding: json                 # Optional, default: console
-#      outputPaths: ["sqlserver/log"] # Optional, default: []
+#      level: warn                         # Optional, default: warn
+#      encoding: json                      # Optional, default: console
+#      outputPaths: [ "clickhouse/log" ]   # Optional, default: []
 ```
 
 ### 2.Create main.go
@@ -86,11 +90,11 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/database/sqlserver"
+	"github.com/rookie-ninja/rk-boot/database/clickhouse"
 	"github.com/rookie-ninja/rk-boot/gin"
+	"github.com/rs/xid"
 	"gorm.io/gorm"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -102,7 +106,7 @@ func main() {
 	boot.Bootstrap(context.TODO())
 
 	// Auto migrate database and init global userDb variable
-	userDb = rkbootsqlserver.GetGormDb("user", "user-meta")
+	userDb = rkbootclickhouse.GetGormDb("user", "usermeta")
 
 	if !userDb.DryRun {
 		userDb.AutoMigrate(&User{})
@@ -124,14 +128,13 @@ func main() {
 // *************************************
 
 type Base struct {
-	CreatedAt time.Time      `yaml:"-" json:"-"`
-	UpdatedAt time.Time      `yaml:"-" json:"-"`
-	DeletedAt gorm.DeletedAt `yaml:"-" json:"-" gorm:"index"`
+	CreatedAt time.Time `yaml:"-" json:"-"`
+	UpdatedAt time.Time `yaml:"-" json:"-"`
 }
 
 type User struct {
 	Base
-	Id   int    `yaml:"id" json:"id" gorm:"primaryKey"`
+	Id   string `yaml:"id" json:"id"`
 	Name string `yaml:"name" json:"name"`
 }
 
@@ -149,7 +152,7 @@ func ListUsers(ctx *gin.Context) {
 func GetUser(ctx *gin.Context) {
 	uid := ctx.Param("id")
 	user := &User{}
-	res := userDb.Where("id = ?", uid).Find(user)
+	res := userDb.Find(user, "id = ?", uid)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
@@ -160,6 +163,7 @@ func GetUser(ctx *gin.Context) {
 
 func CreateUser(ctx *gin.Context) {
 	user := &User{
+		Id:   xid.New().String(),
 		Name: ctx.Query("name"),
 	}
 
@@ -175,6 +179,7 @@ func CreateUser(ctx *gin.Context) {
 func UpdateUser(ctx *gin.Context) {
 	uid := ctx.Param("id")
 	user := &User{
+		Id:   uid,
 		Name: ctx.Query("name"),
 	}
 
@@ -185,30 +190,16 @@ func UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	if res.RowsAffected < 1 {
-		ctx.JSON(http.StatusNotFound, "user not found")
-		return
-	}
-
-	// get user
-	userDb.Where("id = ?", uid).Find(user)
-
 	ctx.JSON(http.StatusOK, user)
 }
 
 func DeleteUser(ctx *gin.Context) {
-	uid, _ := strconv.Atoi(ctx.Param("id"))
-	res := userDb.Delete(&User{
-		Id: uid,
-	})
+	uid := ctx.Param("id")
+
+	res := userDb.Delete(&User{}, "id = ?", uid)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
-		return
-	}
-
-	if res.RowsAffected < 1 {
-		ctx.JSON(http.StatusNotFound, "user not found")
 		return
 	}
 
@@ -221,25 +212,13 @@ func DeleteUser(ctx *gin.Context) {
 ```
 $ go run main.go
 
-2022-01-09T04:41:17.010+0800    INFO    Bootstrap sqlServer entry       {"entryName": "user", "sqlServerUser": "sa", "sqlServerAddr": "localhost:1433"}
-2022-01-09T04:41:17.010+0800    INFO    creating database user-meta if not exists
-2022-01-09T04:41:17.492+0800    INFO    /Users/dongxuny/go/pkg/mod/github.com/rookie-ninja/rk-db/sqlserver@v0.0.1/boot.go:404 SLOW SQL >= 200ms
-[366.743ms] [rows:0] 
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'user-meta')
-BEGIN
-  CREATE DATABASE [user-meta];
-END;
-
-2022-01-09T04:41:17.492+0800    INFO    creating successs or database user-meta exists
-2022-01-09T04:41:17.492+0800    INFO    connecting to database user-meta
-2022-01-09T04:41:17.510+0800    INFO    connecting to database user-meta success
-2022-01-09T04:41:17.510+0800    INFO    boot/gin_entry.go:913   Bootstrap ginEntry      {"eventId": "88026b54-8782-4ab2-99db-0698739db073", "entryName": "user-service"}
+2022-01-09T05:25:50.341+0800    INFO    boot/gin_entry.go:913   Bootstrap ginEntry      {"eventId": "9eaeab9a-5d95-440c-9a5a-abce6159e884", "entryName": "user-service"}
 ------------------------------------------------------------------------
-endTime=2022-01-09T04:41:17.510765+08:00
-startTime=2022-01-09T04:41:17.510717+08:00
-elapsedNano=48442
+endTime=2022-01-09T05:25:50.341891+08:00
+startTime=2022-01-09T05:25:50.341803+08:00
+elapsedNano=87212
 timezone=CST
-ids={"eventId":"88026b54-8782-4ab2-99db-0698739db073"}
+ids={"eventId":"9eaeab9a-5d95-440c-9a5a-abce6159e884"}
 app={"appName":"rk","appVersion":"","entryName":"user-service","entryType":"GinEntry"}
 env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
 payloads={"ginPort":8080}
@@ -252,6 +231,11 @@ operation=Bootstrap
 resCode=OK
 eventStatus=Ended
 EOE
+2022-01-09T05:25:50.341+0800    INFO    Bootstrap ClickHouse entry      {"entryName": "user", "clickHouseUser": "default", "clickHouseAddr": "localhost:9000"}
+2022-01-09T05:25:50.341+0800    INFO    creating database usermeta if not exists
+2022-01-09T05:25:50.361+0800    INFO    creating successs or database usermeta exists
+2022-01-09T05:25:50.361+0800    INFO    connecting to database usermeta
+2022-01-09T05:25:50.371+0800    INFO    connecting to database usermeta success
 ```
 
 ### 4.Validation
@@ -260,15 +244,15 @@ Create a user with name of rk-dev.
 
 ```shell script
 $ curl -X PUT "localhost:8080/v1/user?name=rk-dev"
-{"id":1,"name":"rk-dev"}
+{"id":"c7d038jd0cvvjkhma6dg","name":"rk-dev"}
 ```
 
 #### 4.1 Update user
 Update user name to rk-dev-updated.
 
 ```shell script
-$ curl -X POST "localhost:8080/v1/user/1?name=rk-dev-updated"
-{"id":1,"name":"rk-dev-updated"}
+$ curl -X POST "localhost:8080/v1/user/c7d038jd0cvvjkhma6dg?name=rk-dev-updated"
+{"id":"c7d038jd0cvvjkhma6dg","name":"rk-dev-updated"}
 ```
 
 #### 4.1 List users
@@ -276,43 +260,45 @@ List users.
 
 ```shell script
 $ curl -X GET localhost:8080/v1/user
-[{"id":1,"name":"rk-dev-updated"}]
+[{"id":"c7d038jd0cvvjkhma6dg","name":"rk-dev-updated"}]
 ```
 
 #### 4.1 Get user
-Get user with id=1.
+Get user with id=c7d038jd0cvvjkhma6dg.
 
 ```shell script
-$ curl -X GET localhost:8080/v1/user/1
-{"id":1,"name":"rk-dev-updated"}
+$ curl -X GET localhost:8080/v1/user/c7d038jd0cvvjkhma6dg
+{"id":"c7d038jd0cvvjkhma6dg","name":"rk-dev-updated"}
 ```
 
 #### 4.1 Delete user
 
 ```shell script
-$ curl -X DELETE localhost:8080/v1/user/1
+$ curl -X DELETE localhost:8080/v1/user/c7d038jd0cvvjkhma6dg
 success
 ```
+
+![image](img/clickhouse.png)
 
 ## YAML Options
 User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the same time. Please make sure use different names.
 
 | name | Required | description | type | default value |
 | ------ | ------ | ------ | ------ | ------ |
-| sqlServer.name | Required | The name of entry | string | SqlServer |
-| sqlServer.enabled | Required | Enable entry or not | bool | false |
-| sqlServer.locale | Required | See locale description bellow | string | "" |
-| sqlServer.description | Optional | Description of echo entry. | string | "" |
-| sqlServer.user | Optional | SQL Server username | string | sa |
-| sqlServer.pass | Optional | SQL Server password | string | pass |
-| sqlServer.addr | Optional | SQL Server remote address | string | localhost:1433 |
-| sqlServer.database.name | Required | Name of database | string | "" |
-| sqlServer.database.autoCreate | Optional | Create DB if missing | bool | false |
-| sqlServer.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
-| sqlServer.database.params | Optional | Connection params | []string | [] |
-| sqlServer.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| sqlServer.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| sqlServer.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| clickHouse.name | Required | The name of entry | string | ClickHouse |
+| clickHouse.enabled | Required | Enable entry or not | bool | false |
+| clickHouse.locale | Required | See locale description bellow | string | "" |
+| clickHouse.description | Optional | Description of echo entry. | string | "" |
+| clickHouse.user | Optional | ClickHouse username | string | root |
+| clickHouse.pass | Optional | ClickHouse password | string | pass |
+| clickHouse.addr | Optional | ClickHouse remote address | string | localhost:9000 |
+| clickHouse.database.name | Required | Name of database | string | "" |
+| clickHouse.database.autoCreate | Optional | Create DB if missing | bool | false |
+| clickHouse.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
+| clickHouse.database.params | Optional | Connection params | []string | [""] |
+| clickHouse.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
+| clickHouse.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
+| clickHouse.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
 
 ### Usage of locale
 
@@ -361,7 +347,3 @@ DB:
     locale: "*::*::*::prod"
     addr: "176.0.0.1:6379"
 ```
-
-## Development Status: Stable
-
-Released under the [Apache 2.0 License](../../LICENSE)

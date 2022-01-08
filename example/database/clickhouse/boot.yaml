@@ -1,0 +1,21 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+clickHouse:
+  - name: user                             # Required
+    enabled: true                          # Required
+    locale: "*::*::*::*"                   # Required
+    addr: "localhost:9000"                 # Optional, default: localhost:9000
+    user: default                          # Optional, default: default
+    pass: ""                               # Optional, default: ""
+    database:
+      - name: usermeta                     # Required
+        autoCreate: true                   # Optional, default: false
+#        dryRun: false                     # Optional, default: false
+#        params: []                        # Optional, default: []
+#    logger:
+#      level: warn                         # Optional, default: warn
+#      encoding: json                      # Optional, default: console
+#      outputPaths: [ "clickhouse/log" ]   # Optional, default: []

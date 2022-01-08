@@ -22,7 +22,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Quick Start
-In the bellow example, we will run SQL Server locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
+In the bellow example, we will run postgreSQL locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
 
 - GET /v1/user, List users
 - GET /v1/user/:id, Get user
