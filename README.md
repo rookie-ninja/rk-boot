@@ -94,6 +94,7 @@ Databases still in Testing stage. Please see [examples](example/database) for de
 | SQLite | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
 | SQL Server | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver) |
 | postgreSQL | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres) |
+| ClickHouse | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/clickhouse | [rk-db/clickhouse](https://github.com/rookie-ninja/rk-db/clickhouse) |
 
 ## Examples
 | Name | Type | Example | Docs |
@@ -109,6 +110,7 @@ Databases still in Testing stage. Please see [examples](example/database) for de
 | SQLite | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlite) | [docs](database/sqlite) |
 | SQL Server | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlserver) | [docs](database/sqlserver) |
 | postgreSQL | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/postgres) | [docs](database/postgres) |
+| ClickHouse | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/clickhouse) | [docs](database/clickhouse) |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
