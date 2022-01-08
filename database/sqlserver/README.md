@@ -6,6 +6,7 @@
 
 - [Quick Start](#quick-start)
   - [Installation](#installation)
+  - [Start SQL Server with docker](#start-sql-server-with-docker)
   - [1.Create boot.yaml](#1create-bootyaml)
   - [2.Create main.go](#2create-maingo)
   - [3.Start server](#3start-server)
@@ -17,7 +18,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Quick Start
-In the bellow example, we will run SQLite locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
+In the bellow example, we will run SQL Server locally and implement API of Create/List/Get/Update/Delete for User model with Gin.
 
 - GET /v1/user, List users
 - GET /v1/user/:id, Get user
@@ -30,12 +31,19 @@ In this example, we will start a web service with gin. As a result, bellow depen
 
 ```
 go get github.com/rookie-ninja/rk-boot/gin
-go get github.com/rookie-ninja/rk-boot/database/sqlite
+go get github.com/rookie-ninja/rk-boot/database/sqlserver
+```
+
+### Start SQL Server with docker
+We are going to use [sa:MyStrongPass$] as credential of SQL Server.
+
+```
+$ docker run --name sql-server -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=MyStrongPass$" -p 1433:1433 -d mcr.microsoft.com/mssql/server
 ```
 
 ### 1.Create boot.yaml
 - Create web server with Gin framework at port 8080
-- Create Sqlite entry which connects Sqlite at file path or in memory
+- Create SQL Server entry which connects SQL Server at localhost:1433
 
 ```yaml
 ---
@@ -43,20 +51,22 @@ gin:
   - name: user-service
     port: 8080
     enabled: true
-sqlite:
+sqlServer:
   - name: user                        # Required
     enabled: true                     # Required
     locale: "*::*::*::*"              # Required
+    addr: "localhost:1433"            # Optional, default: localhost:1433
+    user: sa                          # Optional, default: sa
+    pass: MyStrongPass$               # Optional, default: pass
     database:
       - name: user-meta               # Required
-#        inMemory: true               # Optional, default: false
-#        dbDir: ""                    # Optional, default: "", directory where db file created or imported, can be absolute or relative path
+        autoCreate: true              # Optional, default: false
 #        dryRun: true                 # Optional, default: false
-#        params: []                   # Optional, default: ["cache=shared"]
+#        params: []                   # Optional, default: []
 #    logger:
-#      level: warn                    # Optional, default: warn
+#      level: info                    # Optional, default: warn
 #      encoding: json                 # Optional, default: console
-#      outputPaths: [ "sqlite/log" ]  # Optional, default: []
+#      outputPaths: ["sqlserver/log"] # Optional, default: []
 ```
 
 ### 2.Create main.go
@@ -76,7 +86,7 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/database/sqlite"
+	"github.com/rookie-ninja/rk-boot/database/sqlserver"
 	"github.com/rookie-ninja/rk-boot/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -92,7 +102,7 @@ func main() {
 	boot.Bootstrap(context.TODO())
 
 	// Auto migrate database and init global userDb variable
-	userDb = rkbootsqlite.GetGormDb("user", "user-meta")
+	userDb = rkbootsqlserver.GetGormDb("user", "user-meta")
 
 	if !userDb.DryRun {
 		userDb.AutoMigrate(&User{})
@@ -211,16 +221,25 @@ func DeleteUser(ctx *gin.Context) {
 ```
 $ go run main.go
 
-2022-01-09T04:18:12.408+0800    INFO    Bootstrap SQLite entry  {"entryName": "user"}
-2022-01-09T04:18:12.408+0800    INFO    connecting to database user-meta
-2022-01-09T04:18:12.410+0800    INFO    connecting to database user-meta success
-2022-01-09T04:18:12.410+0800    INFO    boot/gin_entry.go:913   Bootstrap ginEntry      {"eventId": "d2c38f14-b255-4ddb-809c-082873eb68e4", "entryName": "user-service"}
+2022-01-09T04:41:17.010+0800    INFO    Bootstrap sqlServer entry       {"entryName": "user", "sqlServerUser": "sa", "sqlServerAddr": "localhost:1433"}
+2022-01-09T04:41:17.010+0800    INFO    creating database user-meta if not exists
+2022-01-09T04:41:17.492+0800    INFO    /Users/dongxuny/go/pkg/mod/github.com/rookie-ninja/rk-db/sqlserver@v0.0.1/boot.go:404 SLOW SQL >= 200ms
+[366.743ms] [rows:0] 
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'user-meta')
+BEGIN
+  CREATE DATABASE [user-meta];
+END;
+
+2022-01-09T04:41:17.492+0800    INFO    creating successs or database user-meta exists
+2022-01-09T04:41:17.492+0800    INFO    connecting to database user-meta
+2022-01-09T04:41:17.510+0800    INFO    connecting to database user-meta success
+2022-01-09T04:41:17.510+0800    INFO    boot/gin_entry.go:913   Bootstrap ginEntry      {"eventId": "88026b54-8782-4ab2-99db-0698739db073", "entryName": "user-service"}
 ------------------------------------------------------------------------
-endTime=2022-01-09T04:18:12.410298+08:00
-startTime=2022-01-09T04:18:12.410248+08:00
-elapsedNano=49746
+endTime=2022-01-09T04:41:17.510765+08:00
+startTime=2022-01-09T04:41:17.510717+08:00
+elapsedNano=48442
 timezone=CST
-ids={"eventId":"d2c38f14-b255-4ddb-809c-082873eb68e4"}
+ids={"eventId":"88026b54-8782-4ab2-99db-0698739db073"}
 app={"appName":"rk","appVersion":"","entryName":"user-service","entryType":"GinEntry"}
 env={"arch":"amd64","az":"*","domain":"*","hostname":"lark.local","localIP":"10.8.0.2","os":"darwin","realm":"*","region":"*"}
 payloads={"ginPort":8080}
@@ -234,23 +253,6 @@ resCode=OK
 eventStatus=Ended
 EOE
 ```
-
-A user-meta.db file will be created.
-
-```
-$ tree
-.
-├── Makefile
-├── README.md
-├── boot.yaml
-├── go.mod
-├── go.sum
-├── main.go
-└── user-meta.db
-
-0 directories, 7 files
-```
-
 
 ### 4.Validation
 #### 4.1 Create user
@@ -297,18 +299,20 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 
 | name | Required | description | type | default value |
 | ------ | ------ | ------ | ------ | ------ |
-| sqlite.name | Required | The name of entry | string | SQLite |
-| sqlite.enabled | Required | Enable entry or not | bool | false |
-| sqlite.locale | Required | See locale description bellow | string | "" |
-| sqlite.description | Optional | Description of echo entry. | string | "" |
-| sqlite.database.name | Required | Name of database | string | "" |
-| sqlite.database.inMemory | Optional | SQLite in memory | bool | false |
-| sqlite.database.dbDir | Optional | Specify *.db file directory | string | "", current working directory if empty |
-| sqlite.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
-| sqlite.database.params | Optional | Connection params | []string | ["cache=shared"] |
-| sqlite.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| sqlite.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| sqlite.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| sqlServer.name | Required | The name of entry | string | SqlServer |
+| sqlServer.enabled | Required | Enable entry or not | bool | false |
+| sqlServer.locale | Required | See locale description bellow | string | "" |
+| sqlServer.description | Optional | Description of echo entry. | string | "" |
+| sqlServer.user | Optional | SQL Server username | string | sa |
+| sqlServer.pass | Optional | SQL Server password | string | pass |
+| sqlServer.addr | Optional | SQL Server remote address | string | localhost:1433 |
+| sqlServer.database.name | Required | Name of database | string | "" |
+| sqlServer.database.autoCreate | Optional | Create DB if missing | bool | false |
+| sqlServer.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
+| sqlServer.database.params | Optional | Connection params | []string | [] |
+| sqlServer.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
+| sqlServer.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
+| sqlServer.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
 
 ### Usage of locale
 

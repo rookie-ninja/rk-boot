@@ -1,4 +1,4 @@
-module github.com/rookie-ninja/rk-boot/database/mysql
+module github.com/rookie-ninja/rk-boot/database/sqlite
 
 go 1.16
 
