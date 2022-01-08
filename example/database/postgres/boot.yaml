@@ -1,0 +1,22 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+postgres:
+  - name: user                        # Required
+    enabled: true                     # Required
+    locale: "*::*::*::*"              # Required
+    addr: "localhost:5432"            # Optional, default: localhost:5432
+    user: postgres                    # Optional, default: postgres
+    pass: pass                        # Optional, default: pass
+    database:
+      - name: user-meta               # Required
+        autoCreate: true              # Optional, default: false
+#        dryRun: true                 # Optional, default: false
+#        preferSimpleProtocol: false  # Optional, default: false
+#        params: []                   # Optional, default: ["sslmode=disable","TimeZone=Asia/Shanghai"]
+#    logger:
+#      level: info                    # Optional, default: warn
+#      encoding: json                 # Optional, default: console
+#      outputPaths: [ "pg/log" ]      # Optional, default: []
