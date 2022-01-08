@@ -13,6 +13,7 @@
   - [4.Validation](#4validation)
 - [YAML Options](#yaml-options)
   - [Usage of locale](#usage-of-locale)
+- [Development Status: Stable](#development-status-stable)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -353,3 +354,7 @@ DB:
     locale: "*::*::*::prod"
     addr: "176.0.0.1:6379"
 ```
+
+## Development Status: Stable
+
+Released under the [Apache 2.0 License](../../LICENSE)

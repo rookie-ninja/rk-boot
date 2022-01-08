@@ -90,8 +90,10 @@ Databases still in Testing stage. Please see [examples](example/database) for de
 
 | Database | Status | Tag | ORM | Installation | Dependency |
 | --- | --- | --- | --- | --- | --- |
-| MySQL | Testing | v0.0.3 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) |
-| SQLite | Testing | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
+| MySQL | Stable | v0.0.3 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) |
+| SQLite | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
+| SQL Server | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver) |
+| postgreSQL | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres) |
 
 ## Examples
 | Name | Type | Example | Docs |
@@ -105,6 +107,8 @@ Databases still in Testing stage. Please see [examples](example/database) for de
 | [gorilla/mux](https://github.com/gorilla/mux) | Web Framework | [example](example/mux) | [docs](mux) |
 | MySQL | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/mysql) | [docs](database/mysql) |
 | SQLite | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlite) | [docs](database/sqlite) |
+| SQL Server | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlserver) | [docs](database/sqlserver) |
+| postgreSQL | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/postgres) | [docs](database/postgres) |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.

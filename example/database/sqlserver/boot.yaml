@@ -1,0 +1,21 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+sqlServer:
+  - name: user                        # Required
+    enabled: true                     # Required
+    locale: "*::*::*::*"              # Required
+    addr: "localhost:1433"            # Optional, default: localhost:1433
+    user: sa                          # Optional, default: sa
+    pass: MyStrongPass$               # Optional, default: pass
+    database:
+      - name: user-meta               # Required
+        autoCreate: true              # Optional, default: false
+#        dryRun: true                 # Optional, default: false
+#        params: []                   # Optional, default: []
+#    logger:
+#      level: info                    # Optional, default: warn
+#      encoding: json                 # Optional, default: console
+#      outputPaths: ["sqlserver/log"] # Optional, default: []
