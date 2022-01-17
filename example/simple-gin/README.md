@@ -9,6 +9,15 @@
     - [2.Create main.go](#2create-maingo)
     - [3.Start server](#3start-server)
     - [4.Validation](#4validation)
+      - [4.1 Gin server](#41-gin-server)
+      - [4.2 Swagger UI](#42-swagger-ui)
+      - [4.3 TV](#43-tv)
+      - [4.4 Prometheus Metrics](#44-prometheus-metrics)
+      - [4.5 Logging](#45-logging)
+      - [4.6 Meta](#46-meta)
+      - [4.7 Send request](#47-send-request)
+      - [4.8 RPC logs](#48-rpc-logs)
+      - [4.9 RPC prometheus metrics](#49-rpc-prometheus-metrics)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
