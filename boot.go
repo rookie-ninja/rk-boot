@@ -9,7 +9,6 @@ package rkboot
 import (
 	"context"
 	"github.com/rookie-ninja/rk-entry/entry"
-	"github.com/rookie-ninja/rk-prom"
 )
 
 // Boot is a structure for bootstrapping rk style application
@@ -152,17 +151,6 @@ func (boot *Boot) GetConfigEntry(name string) *rkentry.ConfigEntry {
 // GetCertEntry returns rkentry.CertEntry from rkentry.GlobalAppCtx.
 func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
 	return rkentry.GlobalAppCtx.GetCertEntry(name)
-}
-
-// GetPromEntry returns rkprom.PromEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetPromEntry(name string) *rkprom.PromEntry {
-	entryRaw := rkentry.GlobalAppCtx.GetEntry(name)
-
-	if entry, ok := entryRaw.(*rkprom.PromEntry); ok {
-		return entry
-	}
-
-	return nil
 }
 
 // GetEntry returns rkentry.Entry interface which user needs to convert by himself.

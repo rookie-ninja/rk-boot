@@ -7,7 +7,8 @@ package rkboot
 
 import (
 	"context"
-	"fmt"
+	"encoding/json"
+	rkcommon "github.com/rookie-ninja/rk-common/common"
 	"github.com/rookie-ninja/rk-entry/entry"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -18,16 +19,15 @@ import (
 	"time"
 )
 
-func TestNewBoot_HappyCase_Gin(t *testing.T) {
+func TestNewBoot_HappyCase(t *testing.T) {
 	config := `
 ---
-gin:
-  - name: ut-gin
-    port: 8080
-    enabled: true
+myEntry:
+  name: ut
+  enabled: true
 `
 
-	filePath := createFileAtTestTempDir(t, "ut-boot-gin.yaml", config)
+	filePath := createFileAtTestTempDir(t, "ut-boot.yaml", config)
 
 	boot := NewBoot(WithBootConfigPath(filePath))
 	boot.AddShutdownHookFunc("ut-shutdown", func() {
@@ -43,7 +43,7 @@ gin:
 	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
 	assert.Nil(t, boot.GetConfigEntry(""))
 	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetPromEntry(""))
+	assert.NotNil(t, boot.GetEntry("ut"))
 
 	go func() {
 		boot.WaitForShutdownSig(context.TODO())
@@ -55,117 +55,26 @@ gin:
 	rkentry.GlobalAppCtx.RemoveEntry("ut-gin")
 }
 
-func TestNewBoot_HappyCase_Echo(t *testing.T) {
-	config := `
----
-echo:
-  - name: ut-echo
-    port: 8080
-    enabled: true
-`
-
-	filePath := createFileAtTestTempDir(t, "ut-boot-echo.yaml", config)
-
-	boot := NewBoot(WithBootConfigPath(filePath))
-	boot.AddShutdownHookFunc("ut-shutdown", func() {
-		// noop
-	})
-
-	boot.Bootstrap(context.TODO())
-
-	assert.NotNil(t, boot.GetAppInfoEntry())
-	assert.NotNil(t, boot.GetZapLoggerEntry(rkentry.DefaultZapLoggerEntryName))
-	assert.NotNil(t, boot.GetZapLoggerEntryDefault())
-	assert.NotNil(t, boot.GetEventLoggerEntry(rkentry.DefaultEventLoggerEntryName))
-	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
-	assert.Nil(t, boot.GetConfigEntry(""))
-	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetPromEntry(""))
-
-	go func() {
-		boot.WaitForShutdownSig(context.TODO())
-	}()
-
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.RemoveEntry("ut-echo")
+func TestNewBoot_WithEmptyBootFilePath(t *testing.T) {
+	defer assertPanic(t)
+	NewBoot()
 }
 
-func TestNewBoot_HappyCase_Gf(t *testing.T) {
+func TestBoot_GetEntry(t *testing.T) {
 	config := `
 ---
-gf:
-  - name: ut-gf
+gin:
+  - name: ut-gin
     port: 8080
     enabled: true
 `
 
-	filePath := createFileAtTestTempDir(t, "ut-boot-gf.yaml", config)
+	filePath := createFileAtTestTempDir(t, "ut-boot-gin.yaml", config)
 
 	boot := NewBoot(WithBootConfigPath(filePath))
-	boot.AddShutdownHookFunc("ut-shutdown", func() {
-		// noop
-	})
-
 	boot.Bootstrap(context.TODO())
 
-	assert.NotNil(t, boot.GetAppInfoEntry())
-	assert.NotNil(t, boot.GetZapLoggerEntry(rkentry.DefaultZapLoggerEntryName))
-	assert.NotNil(t, boot.GetZapLoggerEntryDefault())
-	assert.NotNil(t, boot.GetEventLoggerEntry(rkentry.DefaultEventLoggerEntryName))
-	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
-	assert.Nil(t, boot.GetConfigEntry(""))
-	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetPromEntry(""))
-
-	go func() {
-		boot.WaitForShutdownSig(context.TODO())
-	}()
-
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.RemoveEntry("ut-gf")
-}
-
-func TestNewBoot_HappyCase_Grpc(t *testing.T) {
-	config := `
----
-grpc:
-  - name: ut-grpc
-    port: 8080
-    enabled: true
-`
-
-	filePath := createFileAtTestTempDir(t, "ut-boot-grpc.yaml", config)
-
-	boot := NewBoot(WithBootConfigPath(filePath))
-	fmt.Println(filePath)
-	boot.AddShutdownHookFunc("ut-shutdown", func() {
-		// noop
-	})
-
-	boot.Bootstrap(context.TODO())
-
-	assert.NotNil(t, boot.GetAppInfoEntry())
-	assert.NotNil(t, boot.GetZapLoggerEntry(rkentry.DefaultZapLoggerEntryName))
-	assert.NotNil(t, boot.GetZapLoggerEntryDefault())
-	assert.NotNil(t, boot.GetEventLoggerEntry(rkentry.DefaultEventLoggerEntryName))
-	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
-	assert.Nil(t, boot.GetConfigEntry(""))
-	assert.Nil(t, boot.GetCertEntry(""))
-	assert.Nil(t, boot.GetPromEntry(""))
-
-	go func() {
-		boot.WaitForShutdownSig(context.TODO())
-	}()
-
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
-	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.RemoveEntry("ut-grpc")
-
+	assert.Nil(t, boot.GetEntry(rkentry.GlobalAppCtx.GetAppInfoEntry().GetName()))
 }
 
 func createFileAtTestTempDir(t *testing.T, filename, content string) string {
@@ -173,4 +82,113 @@ func createFileAtTestTempDir(t *testing.T, filename, content string) string {
 
 	assert.Nil(t, ioutil.WriteFile(tempDir, []byte(content), os.ModePerm))
 	return tempDir
+}
+
+func assertPanic(t *testing.T) {
+	if r := recover(); r != nil {
+		// Expect panic to be called with non nil error
+		assert.True(t, true)
+	} else {
+		// This should never be called in case of a bug
+		assert.True(t, false)
+	}
+}
+
+// Register entry, must be in init() function since we need to register entry at beginning
+func init() {
+	rkentry.RegisterEntryRegFunc(RegisterMyEntriesFromConfig)
+}
+
+// A struct which is for unmarshalled YAML
+type BootConfig struct {
+	MyEntry struct {
+		Enabled     bool   `yaml:"enabled" json:"enabled"`
+		Name        string `yaml:"name" json:"name"`
+		Description string `yaml:"description" json:"description"`
+	} `yaml:"myEntry" json:"myEntry"`
+}
+
+// An implementation of:
+// type EntryRegFunc func(string) map[string]rkentry.Entry
+func RegisterMyEntriesFromConfig(configFilePath string) map[string]rkentry.Entry {
+	res := make(map[string]rkentry.Entry)
+
+	// 1: decode config map into boot config struct
+	config := &BootConfig{}
+	rkcommon.UnmarshalBootConfig(configFilePath, config)
+
+	// 3: construct entry
+	if config.MyEntry.Enabled {
+		entry := RegisterMyEntry(
+			WithName(config.MyEntry.Name),
+			WithDescription(config.MyEntry.Description))
+		res[entry.GetName()] = entry
+	}
+
+	return res
+}
+
+func RegisterMyEntry(opts ...MyEntryOption) *MyEntry {
+	entry := &MyEntry{
+		EntryName:        "default",
+		EntryType:        "myEntry",
+		EntryDescription: "Please contact maintainers to add description of this entry.",
+	}
+
+	for i := range opts {
+		opts[i](entry)
+	}
+
+	if len(entry.EntryName) < 1 {
+		entry.EntryName = "my-default"
+	}
+
+	if len(entry.EntryDescription) < 1 {
+		entry.EntryDescription = "Please contact maintainers to add description of this entry."
+	}
+
+	rkentry.GlobalAppCtx.AddEntry(entry)
+
+	return entry
+}
+
+type MyEntryOption func(*MyEntry)
+
+func WithName(name string) MyEntryOption {
+	return func(entry *MyEntry) {
+		entry.EntryName = name
+	}
+}
+
+func WithDescription(description string) MyEntryOption {
+	return func(entry *MyEntry) {
+		entry.EntryDescription = description
+	}
+}
+
+type MyEntry struct {
+	EntryName        string                    `json:"entryName" yaml:"entryName"`
+	EntryType        string                    `json:"entryType" yaml:"entryType"`
+	EntryDescription string                    `json:"entryDescription" yaml:"entryDescription"`
+}
+
+func (entry *MyEntry) Bootstrap(context.Context) {}
+
+func (entry *MyEntry) Interrupt(context.Context) {}
+
+func (entry *MyEntry) GetName() string {
+	return entry.EntryName
+}
+
+func (entry *MyEntry) GetDescription() string {
+	return entry.EntryDescription
+}
+
+func (entry *MyEntry) GetType() string {
+	return entry.EntryType
+}
+
+func (entry *MyEntry) String() string {
+	bytes, _ := json.Marshal(entry)
+	return string(bytes)
 }
