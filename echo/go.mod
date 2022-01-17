@@ -4,8 +4,8 @@ go 1.16
 
 require (
 	github.com/rookie-ninja/rk-boot v1.4.0
-	github.com/rookie-ninja/rk-echo v0.0.9
-	github.com/rookie-ninja/rk-entry v1.0.5
+	github.com/rookie-ninja/rk-echo v0.0.10
+	github.com/rookie-ninja/rk-entry v1.0.6
 )
 
 replace github.com/rookie-ninja/rk-boot => ../
