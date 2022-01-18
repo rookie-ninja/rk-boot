@@ -90,11 +90,11 @@ Databases still in Testing stage. Please see [examples](example/database) for de
 
 | Database | Status | Tag | ORM | Installation | Dependency |
 | --- | --- | --- | --- | --- | --- |
-| MySQL | Stable | v0.0.3 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) |
-| SQLite | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
-| SQL Server | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver) |
-| postgreSQL | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres) |
-| ClickHouse | Stable | v0.0.1 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/clickhouse | [rk-db/clickhouse](https://github.com/rookie-ninja/rk-db/clickhouse) |
+| MySQL | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) |
+| SQLite | Stable | v0.0.2 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
+| SQL Server | Stable | v0.0.2 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver) |
+| postgreSQL | Stable | v0.0.2 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres) |
+| ClickHouse | Stable | v0.0.2 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/clickhouse | [rk-db/clickhouse](https://github.com/rookie-ninja/rk-db/clickhouse) |
 
 ## Examples
 | Name | Type | Example | Docs |
