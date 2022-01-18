@@ -409,12 +409,13 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/rookie-ninja/rk-common v1.2.3 h1:bID5I11Om4az+Bkk7/RxuaHei0MS6ya1jHGnrvrqZBg=
 github.com/rookie-ninja/rk-common v1.2.3/go.mod h1:M2DqLnf5rUK6ewOcSNYZY4LLSJX5dg9I8Wh9JoAs4xo=
 github.com/rookie-ninja/rk-entry v1.0.4/go.mod h1:WMuVes3tyUgYbzNESO+4GtR7Vavw85l+VUOM5W+7Nso=
-github.com/rookie-ninja/rk-entry v1.0.6 h1:LA2sHG1ILKTtkgaPYM/esQdgwBNouMbw4RrKfaB7ihA=
 github.com/rookie-ninja/rk-entry v1.0.6/go.mod h1:gaxt1RYnHLgGs4SpqTTYRjNoYVaLsxoiD1cREEmZSIg=
+github.com/rookie-ninja/rk-entry v1.0.7 h1:y4Ic0xExsPh6/X4+b/2Kq/Eu3SciRJgAn73KwVRBgas=
+github.com/rookie-ninja/rk-entry v1.0.7/go.mod h1:gaxt1RYnHLgGs4SpqTTYRjNoYVaLsxoiD1cREEmZSIg=
 github.com/rookie-ninja/rk-logger v1.2.3 h1:BTbHizHtCIP01JD2msdmZrijEPEFXD/KprsBgMDBJ6A=
 github.com/rookie-ninja/rk-logger v1.2.3/go.mod h1:NDRMGnXMO/PBsFQc+N4LQgTmIxOKaFE1c7pDRmQUGjc=
-github.com/rookie-ninja/rk-mux v0.0.4 h1:YrPB4Woz0evEVU5twGLNnVWlxtZX+SFZb/b2mgbhyG8=
-github.com/rookie-ninja/rk-mux v0.0.4/go.mod h1:rDXx7vPvqDszLzZW5OUmpVwP8QlD2V+6xOdDU3vWOc4=
+github.com/rookie-ninja/rk-mux v0.0.5 h1:+yLXI0/1Y+mjrBHPgaCc4ZFobvslBTiHt+l/JBmpvbM=
+github.com/rookie-ninja/rk-mux v0.0.5/go.mod h1:O6+wjYoKlKEzpB1TCm6fEmfqg1yyW+fKyIZcKscCEWs=
 github.com/rookie-ninja/rk-prom v1.1.4 h1:p33XVD9/pK7QtcYNX8nAfm1aiLc/NQI0mQBKgIw4IZ0=
 github.com/rookie-ninja/rk-prom v1.1.4/go.mod h1:ZiYyxCmWfVyZMNVAVZiZOzqxx+lutVsnWadj5A+XTEM=
 github.com/rookie-ninja/rk-query v1.2.4 h1:PBM90z5dDWRKNvJHtDUQ2F4um5c4I+WwSml8uLVvfkc=
