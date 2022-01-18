@@ -167,9 +167,9 @@ func WithDescription(description string) MyEntryOption {
 }
 
 type MyEntry struct {
-	EntryName        string                    `json:"entryName" yaml:"entryName"`
-	EntryType        string                    `json:"entryType" yaml:"entryType"`
-	EntryDescription string                    `json:"entryDescription" yaml:"entryDescription"`
+	EntryName        string `json:"entryName" yaml:"entryName"`
+	EntryType        string `json:"entryType" yaml:"entryType"`
+	EntryDescription string `json:"entryDescription" yaml:"entryDescription"`
 }
 
 func (entry *MyEntry) Bootstrap(context.Context) {}
