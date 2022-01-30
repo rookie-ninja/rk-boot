@@ -331,9 +331,9 @@ User can start multiple [gofiber/fiber](https://github.com/gofiber/fiber) instan
 | fiber.port | The port of fiber server | integer | nil, server won't start |
 | fiber.enabled | Enable fiber entry or not | bool | false |
 | fiber.description | Description of fiber entry. | string | "" |
-| fiber.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
-| fiber.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
-| fiber.logger.eventLogger.ref | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
+| fiber.certEntry | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
+| fiber.logger.zapLogger | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
+| fiber.logger.eventLogger | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
 
 ```yaml
 fiber:
@@ -853,9 +853,31 @@ fiber:
 #zapLogger:
 #  - name: zap-logger                                      # Required
 #    description: "Description of entry"                   # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #eventLogger:
 #  - name: event-logger                                    # Required
 #    description: "Description of entry"                   # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #cred:
 #  - name: "local-cred"                                    # Required
 #    provider: "localFs"                                   # Required, etcd, consul, localFs, remoteFs are supported options
@@ -882,8 +904,7 @@ fiber:
     port: 8080                                             # Required
     enabled: true                                          # Required
 #    description: "greeter server"                         # Optional, default: ""
-#    cert:
-#      ref: "local-cert"                                   # Optional, default: "", reference of cert entry declared above
+#    certEntry: "local-cert"                               # Optional, default: "", reference of cert entry declared above
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
@@ -910,10 +931,8 @@ fiber:
 #        cert:                                             # Optional
 #          ref: "local-test"                               # Optional, default: "", reference of cert entry declared above
 #    logger:
-#      zapLogger:
-#        ref: zap-logger                                   # Optional, default: logger of STDOUT, reference of logger entry declared above
-#      eventLogger:
-#        ref: event-logger                                 # Optional, default: logger of STDOUT, reference of logger entry declared above
+#      zapLogger: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
+#      eventLogger: event-logger                           # Optional, default: logger of STDOUT, reference of logger entry declared above
 #    interceptors:
 #      loggingZap:
 #        enabled: true                                     # Optional, default: false
