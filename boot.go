@@ -100,15 +100,15 @@ func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
 // External entries:
 // User defined entries
 func (boot *Boot) interrupt(ctx context.Context) {
-	// Interrupt internal entries
-	rkentry.GlobalAppCtx.GetAppInfoEntry().Interrupt(ctx)
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListZapLoggerEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEventLoggerEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListConfigEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListCertEntriesRaw())
-
 	// Interrupt external entries
 	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEntries())
+
+	// Interrupt internal entries
+	rkentry.GlobalAppCtx.GetAppInfoEntry().Interrupt(ctx)
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListConfigEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListCertEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEventLoggerEntriesRaw())
+	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListZapLoggerEntriesRaw())
 }
 
 // Helper function which all interrupt() function for each entry.
