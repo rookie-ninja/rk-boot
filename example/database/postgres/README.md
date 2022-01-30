@@ -69,9 +69,7 @@ postgres:
 #        preferSimpleProtocol: false  # Optional, default: false
 #        params: []                   # Optional, default: ["sslmode=disable","TimeZone=Asia/Shanghai"]
 #    logger:
-#      level: info                    # Optional, default: warn
-#      encoding: json                 # Optional, default: console
-#      outputPaths: [ "pg/log" ]      # Optional, default: []
+#      zapLogger: zap                 # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -312,9 +310,7 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 | postgres.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
 | postgres.database.preferSimpleProtocol | Optional | Disable prepared statement cache | bool | false |
 | postgres.database.params | Optional | Connection params | []string | ["sslmode=disable","TimeZone=Asia/Shanghai"] |
-| postgres.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| postgres.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| postgres.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| postgres.logger.zapLogger | Optional | Reference of zap logger entry name | string | "" |
 
 ### Usage of locale
 

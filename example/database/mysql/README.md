@@ -68,9 +68,7 @@ mySql:
 #        dryRun: false                # Optional, default: false
 #        params: []                   # Optional, default: ["charset=utf8mb4","parseTime=True","loc=Local"]
 #    logger:
-#      level: warn                    # Optional, default: warn
-#      encoding: json                 # Optional, default: console
-#      outputPaths: [ "mysql/log" ]   # Optional, default: []
+#      zapLogger: zap                 # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -309,9 +307,7 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 | mysql.database.autoCreate | Optional | Create DB if missing | bool | false |
 | mysql.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
 | mysql.database.params | Optional | Connection params | []string | ["charset=utf8mb4","parseTime=True","loc=Local"] |
-| mysql.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| mysql.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| mysql.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| mysql.logger.zapLogger | Optional | Reference of zap logger entry name | string | "" |
 
 ### Usage of locale
 
