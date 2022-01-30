@@ -68,9 +68,7 @@ sqlServer:
 #        dryRun: true                 # Optional, default: false
 #        params: []                   # Optional, default: []
 #    logger:
-#      level: info                    # Optional, default: warn
-#      encoding: json                 # Optional, default: console
-#      outputPaths: ["sqlserver/log"] # Optional, default: []
+#      zapLogger: zap                   # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -316,9 +314,7 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 | sqlServer.database.autoCreate | Optional | Create DB if missing | bool | false |
 | sqlServer.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
 | sqlServer.database.params | Optional | Connection params | []string | [] |
-| sqlServer.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| sqlServer.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| sqlServer.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| sqlServer.logger.zapLogger | Optional | Reference of zap logger entry name | string | "" |
 
 ### Usage of locale
 

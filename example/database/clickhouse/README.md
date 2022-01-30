@@ -68,9 +68,7 @@ clickHouse:
 #        dryRun: false                     # Optional, default: false
 #        params: []                        # Optional, default: []
 #    logger:
-#      level: warn                         # Optional, default: warn
-#      encoding: json                      # Optional, default: console
-#      outputPaths: [ "clickhouse/log" ]   # Optional, default: []
+#      zapLogger: zap                      # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -296,9 +294,7 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 | clickHouse.database.autoCreate | Optional | Create DB if missing | bool | false |
 | clickHouse.database.dryRun | Optional | Run gorm.DB with dry run mode | bool | false |
 | clickHouse.database.params | Optional | Connection params | []string | [""] |
-| clickHouse.logger.encoding | Optional | Log encoding type, json & console are available options | string | console |
-| clickHouse.logger.outputPaths | Optional | Output paths of logger | []string | [stdout] |
-| clickHouse.logger.level | Optional | Logger level, options: silent, error, warn, info | string | warn |
+| clickHouse.logger.zapLogger | Optional | Reference of zap logger entry name | string | "" |
 
 ### Usage of locale
 
