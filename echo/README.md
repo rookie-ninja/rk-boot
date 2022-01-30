@@ -332,9 +332,9 @@ User can start multiple [labstack/echo](https://github.com/labstack/echo) instan
 | echo.port | The port of echo server | integer | nil, server won't start |
 | echo.enabled | Enable echo entry or not | bool | false |
 | echo.description | Description of echo entry. | string | "" |
-| echo.cert.ref | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
-| echo.logger.zapLogger.ref | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
-| echo.logger.eventLogger.ref | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
+| echo.certEntry | Reference of cert entry declared in [cert entry](https://github.com/rookie-ninja/rk-entry#certentry) | string | "" |
+| echo.logger.zapLogger | Reference of zapLoggerEntry declared in [zapLoggerEntry](https://github.com/rookie-ninja/rk-entry#zaploggerentry) | string | "" |
+| echo.logger.eventLogger | Reference of eventLoggerEntry declared in [eventLoggerEntry](https://github.com/rookie-ninja/rk-entry#eventloggerentry) | string | "" |
 
 ```yaml
 echo:
@@ -873,9 +873,31 @@ echo:
 #zapLogger:
 #  - name: zap-logger                                      # Required
 #    description: "Description of entry"                   # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #eventLogger:
 #  - name: event-logger                                    # Required
 #    description: "Description of entry"                   # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #cred:
 #  - name: "local-cred"                                    # Required
 #    provider: "localFs"                                   # Required, etcd, consul, localFs, remoteFs are supported options
@@ -902,8 +924,7 @@ echo:
     port: 8080                                             # Required
     enabled: true                                          # Required
 #    description: "greeter server"                         # Optional, default: ""
-#    cert:
-#      ref: "local-cert"                                   # Optional, default: "", reference of cert entry declared above
+#    certEntry: "local-cert"                               # Optional, default: "", reference of cert entry declared above
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
@@ -930,10 +951,8 @@ echo:
 #        cert:                                             # Optional
 #          ref: "local-test"                               # Optional, default: "", reference of cert entry declared above
 #    logger:
-#      zapLogger:
-#        ref: zap-logger                                   # Optional, default: logger of STDOUT, reference of logger entry declared above
-#      eventLogger:
-#        ref: event-logger                                 # Optional, default: logger of STDOUT, reference of logger entry declared above
+#      zapLogger: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
+#      eventLogger: event-logger                           # Optional, default: logger of STDOUT, reference of logger entry declared above
 #    interceptors:
 #      loggingZap:
 #        enabled: true                                     # Optional, default: false

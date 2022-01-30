@@ -10,9 +10,31 @@ app:
 #zapLogger:                                            # Optional
 #  - name: zap-logger                                  # Required
 #    description: "Description of entry"               # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #eventLogger:                                          # Optional
 #  - name: event-logger                                # Required
 #    description: "Description of entry"               # Optional
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
 #cert:                                                 # Optional
 #  - name: "local-cert"                                # Required
 #    description: "Description of entry"               # Optional
@@ -52,8 +74,7 @@ grpc:
 #      path: "/rk/v1/static"                           # Optional, default: /rk/v1/static
 #      sourceType: local                               # Required, options: pkger, local
 #      sourcePath: "."                                 # Required, full path of source directory
-#    cert:
-#      ref: "local-cert"                               # Optional, default: "", reference of cert entry declared above
+#    certEntry: "local-cert"                               # Optional, default: "", reference of cert entry declared above
 #    gwMappingFilePaths:                               # Optional
 #      - "api/v1/gw_mapping.yaml"
 #    tv:
@@ -74,11 +95,9 @@ grpc:
 #        intervalMs: 1000                              # Optional, default: 1000
 #        cert:
 #          ref: "local-cert"                           # Optional, default: "", reference of cert entry declared above
-#    logger:                                           # Optional
-#      zapLogger:                                      # Optional
-#        ref: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
-#      eventLogger:                                    # Optional
-#        ref: event-logger                             # Optional, default: logger of STDOUT, reference of logger entry declared above
+#    logger:
+#      zapLogger: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
+#      eventLogger: event-logger                           # Optional, default: logger of STDOUT, reference of logger entry declared above
 #    interceptors:
 #      loggingZap:
 #        enabled: true                                 # Optional, default: false
