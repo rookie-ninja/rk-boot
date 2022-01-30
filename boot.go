@@ -8,12 +8,14 @@ package rkboot
 
 import (
 	"context"
+	rkcommon "github.com/rookie-ninja/rk-common/common"
 	"github.com/rookie-ninja/rk-entry/entry"
 )
 
 // Boot is a structure for bootstrapping rk style application
 type Boot struct {
 	BootConfigPath string `yaml:"bootConfigPath" json:"bootConfigPath"`
+	EventId        string `yaml:"eventId" json:"eventId"`
 }
 
 // BootOption is used as options while bootstrapping from code
@@ -28,7 +30,9 @@ func WithBootConfigPath(filePath string) BootOption {
 
 // NewBoot create a bootstrapper.
 func NewBoot(opts ...BootOption) *Boot {
-	boot := &Boot{}
+	boot := &Boot{
+		EventId: rkcommon.GenerateRequestId(),
+	}
 
 	for i := range opts {
 		opts[i](boot)
@@ -62,6 +66,8 @@ func NewBoot(opts ...BootOption) *Boot {
 // External entries:
 // User defined entries
 func (boot *Boot) Bootstrap(ctx context.Context) {
+	ctx = context.WithValue(ctx, "eventId", boot.EventId)
+
 	// Bootstrap external entries
 	for _, entry := range rkentry.GlobalAppCtx.ListEntries() {
 		entry.Bootstrap(ctx)
@@ -100,6 +106,8 @@ func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
 // External entries:
 // User defined entries
 func (boot *Boot) interrupt(ctx context.Context) {
+	ctx = context.WithValue(ctx, "eventId", boot.EventId)
+
 	// Interrupt external entries
 	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEntries())
 
