@@ -8,8 +8,11 @@ package rkboot
 
 import (
 	"context"
-	rkcommon "github.com/rookie-ninja/rk-common/common"
+	"fmt"
+	"github.com/rookie-ninja/rk-common/common"
 	"github.com/rookie-ninja/rk-entry/entry"
+	"go.uber.org/zap"
+	"runtime/debug"
 )
 
 // Boot is a structure for bootstrapping rk style application
@@ -30,6 +33,8 @@ func WithBootConfigPath(filePath string) BootOption {
 
 // NewBoot create a bootstrapper.
 func NewBoot(opts ...BootOption) *Boot {
+	defer syncLog("N/A")
+
 	boot := &Boot{
 		EventId: rkcommon.GenerateRequestId(),
 	}
@@ -66,6 +71,8 @@ func NewBoot(opts ...BootOption) *Boot {
 // External entries:
 // User defined entries
 func (boot *Boot) Bootstrap(ctx context.Context) {
+	defer syncLog(boot.EventId)
+
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
 	// Bootstrap external entries
@@ -106,6 +113,8 @@ func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
 // External entries:
 // User defined entries
 func (boot *Boot) interrupt(ctx context.Context) {
+	defer syncLog(boot.EventId)
+
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
 	// Interrupt external entries
@@ -164,4 +173,28 @@ func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
 // GetEntry returns rkentry.Entry interface which user needs to convert by himself.
 func (boot *Boot) GetEntry(name string) interface{} {
 	return rkentry.GlobalAppCtx.GetEntry(name)
+}
+
+// sync logs
+func syncLog(eventId string) {
+	if r := recover(); r != nil {
+		stackTrace := fmt.Sprintf("Panic occured, shutting down... \n%s", string(debug.Stack()))
+		for _, v := range rkentry.GlobalAppCtx.ListZapLoggerEntries() {
+			if v == rkentry.GlobalAppCtx.GetZapLoggerEntryDefault() {
+				continue
+			}
+			if v.Logger != nil {
+				v.Logger.Error(stackTrace,
+					zap.String("eventId", eventId),
+					zap.Any("RootCause", r))
+			}
+			v.Sync()
+		}
+
+		for _, v := range rkentry.GlobalAppCtx.ListEventLoggerEntries() {
+			v.Sync()
+		}
+
+		panic(r)
+	}
 }
