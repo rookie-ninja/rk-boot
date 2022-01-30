@@ -55,27 +55,35 @@
 #    path: "example/boot/full/config.yaml"                 # Required
 #    locale: "*::*::*::*"                                  # Required, default: *::*::*::*
 #    description: "Description of entry"                   # Optional
+zapLogger:
+  - name: zap
+    zap:
+      outputPaths: [""]
+    loki:
+      enabled: true
 gin:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required
+    logger:
+      zapLogger: zap
 #    certEntry: "local-cert"                               # Optional, default: "", reference of cert entry declared above
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
 #      jsonPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
-    commonService:
-      enabled: true                                       # Optional, default: false
+#    commonService:
+#      enabled: true                                       # Optional, default: false
 #    static:
 #      enabled: true                                       # Optional, default: false
 #      path: "/rk/v1/static"                               # Optional, default: /rk/v1/static
 #      sourceType: local                                   # Required, options: pkger, local
 #      sourcePath: "."                                     # Required, full path of source directory
-    tv:
-      enabled:  true                                      # Optional, default: false
-    prom:
-      enabled: true                                       # Optional, default: false
+#    tv:
+#      enabled:  true                                      # Optional, default: false
+#    prom:
+#      enabled: true                                       # Optional, default: false
 #      path: ""                                            # Optional, default: "metrics"
 #      pusher:
 #        enabled: false                                    # Optional, default: false
@@ -88,15 +96,15 @@ gin:
 #    logger:
 #      zapLogger: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
 #      eventLogger: event-logger                           # Optional, default: logger of STDOUT, reference of logger entry declared above
-    interceptors:
+#    interceptors:
 #      loggingZap:
 #        enabled: true                                     # Optional, default: false
 #        zapLoggerEncoding: "json"                         # Optional, default: "console"
 #        zapLoggerOutputPaths: ["logs/app.log"]            # Optional, default: ["stdout"]
 #        eventLoggerEncoding: "json"                       # Optional, default: "console"
 #        eventLoggerOutputPaths: ["logs/event.log"]        # Optional, default: ["stdout"]
-      metricsProm:
-        enabled: true                                     # Optional, default: false
+#      metricsProm:
+#        enabled: true                                     # Optional, default: false
 #      auth:
 #        enabled: true                                     # Optional, default: false
 #        basic:

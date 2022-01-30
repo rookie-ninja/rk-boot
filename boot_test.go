@@ -52,11 +52,32 @@ myEntry:
 	time.Sleep(1 * time.Second)
 	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
 	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.RemoveEntry("ut-gin")
+	rkentry.GlobalAppCtx.RemoveEntry("ut")
 }
 
-func TestNewBoot_WithEmptyBootFilePath(t *testing.T) {
+func TestNewBoot_Panic(t *testing.T) {
 	defer assertPanic(t)
+	defer rkentry.GlobalAppCtx.RemoveEntry("ut")
+
+	config := `
+---
+zapLogger:
+  - name: zap
+myEntry:
+  name: ut
+  enabled: true
+  shouldPanic: true
+`
+
+	filePath := createFileAtTestTempDir(t, "ut-boot.yaml", config)
+
+	boot := NewBoot(WithBootConfigPath(filePath))
+	boot.Bootstrap(context.TODO())
+}
+
+func TestNewBoot_EmptyConfig(t *testing.T) {
+	defer assertPanic(t)
+
 	NewBoot()
 }
 
@@ -105,6 +126,7 @@ type BootConfig struct {
 		Enabled     bool   `yaml:"enabled" json:"enabled"`
 		Name        string `yaml:"name" json:"name"`
 		Description string `yaml:"description" json:"description"`
+		ShouldPanic bool   `yaml:"shouldPanic" json:"shouldPanic"`
 	} `yaml:"myEntry" json:"myEntry"`
 }
 
@@ -121,7 +143,8 @@ func RegisterMyEntriesFromConfig(configFilePath string) map[string]rkentry.Entry
 	if config.MyEntry.Enabled {
 		entry := RegisterMyEntry(
 			WithName(config.MyEntry.Name),
-			WithDescription(config.MyEntry.Description))
+			WithDescription(config.MyEntry.Description),
+			WithPanic(config.MyEntry.ShouldPanic))
 		res[entry.GetName()] = entry
 	}
 
@@ -166,13 +189,24 @@ func WithDescription(description string) MyEntryOption {
 	}
 }
 
+func WithPanic(val bool) MyEntryOption {
+	return func(entry *MyEntry) {
+		entry.shouldPanic = val
+	}
+}
+
 type MyEntry struct {
 	EntryName        string `json:"entryName" yaml:"entryName"`
 	EntryType        string `json:"entryType" yaml:"entryType"`
 	EntryDescription string `json:"entryDescription" yaml:"entryDescription"`
+	shouldPanic      bool
 }
 
-func (entry *MyEntry) Bootstrap(context.Context) {}
+func (entry *MyEntry) Bootstrap(context.Context) {
+	if entry.shouldPanic {
+		panic("expected panic")
+	}
+}
 
 func (entry *MyEntry) Interrupt(context.Context) {}
 
