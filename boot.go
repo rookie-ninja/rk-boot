@@ -8,16 +8,21 @@ package rkboot
 
 import (
 	"context"
+	"embed"
 	"fmt"
 	"github.com/rookie-ninja/rk-common/common"
 	"github.com/rookie-ninja/rk-entry/entry"
 	"go.uber.org/zap"
+	"io/ioutil"
+	"os"
+	"path"
 	"runtime/debug"
 )
 
 // Boot is a structure for bootstrapping rk style application
 type Boot struct {
 	BootConfigPath string `yaml:"bootConfigPath" json:"bootConfigPath"`
+	bootConfigRaw  []byte `yaml:"-" json:"-"`
 	EventId        string `yaml:"eventId" json:"eventId"`
 }
 
@@ -31,6 +36,36 @@ func WithBootConfigPath(filePath string) BootOption {
 	}
 }
 
+// WithBootConfigString provide boot config as string.
+func WithBootConfigString(bootConfigStr string) BootOption {
+	return func(boot *Boot) {
+		if len(bootConfigStr) > 0 {
+			boot.bootConfigRaw = []byte(bootConfigStr)
+		}
+	}
+}
+
+// WithBootConfigBytes provide boot config as string.
+func WithBootConfigBytes(bootConfigBytes []byte) BootOption {
+	return func(boot *Boot) {
+		if len(bootConfigBytes) > 0 {
+			boot.bootConfigRaw = bootConfigBytes
+		}
+	}
+}
+
+// WithBootConfigEmbedFs provide boot config as file in embed.FS.
+func WithBootConfigEmbedFs(fs embed.FS, filePath string) BootOption {
+	return func(boot *Boot) {
+		bytes, err := fs.ReadFile(filePath)
+		if err != nil {
+			rkcommon.ShutdownWithError(err)
+		}
+
+		boot.bootConfigRaw = bytes
+	}
+}
+
 // NewBoot create a bootstrapper.
 func NewBoot(opts ...BootOption) *Boot {
 	defer syncLog("N/A")
@@ -41,6 +76,19 @@ func NewBoot(opts ...BootOption) *Boot {
 
 	for i := range opts {
 		opts[i](boot)
+	}
+
+	if len(boot.bootConfigRaw) > 0 {
+		wd, err := os.Getwd()
+		if err != nil {
+			rkcommon.ShutdownWithError(err)
+		}
+
+		boot.BootConfigPath = path.Join(wd, "boot-gen.yaml")
+		err = ioutil.WriteFile(boot.BootConfigPath, boot.bootConfigRaw, os.ModePerm)
+		if err != nil {
+			rkcommon.ShutdownWithError(err)
+		}
 	}
 
 	if len(boot.BootConfigPath) < 1 {
