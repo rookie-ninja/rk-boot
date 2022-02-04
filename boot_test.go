@@ -55,6 +55,36 @@ myEntry:
 	rkentry.GlobalAppCtx.RemoveEntry("ut")
 }
 
+func TestNewBoot_WithEmbedCase(t *testing.T) {
+	config := `
+---
+myEntry:
+  name: ut
+  enabled: true
+`
+	// provide boot config as string
+	boot := NewBoot(WithBootConfigString(config))
+	wd, _ := os.Getwd()
+	bytes, _ := ioutil.ReadFile(path.Join(wd, "boot-gen.yaml"))
+	assert.Equal(t, config, string(bytes))
+
+	boot.Bootstrap(context.TODO())
+	boot.interrupt(context.TODO())
+	rkentry.GlobalAppCtx.RemoveEntry("ut")
+	os.Remove(path.Join(wd, "boot-gen.yaml"))
+
+	// provide boot config as byte
+	boot = NewBoot(WithBootConfigBytes([]byte(config)))
+	wd, _ = os.Getwd()
+	bytes, _ = ioutil.ReadFile(path.Join(wd, "boot-gen.yaml"))
+	assert.Equal(t, config, string(bytes))
+
+	boot.Bootstrap(context.TODO())
+	boot.interrupt(context.TODO())
+	rkentry.GlobalAppCtx.RemoveEntry("ut")
+	os.Remove(path.Join(wd, "boot-gen.yaml"))
+}
+
 func TestNewBoot_Panic(t *testing.T) {
 	defer assertPanic(t)
 	defer rkentry.GlobalAppCtx.RemoveEntry("ut")
