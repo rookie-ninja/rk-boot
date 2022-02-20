@@ -77,7 +77,7 @@ We will add more bootstrapper for popular third-party dependencies.
 
 | Frameworks                                                | Status  | Tag     | Installation                                 | Dependency                                           |
 |-----------------------------------------------------------|---------|---------|----------------------------------------------|------------------------------------------------------|
-| [gin-gonic/gin](https://github.com/gin-gonic/gin)         | Stable  | v1.2.21 | go get github.com/rookie-ninja/rk-boot/gin   | [rk-gin](https://github.com/rookie-ninja/rk-gin)     |
+| [gin-gonic/gin](https://github.com/gin-gonic/gin)         | Stable  | v1.2.22 | go get github.com/rookie-ninja/rk-boot/gin   | [rk-gin](https://github.com/rookie-ninja/rk-gin)     |
 | [gRPC](https://grpc.io/docs/languages/go/)                | Stable  | v1.2.25 | go get github.com/rookie-ninja/rk-boot/grpc  | [rk-grpc](https://github.com/rookie-ninja/rk-grpc)   |
 | [labstack/echo](https://github.com/labstack/echo)         | Stable  | v0.0.16 | go get github.com/rookie-ninja/rk-boot/echo  | [rk-echo](https://github.com/rookie-ninja/rk-echo)   |
 | [gogf/gf](https://github.com/gogf/gf)                     | Stable  | v0.0.15 | go get github.com/rookie-ninja/rk-boot/gf    | [rk-gf](https://github.com/rookie-ninja/rk-gf)       |
