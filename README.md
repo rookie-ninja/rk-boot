@@ -75,42 +75,42 @@ We will add more bootstrapper for popular third-party dependencies.
 
 **Start with [docs](https://rkdev.info/docs/bootstrapper/user-guide/gin-golang/developer/) and refer [rk-gin](https://github.com/rookie-ninja/rk-gin) as example.**
 
-| Frameworks | Status | Tag | Installation | Dependency |
-| --- | --- | --- | --- | --- |
-| [gin-gonic/gin](https://github.com/gin-gonic/gin) | Stable | v1.2.21 | go get github.com/rookie-ninja/rk-boot/gin | [rk-gin](https://github.com/rookie-ninja/rk-gin) |
-| [gRPC](https://grpc.io/docs/languages/go/) | Stable | v1.2.25 | go get github.com/rookie-ninja/rk-boot/grpc | [rk-grpc](https://github.com/rookie-ninja/rk-grpc) |
-| [labstack/echo](https://github.com/labstack/echo) | Stable | v0.0.16 | go get github.com/rookie-ninja/rk-boot/echo | [rk-echo](https://github.com/rookie-ninja/rk-echo) |
-| [gogf/gf](https://github.com/gogf/gf) | Stable | v0.0.15 | go get github.com/rookie-ninja/rk-boot/gf | [rk-gf](https://github.com/rookie-ninja/rk-gf) |
-| [gofiber/fiber](https://github.com/gofiber/fiber) | Testing | v0.0.11 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
-| [zeromicro/go-zero](https://github.com/zeromicro/go-zero) | Testing | v0.0.10 | go get github.com/rookie-ninja/rk-boot/zero | [rk-zero](https://github.com/rookie-ninja/rk-zero) |
-| [gorilla/mux](https://github.com/gorilla/mux) | Testing | v0.0.9 | go get github.com/rookie-ninja/rk-boot/mux | [rk-mux](https://github.com/rookie-ninja/rk-mux) |
+| Frameworks                                                | Status  | Tag     | Installation                                 | Dependency                                           |
+|-----------------------------------------------------------|---------|---------|----------------------------------------------|------------------------------------------------------|
+| [gin-gonic/gin](https://github.com/gin-gonic/gin)         | Stable  | v1.2.22 | go get github.com/rookie-ninja/rk-boot/gin   | [rk-gin](https://github.com/rookie-ninja/rk-gin)     |
+| [gRPC](https://grpc.io/docs/languages/go/)                | Stable  | v1.2.25 | go get github.com/rookie-ninja/rk-boot/grpc  | [rk-grpc](https://github.com/rookie-ninja/rk-grpc)   |
+| [labstack/echo](https://github.com/labstack/echo)         | Stable  | v0.0.16 | go get github.com/rookie-ninja/rk-boot/echo  | [rk-echo](https://github.com/rookie-ninja/rk-echo)   |
+| [gogf/gf](https://github.com/gogf/gf)                     | Stable  | v0.0.15 | go get github.com/rookie-ninja/rk-boot/gf    | [rk-gf](https://github.com/rookie-ninja/rk-gf)       |
+| [gofiber/fiber](https://github.com/gofiber/fiber)         | Testing | v0.0.11 | go get github.com/rookie-ninja/rk-boot/fiber | [rk-fiber](https://github.com/rookie-ninja/rk-fiber) |
+| [zeromicro/go-zero](https://github.com/zeromicro/go-zero) | Testing | v0.0.11 | go get github.com/rookie-ninja/rk-boot/zero  | [rk-zero](https://github.com/rookie-ninja/rk-zero)   |
+| [gorilla/mux](https://github.com/gorilla/mux)             | Testing | v0.0.9  | go get github.com/rookie-ninja/rk-boot/mux   | [rk-mux](https://github.com/rookie-ninja/rk-mux)     |
 
 ### Supported database ORM
 Databases still in Testing stage. Please see [examples](example/database) for detail.
 
-| Database | Status | Tag | ORM | Installation | Dependency |
-| --- | --- | --- | --- | --- | --- |
-| MySQL | Stable | v0.0.6 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql) |
-| SQLite | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite) |
-| SQL Server | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver) |
-| postgreSQL | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres) |
+| Database   | Status | Tag    | ORM                      | Installation                                    | Dependency                                                           |
+|------------|--------|--------|--------------------------|-------------------------------------------------|----------------------------------------------------------------------|
+| MySQL      | Stable | v0.0.6 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/mysql      | [rk-db/mysql](https://github.com/rookie-ninja/rk-db/mysql)           |
+| SQLite     | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlite     | [rk-db/sqlite](https://github.com/rookie-ninja/rk-db/sqlite)         |
+| SQL Server | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/sqlserver  | [rk-db/sqlserver](https://github.com/rookie-ninja/rk-db/sqlserver)   |
+| postgreSQL | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/postgres   | [rk-db/postgres](https://github.com/rookie-ninja/rk-db/postgres)     |
 | ClickHouse | Stable | v0.0.4 | [gorm](https://gorm.io/) | go get github.com/rookie-ninja/rk-db/clickhouse | [rk-db/clickhouse](https://github.com/rookie-ninja/rk-db/clickhouse) |
 
 ## Examples
-| Name | Type | Example | Docs |
-| --- | --- | --- | --- |
-| [gin-gonic/gin](https://github.com/gin-gonic/gin) | Web Framework | [example](example/gin) | [docs](gin) |
-| [gRPC](https://grpc.io/docs/languages/go/) | Web Framework | [example](example/grpc) | [docs](grpc) |
-| [labstack/echo](https://github.com/labstack/echo) | Web Framework | [example](example/echo) | [docs](echo) |
-| [gogf/gf](https://github.com/gogf/gf) | Web Framework | [example](example/gf) | [docs](gf) |
-| [gofiber/fiber](https://github.com/gofiber/fiber) | Web Framework | [example](example/fiber) | [docs](fiber) |
-| [zeromicro/go-zero](https://github.com/zeromicro/go-zero) | Web Framework | [example](example/zero) | [docs](zero) |
-| [gorilla/mux](https://github.com/gorilla/mux) | Web Framework | [example](example/mux) | [docs](mux) |
-| MySQL | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/mysql) | [docs](database/mysql) |
-| SQLite | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlite) | [docs](database/sqlite) |
-| SQL Server | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlserver) | [docs](database/sqlserver) |
-| postgreSQL | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/postgres) | [docs](database/postgres) |
-| ClickHouse | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/clickhouse) | [docs](database/clickhouse) |
+| Name                                                      | Type                                          | Example                                | Docs                        |
+|-----------------------------------------------------------|-----------------------------------------------|----------------------------------------|-----------------------------|
+| [gin-gonic/gin](https://github.com/gin-gonic/gin)         | Web Framework                                 | [example](example/gin)                 | [docs](gin)                 |
+| [gRPC](https://grpc.io/docs/languages/go/)                | Web Framework                                 | [example](example/grpc)                | [docs](grpc)                |
+| [labstack/echo](https://github.com/labstack/echo)         | Web Framework                                 | [example](example/echo)                | [docs](echo)                |
+| [gogf/gf](https://github.com/gogf/gf)                     | Web Framework                                 | [example](example/gf)                  | [docs](gf)                  |
+| [gofiber/fiber](https://github.com/gofiber/fiber)         | Web Framework                                 | [example](example/fiber)               | [docs](fiber)               |
+| [zeromicro/go-zero](https://github.com/zeromicro/go-zero) | Web Framework                                 | [example](example/zero)                | [docs](zero)                |
+| [gorilla/mux](https://github.com/gorilla/mux)             | Web Framework                                 | [example](example/mux)                 | [docs](mux)                 |
+| MySQL                                                     | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/mysql)      | [docs](database/mysql)      |
+| SQLite                                                    | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlite)     | [docs](database/sqlite)     |
+| SQL Server                                                | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/sqlserver)  | [docs](database/sqlserver)  |
+| postgreSQL                                                | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/postgres)   | [docs](database/postgres)   |
+| ClickHouse                                                | ORM - [gorm](https://github.com/go-gorm/gorm) | [example](example/database/clickhouse) | [docs](database/clickhouse) |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
