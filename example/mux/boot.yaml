@@ -1,0 +1,222 @@
+---
+#app:
+#  name: my-app                                            # Optional, default: "rk-app"
+#  version: "v1.0.0"                                       # Optional, default: "v0.0.0"
+#  description: "this is description"                      # Optional, default: ""
+#  keywords: ["rk", "golang"]                              # Optional, default: []
+#  homeUrl: "http://example.com"                           # Optional, default: ""
+#  docsUrl: ["http://example.com"]                         # Optional, default: []
+#  maintainers: ["rk-dev"]                                 # Optional, default: []
+#logger:
+#  - name: my-logger                                       # Required
+#    description: "Description of entry"                   # Optional
+#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    zap:                                                  # Optional
+#      level: info                                         # Optional, default: info
+#      development: true                                   # Optional, default: true
+#      disableCaller: false                                # Optional, default: false
+#      disableStacktrace: true                             # Optional, default: true
+#      encoding: console                                   # Optional, default: console
+#      outputPaths: ["stdout"]                             # Optional, default: [stdout]
+#      errorOutputPaths: ["stderr"]                        # Optional, default: [stderr]
+#      encoderConfig:                                      # Optional
+#        timeKey: "ts"                                     # Optional, default: ts
+#        levelKey: "level"                                 # Optional, default: level
+#        nameKey: "logger"                                 # Optional, default: logger
+#        callerKey: "caller"                               # Optional, default: caller
+#        messageKey: "msg"                                 # Optional, default: msg
+#        stacktraceKey: "stacktrace"                       # Optional, default: stacktrace
+#        skipLineEnding: false                             # Optional, default: false
+#        lineEnding: "\n"                                  # Optional, default: \n
+#        consoleSeparator: "\t"                            # Optional, default: \t
+#      sampling:                                           # Optional, default: nil
+#        initial: 0                                        # Optional, default: 0
+#        thereafter: 0                                     # Optional, default: 0
+#      initialFields:                                      # Optional, default: empty map
+#        key: value
+#    lumberjack:                                           # Optional, default: nil
+#      filename:
+#      maxsize: 1024                                       # Optional, suggested: 1024 (MB)
+#      maxage: 7                                           # Optional, suggested: 7 (day)
+#      maxbackups: 3                                       # Optional, suggested: 3 (day)
+#      localtime: true                                     # Optional, suggested: true
+#      compress: true                                      # Optional, suggested: true
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
+#event:
+#  - name: my-event                                        # Required
+#    description: "Description of entry"                   # Optional
+#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    encoding: console                                     # Optional, default: console
+#    outputPaths: ["stdout"]                               # Optional, default: [stdout]
+#    lumberjack:                                           # Optional, default: nil
+#      filename:
+#      maxsize: 1024                                       # Optional, suggested: 1024 (MB)
+#      maxage: 7                                           # Optional, suggested: 7 (day)
+#      maxbackups: 3                                       # Optional, suggested: 3 (day)
+#      localtime: true                                     # Optional, suggested: true
+#      compress: true                                      # Optional, suggested: true
+#    loki:
+#      enabled: true                                       # Optional, default: false
+#      addr: localhost:3100                                # Optional, default: localhost:3100
+#      path: /loki/api/v1/push                             # Optional, default: /loki/api/v1/push
+#      username: ""                                        # Optional, default: ""
+#      password: ""                                        # Optional, default: ""
+#      maxBatchWaitMs: 3000                                # Optional, default: 3000
+#      maxBatchSize: 1000                                  # Optional, default: 1000
+#      insecureSkipVerify: false                           # Optional, default: false
+#      labels:                                             # Optional, default: empty map
+#        my_label_key: my_label_value
+#cert:
+#  - name: my-cert                                         # Required
+#    description: "Description of entry"                   # Optional, default: ""
+#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
+#    caPath: "certs/ca.pem"                                # Optional, default: ""
+#    certPemPath: "certs/server-cert.pem"                  # Optional, default: ""
+#    keyPemPath: "certs/server-key.pem"                    # Optional, default: ""
+#config:
+#  - name: my-config                                       # Required
+#    description: "Description of entry"                   # Optional, default: ""
+#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
+##    path: "config/config.yaml"                            # Optional
+#    envPrefix: ""                                         # Optional, default: ""
+#    content:                                              # Optional, defualt: empty map
+#      key: value
+mux:
+  - name: greeter                                          # Required
+    port: 8080                                             # Required
+    enabled: true                                          # Required
+    sw:
+      enabled: true                                       # Optional, default: false
+#      path: "sw"                                          # Optional, default: "sw"
+#      jsonPath: ""                                        # Optional
+#      headers: ["sw:rk"]                                  # Optional, default: []
+    commonService:
+      enabled: true                                       # Optional, default: false
+#      pathPrefix: ""                                      # Optional, default: "/rk/v1/"
+    docs:
+      enabled: true                                       # Optional, default: false
+#      path: "docs"                                        # Optional, default: "docs"
+#      specPath: ""                                        # Optional
+#      headers: ["sw:rk"]                                  # Optional, default: []
+#      style:                                              # Optional
+#        theme: "light"                                    # Optional, default: "light"
+#      debug: false                                        # Optional, default: false
+#    description: "greeter server"                         # Optional, default: ""
+#    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
+#    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    static:
+#      enabled: true                                       # Optional, default: false
+#      path: "/static"                                     # Optional, default: /static
+#      sourceType: local                                   # Optional, options: local, embed.FS can be used either, need to specify in code
+#      sourcePath: "."                                     # Optional, full path of source directory
+#    prom:
+#      enabled: true                                       # Optional, default: false
+#      path: ""                                            # Optional, default: "metrics"
+#      pusher:
+#        enabled: false                                    # Optional, default: false
+#        jobName: "greeter-pusher"                         # Required
+#        remoteAddress: "localhost:9091"                   # Required
+#        basicAuth: "user:pass"                            # Optional, default: ""
+#        intervalMs: 10000                                 # Optional, default: 1000
+#        certEntry: my-cert                                # Optional, default: "", reference of cert entry declared above
+#    middleware:
+#      ignore: [""]                                        # Optional, default: []
+#      logging:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        loggerEncoding: "console"                         # Optional, default: "console"
+#        loggerOutputPaths: ["logs/app.log"]               # Optional, default: ["stdout"]
+#        eventEncoding: "console"                          # Optional, default: "console"
+#        eventOutputPaths: ["logs/event.log"]              # Optional, default: ["stdout"]
+#      prom:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#      auth:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        basic:
+#          - "user:pass"                                   # Optional, default: []
+#        apiKey:
+#          - "keys"                                        # Optional, default: []
+#      meta:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        prefix: "rk"                                      # Optional, default: "rk"
+#      trace:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        exporter:                                         # Optional, default will create a stdout exporter
+#          file:
+#            enabled: true                                 # Optional, default: false
+#            outputPath: "logs/trace.log"                  # Optional, default: stdout
+#          jaeger:
+#            agent:
+#              enabled: false                              # Optional, default: false
+#              host: ""                                    # Optional, default: localhost
+#              port: 0                                     # Optional, default: 6831
+#            collector:
+#              enabled: true                               # Optional, default: false
+#              endpoint: ""                                # Optional, default: http://localhost:14268/api/traces
+#              username: ""                                # Optional, default: ""
+#              password: ""                                # Optional, default: ""
+#      rateLimit:
+#        enabled: false                                    # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        algorithm: "leakyBucket"                          # Optional, default: "tokenBucket"
+#        reqPerSec: 100                                    # Optional, default: 1000000
+#        paths:
+#          - path: "/rk/v1/healthy"                        # Optional, default: ""
+#            reqPerSec: 0                                  # Optional, default: 1000000
+#      jwt:
+#        enabled: true                                     # Optional, default: false
+#        signingKey: "my-secret"                           # Required
+#        ignore: [""]                                      # Optional, default: []
+#        signingKeys:                                      # Optional
+#          - "key:value"
+#        signingAlgo: ""                                   # Optional, default: "HS256"
+#        tokenLookup: "header:<name>"                      # Optional, default: "header:Authorization"
+#        authScheme: "Bearer"                              # Optional, default: "Bearer"
+#      secure:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        xssProtection: ""                                 # Optional, default: "1; mode=block"
+#        contentTypeNosniff: ""                            # Optional, default: nosniff
+#        xFrameOptions: ""                                 # Optional, default: SAMEORIGIN
+#        hstsMaxAge: 0                                     # Optional, default: 0
+#        hstsExcludeSubdomains: false                      # Optional, default: false
+#        hstsPreloadEnabled: false                         # Optional, default: false
+#        contentSecurityPolicy: ""                         # Optional, default: ""
+#        cspReportOnly: false                              # Optional, default: false
+#        referrerPolicy: ""                                # Optional, default: ""
+#      csrf:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        tokenLength: 32                                   # Optional, default: 32
+#        tokenLookup: "header:X-CSRF-Token"                # Optional, default: "header:X-CSRF-Token"
+#        cookieName: "_csrf"                               # Optional, default: _csrf
+#        cookieDomain: ""                                  # Optional, default: ""
+#        cookiePath: ""                                    # Optional, default: ""
+#        cookieMaxAge: 86400                               # Optional, default: 86400
+#        cookieHttpOnly: false                             # Optional, default: false
+#        cookieSameSite: "default"                         # Optional, default: "default", options: lax, strict, none, default
+#      cors:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        allowOrigins:                                     # Optional, default: []
+#          - "http://localhost:*"                          # Optional, default: *
+#        allowCredentials: false                           # Optional, default: false
+#        allowHeaders: []                                  # Optional, default: []
+#        allowMethods: []                                  # Optional, default: []
+#        exposeHeaders: []                                 # Optional, default: []
+#        maxAge: 0                                         # Optional, default: 0
