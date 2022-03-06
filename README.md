@@ -51,7 +51,7 @@ We will migrate dependencies from v1 to v2 as quick as possible.
 |               | [gogf/gf](https://github.com/gogf/gf)                          | ❌          |                                           |                         |
 |               | [gofiber/fiber](https://github.com/gofiber/fiber)              | ❌          |                                           |                         |
 |               | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | ✅          | go get github.com/rookie-ninja/rk-zero    | [example](example/zero) |
-|               | [gorilla/mux](https://github.com/gorilla/mux)                  | ❌          |                                           |                         |
+|               | [gorilla/mux](https://github.com/gorilla/mux)                  | ✅          | go get github.com/rookie-ninja/rk-mux     |                         |
 | Database ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)           | ❌          |                                           |                         |
 |               | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)         | ❌          |                                           |                         |
 |               | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)  | ❌          |                                           |                         |

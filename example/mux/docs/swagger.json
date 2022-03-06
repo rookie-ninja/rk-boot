@@ -1,0 +1,47 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a greeter service with rk-boot.",
+        "title": "RK Swagger for Mux",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/v1/greeter": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Greeter service",
+                "operationId": "1",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Input name",
+                        "name": "name",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.GreeterResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "main.GreeterResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
