@@ -1,5 +1,5 @@
 .PHONY: all
-all: lint doctoc fmt
+all: lint fmt swag
 
 .PHONY: lint
 lint:
@@ -20,9 +20,4 @@ swag:
 	@rm -rf docs/docs.go
 	@echo "------------------------------------[Done]"
 
-.PHONY: doctoc
-doctoc:
-	@echo "[doctoc] Running doctoc..."
-	@doctoc . 2>&1
-	@echo "------------------------------------[Done]"
 

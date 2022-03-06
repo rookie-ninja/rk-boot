@@ -1,14 +1,46 @@
 ---
 #app:
+#  name: my-app                                            # Optional, default: "rk-app"
+#  version: "v1.0.0"                                       # Optional, default: "v0.0.0"
 #  description: "this is description"                      # Optional, default: ""
 #  keywords: ["rk", "golang"]                              # Optional, default: []
 #  homeUrl: "http://example.com"                           # Optional, default: ""
-#  iconUrl: "http://example.com"                           # Optional, default: ""
 #  docsUrl: ["http://example.com"]                         # Optional, default: []
 #  maintainers: ["rk-dev"]                                 # Optional, default: []
-#zapLogger:
-#  - name: zap-logger                                      # Required
+#logger:
+#  - name: my-logger                                       # Required
 #    description: "Description of entry"                   # Optional
+#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    zap:                                                  # Optional
+#      level: info                                         # Optional, default: info
+#      development: true                                   # Optional, default: true
+#      disableCaller: false                                # Optional, default: false
+#      disableStacktrace: true                             # Optional, default: true
+#      encoding: console                                   # Optional, default: console
+#      outputPaths: ["stdout"]                             # Optional, default: [stdout]
+#      errorOutputPaths: ["stderr"]                        # Optional, default: [stderr]
+#      encoderConfig:                                      # Optional
+#        timeKey: "ts"                                     # Optional, default: ts
+#        levelKey: "level"                                 # Optional, default: level
+#        nameKey: "logger"                                 # Optional, default: logger
+#        callerKey: "caller"                               # Optional, default: caller
+#        messageKey: "msg"                                 # Optional, default: msg
+#        stacktraceKey: "stacktrace"                       # Optional, default: stacktrace
+#        skipLineEnding: false                             # Optional, default: false
+#        lineEnding: "\n"                                  # Optional, default: \n
+#        consoleSeparator: "\t"                            # Optional, default: \t
+#      sampling:                                           # Optional, default: nil
+#        initial: 0                                        # Optional, default: 0
+#        thereafter: 0                                     # Optional, default: 0
+#      initialFields:                                      # Optional, default: empty map
+#        key: value
+#    lumberjack:                                           # Optional, default: nil
+#      filename:
+#      maxsize: 1024                                       # Optional, suggested: 1024 (MB)
+#      maxage: 7                                           # Optional, suggested: 7 (day)
+#      maxbackups: 3                                       # Optional, suggested: 3 (day)
+#      localtime: true                                     # Optional, suggested: true
+#      compress: true                                      # Optional, suggested: true
 #    loki:
 #      enabled: true                                       # Optional, default: false
 #      addr: localhost:3100                                # Optional, default: localhost:3100
@@ -20,9 +52,19 @@
 #      insecureSkipVerify: false                           # Optional, default: false
 #      labels:                                             # Optional, default: empty map
 #        my_label_key: my_label_value
-#eventLogger:
-#  - name: event-logger                                    # Required
+#event:
+#  - name: my-event                                        # Required
 #    description: "Description of entry"                   # Optional
+#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    encoding: console                                     # Optional, default: console
+#    outputPaths: ["stdout"]                               # Optional, default: [stdout]
+#    lumberjack:                                           # Optional, default: nil
+#      filename:
+#      maxsize: 1024                                       # Optional, suggested: 1024 (MB)
+#      maxage: 7                                           # Optional, suggested: 7 (day)
+#      maxbackups: 3                                       # Optional, suggested: 3 (day)
+#      localtime: true                                     # Optional, suggested: true
+#      compress: true                                      # Optional, suggested: true
 #    loki:
 #      enabled: true                                       # Optional, default: false
 #      addr: localhost:3100                                # Optional, default: localhost:3100
@@ -34,90 +76,86 @@
 #      insecureSkipVerify: false                           # Optional, default: false
 #      labels:                                             # Optional, default: empty map
 #        my_label_key: my_label_value
-#cred:
-#  - name: "local-cred"                                    # Required
-#    provider: "localFs"                                   # Required, etcd, consul, localFs, remoteFs are supported options
-#    description: "Description of entry"                   # Optional
-#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
-#    paths:                                                # Optional
-#      - "example/boot/full/cred.yaml"
 #cert:
-#  - name: "local-cert"                                    # Required
-#    provider: "localFs"                                   # Required, etcd, consul, localFs, remoteFs are supported options
-#    description: "Description of entry"                   # Optional
+#  - name: my-cert                                         # Required
+#    description: "Description of entry"                   # Optional, default: ""
 #    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
-#    serverCertPath: "example/boot/full/server.pem"        # Optional, default: "", path of certificate on local FS
-#    serverKeyPath: "example/boot/full/server-key.pem"     # Optional, default: "", path of certificate on local FS
-#    clientCertPath: "example/client.pem"                  # Optional, default: "", path of certificate on local FS
-#    clientKeyPath: "example/client.pem"                   # Optional, default: "", path of certificate on local FS
+#    caPath: "certs/ca.pem"                                # Optional, default: ""
+#    certPemPath: "certs/server-cert.pem"                  # Optional, default: ""
+#    keyPemPath: "certs/server-key.pem"                    # Optional, default: ""
 #config:
-#  - name: rk-main                                         # Required
-#    path: "example/boot/full/config.yaml"                 # Required
-#    locale: "*::*::*::*"                                  # Required, default: *::*::*::*
-#    description: "Description of entry"                   # Optional
-zapLogger:
-  - name: zap
-    zap:
-      outputPaths: [""]
-    loki:
-      enabled: true
+#  - name: my-config                                       # Required
+#    description: "Description of entry"                   # Optional, default: ""
+#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
+##    path: "config/config.yaml"                            # Optional
+#    envPrefix: ""                                         # Optional, default: ""
+#    content:                                              # Optional, defualt: empty map
+#      key: value
 gin:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required
-    logger:
-      zapLogger: zap
-#    certEntry: "local-cert"                               # Optional, default: "", reference of cert entry declared above
-#    sw:
-#      enabled: true                                       # Optional, default: false
+    commonService:
+      enabled: true                                       # Optional, default: false
+#      pathPrefix: ""                                      # Optional, default: "/rk/v1/"
+    sw:
+      enabled: true                                        # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
 #      jsonPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
-#    commonService:
-#      enabled: true                                       # Optional, default: false
+    docs:
+      enabled: true                                        # Optional, default: false
+#      path: "docs"                                        # Optional, default: "docs"
+#      specPath: ""                                        # Optional
+#      headers: ["sw:rk"]                                  # Optional, default: []
+#      style:                                              # Optional
+#        theme: "light"                                    # Optional, default: "light"
+#      debug: false                                        # Optional, default: false
+#    description: "greeter server"                         # Optional, default: ""
+#    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
+#    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
 #    static:
 #      enabled: true                                       # Optional, default: false
-#      path: "/rk/v1/static"                               # Optional, default: /rk/v1/static
-#      sourceType: local                                   # Required, options: pkger, local
-#      sourcePath: "."                                     # Required, full path of source directory
-#    tv:
-#      enabled:  true                                      # Optional, default: false
+#      path: "/static"                                     # Optional, default: /static
+#      sourceType: local                                   # Optional, options: local, embed.FS can be used either, need to specify in code
+#      sourcePath: "."                                     # Optional, full path of source directory
 #    prom:
 #      enabled: true                                       # Optional, default: false
-#      path: ""                                            # Optional, default: "metrics"
+#      path: ""                                            # Optional, default: "/metrics"
 #      pusher:
 #        enabled: false                                    # Optional, default: false
 #        jobName: "greeter-pusher"                         # Required
 #        remoteAddress: "localhost:9091"                   # Required
 #        basicAuth: "user:pass"                            # Optional, default: ""
 #        intervalMs: 10000                                 # Optional, default: 1000
-#        cert:                                             # Optional
-#          ref: "local-test"                               # Optional, default: "", reference of cert entry declared above
-#    logger:
-#      zapLogger: zap-logger                               # Optional, default: logger of STDOUT, reference of logger entry declared above
-#      eventLogger: event-logger                           # Optional, default: logger of STDOUT, reference of logger entry declared above
-#    interceptors:
-#      loggingZap:
+#        certEntry: my-cert                                # Optional, default: "", reference of cert entry declared above
+#    middleware:
+#      ignore: [""]                                        # Optional, default: []
+#      logging:
 #        enabled: true                                     # Optional, default: false
-#        zapLoggerEncoding: "json"                         # Optional, default: "console"
-#        zapLoggerOutputPaths: ["logs/app.log"]            # Optional, default: ["stdout"]
-#        eventLoggerEncoding: "json"                       # Optional, default: "console"
-#        eventLoggerOutputPaths: ["logs/event.log"]        # Optional, default: ["stdout"]
-#      metricsProm:
+#        ignore: [""]                                      # Optional, default: []
+#        loggerEncoding: "console"                         # Optional, default: "console"
+#        loggerOutputPaths: ["logs/app.log"]               # Optional, default: ["stdout"]
+#        eventEncoding: "console"                          # Optional, default: "console"
+#        eventOutputPaths: ["logs/event.log"]              # Optional, default: ["stdout"]
+#      prom:
 #        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #      auth:
 #        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        basic:
 #          - "user:pass"                                   # Optional, default: []
-#        ignorePrefix:
-#          - "/rk/v1"                                      # Optional, default: []
 #        apiKey:
 #          - "keys"                                        # Optional, default: []
 #      meta:
 #        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        prefix: "rk"                                      # Optional, default: "rk"
-#      tracingTelemetry:
+#      trace:
 #        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        exporter:                                         # Optional, default will create a stdout exporter
 #          file:
 #            enabled: true                                 # Optional, default: false
@@ -134,6 +172,7 @@ gin:
 #              password: ""                                # Optional, default: ""
 #      rateLimit:
 #        enabled: false                                    # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        algorithm: "leakyBucket"                          # Optional, default: "tokenBucket"
 #        reqPerSec: 100                                    # Optional, default: 1000000
 #        paths:
@@ -141,20 +180,15 @@ gin:
 #            reqPerSec: 0                                  # Optional, default: 1000000
 #      timeout:
 #        enabled: false                                    # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        timeoutMs: 5000                                   # Optional, default: 5000
 #        paths:
 #          - path: "/rk/v1/healthy"                        # Optional, default: ""
 #            timeoutMs: 1000                               # Optional, default: 5000
-#      gzip:
-#        enabled: true                                     # Optional, default: false
-#        level: defaultCompression                         # Optional, default: defaultCompression, options: [noCompression, bestSpeed, bestCompression, defaultCompression, huffmanOnly]
 #      jwt:
 #        enabled: true                                     # Optional, default: false
 #        signingKey: "my-secret"                           # Required
-#        ignorePrefix:                                     # Optional, default: []
-#          - "/rk/v1/tv"
-#          - "/sw"
-#          - "/rk/v1/assets"
+#        ignore: [""]                                      # Optional, default: []
 #        signingKeys:                                      # Optional
 #          - "key:value"
 #        signingAlgo: ""                                   # Optional, default: "HS256"
@@ -162,6 +196,7 @@ gin:
 #        authScheme: "Bearer"                              # Optional, default: "Bearer"
 #      secure:
 #        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        xssProtection: ""                                 # Optional, default: "1; mode=block"
 #        contentTypeNosniff: ""                            # Optional, default: nosniff
 #        xFrameOptions: ""                                 # Optional, default: SAMEORIGIN
@@ -171,9 +206,9 @@ gin:
 #        contentSecurityPolicy: ""                         # Optional, default: ""
 #        cspReportOnly: false                              # Optional, default: false
 #        referrerPolicy: ""                                # Optional, default: ""
-#        ignorePrefix: []                                  # Optional, default: []
 #      csrf:
-#        enabled: true
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
 #        tokenLength: 32                                   # Optional, default: 32
 #        tokenLookup: "header:X-CSRF-Token"                # Optional, default: "header:X-CSRF-Token"
 #        cookieName: "_csrf"                               # Optional, default: _csrf
@@ -182,4 +217,17 @@ gin:
 #        cookieMaxAge: 86400                               # Optional, default: 86400
 #        cookieHttpOnly: false                             # Optional, default: false
 #        cookieSameSite: "default"                         # Optional, default: "default", options: lax, strict, none, default
-#        ignorePrefix: []                                  # Optional, default: []
+#      gzip:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        level: bestSpeed                                  # Optional, options: [noCompression, bestSpeed， bestCompression, defaultCompression, huffmanOnly]
+#      cors:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        allowOrigins:                                     # Optional, default: []
+#          - "http://localhost:*"                          # Optional, default: *
+#        allowCredentials: false                           # Optional, default: false
+#        allowHeaders: []                                  # Optional, default: []
+#        allowMethods: []                                  # Optional, default: []
+#        exposeHeaders: []                                 # Optional, default: []
+#        maxAge: 0                                         # Optional, default: 0

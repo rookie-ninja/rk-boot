@@ -1,29 +1,19 @@
 # Example
-Full documentations:
-- [rkdev.info](https://rkdev.info/docs/bootstrapper/user-guide/grpc-golang/)
-- [rk-grpc](https://github.com/rookie-ninja/rk-grpc)
+Middleware & bootstrapper designed for [gRPC](https://grpc.io/docs/languages/go/) and [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway).
 
-Interceptor & bootstrapper designed for [gRPC](https://grpc.io/docs/languages/go/) and [grpc-gateway](https://github.com/grpc-ecosystem/grpc-gateway).
+## Documentation
+- [Github](https://github.com/rookie-ninja/rk-grpc)
+- [Official Docs]() will be updated for v2 soon
 
 ![image](docs/img/grpc-arch.png)
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [Installation](#installation)
-- [Quick start](#quick-start)
-  - [1.Prepare .proto files](#1prepare-proto-files)
-  - [2.Generate .pb.go files with buf](#2generate-pbgo-files-with-buf)
-  - [4.Create boot.yaml](#4create-bootyaml)
-  - [5.Create main.go](#5create-maingo)
-  - [6.Start server](#6start-server)
-  - [7.Validation](#7validation)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 ## Installation
-`go get github.com/rookie-ninja/rk-boot/grpc`
+[rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-grpc as dependency since we are testing GIN.
+
+```shell
+go get github.com/rookie-ninja/rk-boot/v2
+go get github.com/rookie-ninja/rk-grpc/v2
+```
 
 ## Quick start
 ### 1.Prepare .proto files
@@ -105,12 +95,24 @@ $ buf generate --path api/v1
 ```
 
 ### 4.Create boot.yaml
+Important note: rk-boot will bind grpc and grpc-gateway in the same port which we think is a convenient way.
+
+As a result, grpc-gateway will automatically be started.
+
 ```yaml
+---
 grpc:
-  - name: greeter                                      # Required
-    enabled: true                                      # Required
-    port: 8080                                         # Optional
-    enableRkGwOption: true                             # Optional, default: false
+  - name: greeter                                          # Required
+    enabled: true                                          # Required
+    port: 8080                                             # Required
+    enableReflection: true                                 # Optional, default: false
+    enableRkGwOption: true                                 # Optional, default: false
+    commonService:
+      enabled: true                                        # Optional, default: false
+    sw:
+      enabled: true                                        # Optional, default: false
+    docs:
+      enabled: true                                        # Optional, default: false
 ```
 
 ### 5.Create main.go
@@ -124,9 +126,9 @@ package main
 
 import (
 	"context"
-	"github.com/rookie-ninja/rk-boot"
-	"github.com/rookie-ninja/rk-boot/grpc"
+	"github.com/rookie-ninja/rk-boot/v2"
 	"github.com/rookie-ninja/rk-demo/api/gen/v1"
+	"github.com/rookie-ninja/rk-grpc/v2/boot"
 	"google.golang.org/grpc"
 )
 
@@ -134,7 +136,7 @@ func main() {
 	boot := rkboot.NewBoot()
 
 	// register grpc
-	entry := rkbootgrpc.GetGrpcEntry("greeter")
+	entry := rkgrpc.GetGrpcEntry("greeter")
 	entry.AddRegFuncGrpc(registerGreeter)
 	entry.AddRegFuncGw(hello.RegisterGreeterHandlerFromEndpoint)
 
@@ -167,7 +169,28 @@ $ go run main.go
 ```
 
 ### 7.Validation
+- Call API:
+
 ```shell script
 $ curl -X GET localhost:8080/v1/greeter
 {"myMessage":"hello!"}
+
+$ curl -X GET localhost:8080/rk/v1/ready
+{
+  "ready": true
+}
+
+$ curl -X GET localhost:8080/rk/v1/alive
+{
+  "alive": true
+}
 ```
+
+- Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
+
+![image](docs/img/simple-sw.png)
+
+- Docs UI via: [http://localhost:8080/docs](http://localhost:8080/docs)
+
+![image](docs/img/simple-docs.png)
+

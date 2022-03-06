@@ -10,8 +10,8 @@ import (
 	"context"
 	"embed"
 	"fmt"
-	"github.com/rookie-ninja/rk-common/common"
-	"github.com/rookie-ninja/rk-entry/entry"
+	"github.com/rookie-ninja/rk-entry/v2/entry"
+	"github.com/rookie-ninja/rk-entry/v2/middleware"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"os"
@@ -21,48 +21,30 @@ import (
 
 // Boot is a structure for bootstrapping rk style application
 type Boot struct {
-	BootConfigPath string `yaml:"bootConfigPath" json:"bootConfigPath"`
-	bootConfigRaw  []byte `yaml:"-" json:"-"`
-	EventId        string `yaml:"eventId" json:"eventId"`
+	bootConfigPath string                       `yaml:"-" json:"-"`
+	embedFS        *embed.FS                    `yaml:"-" json:"-"`
+	bootConfigRaw  []byte                       `yaml:"-" json:"-"`
+	preloadF       map[string]map[string]func() `yaml:"-" json:"-"`
+	EventId        string                       `yaml:"-" json:"-"`
 }
 
 // BootOption is used as options while bootstrapping from code
 type BootOption func(*Boot)
 
 // WithBootConfigPath provide boot config yaml file.
-func WithBootConfigPath(filePath string) BootOption {
+func WithBootConfigPath(filePath string, fs *embed.FS) BootOption {
 	return func(boot *Boot) {
-		boot.BootConfigPath = filePath
+		boot.bootConfigPath = filePath
+		boot.embedFS = fs
 	}
 }
 
-// WithBootConfigString provide boot config as string.
-func WithBootConfigString(bootConfigStr string) BootOption {
+// WithBootConfigRaw provide boot config as string.
+func WithBootConfigRaw(raw []byte) BootOption {
 	return func(boot *Boot) {
-		if len(bootConfigStr) > 0 {
-			boot.bootConfigRaw = []byte(bootConfigStr)
+		if len(raw) > 0 {
+			boot.bootConfigRaw = raw
 		}
-	}
-}
-
-// WithBootConfigBytes provide boot config as string.
-func WithBootConfigBytes(bootConfigBytes []byte) BootOption {
-	return func(boot *Boot) {
-		if len(bootConfigBytes) > 0 {
-			boot.bootConfigRaw = bootConfigBytes
-		}
-	}
-}
-
-// WithBootConfigEmbedFs provide boot config as file in embed.FS.
-func WithBootConfigEmbedFs(fs embed.FS, filePath string) BootOption {
-	return func(boot *Boot) {
-		bytes, err := fs.ReadFile(filePath)
-		if err != nil {
-			rkcommon.ShutdownWithError(err)
-		}
-
-		boot.bootConfigRaw = bytes
 	}
 }
 
@@ -71,40 +53,42 @@ func NewBoot(opts ...BootOption) *Boot {
 	defer syncLog("N/A")
 
 	boot := &Boot{
-		EventId: rkcommon.GenerateRequestId(),
+		EventId:  rkmid.GenerateRequestId(),
+		preloadF: map[string]map[string]func(){},
 	}
 
 	for i := range opts {
 		opts[i](boot)
 	}
 
-	if len(boot.bootConfigRaw) > 0 {
-		wd, err := os.Getwd()
-		if err != nil {
-			rkcommon.ShutdownWithError(err)
-		}
+	raw := boot.readYAML()
 
-		boot.BootConfigPath = path.Join(wd, "boot-gen.yaml")
-		err = ioutil.WriteFile(boot.BootConfigPath, boot.bootConfigRaw, os.ModePerm)
-		if err != nil {
-			rkcommon.ShutdownWithError(err)
-		}
-	}
+	// Register entries need to pre-build.
+	rkentry.BootstrapPreloadEntryYAML(raw)
 
-	if len(boot.BootConfigPath) < 1 {
-		boot.BootConfigPath = "boot.yaml"
-	}
-
-	// Register and bootstrap internal entries with boot config.
-	rkentry.RegisterInternalEntriesFromConfig(boot.BootConfigPath)
-
-	// Register external entries.
+	// Register entries
 	regFuncList := rkentry.ListEntryRegFunc()
 	for i := range regFuncList {
-		regFuncList[i](boot.BootConfigPath)
+		regFuncList[i](raw)
 	}
 
 	return boot
+}
+
+// AddPreloadFuncBeforeBootstrap run functions before certain entry Bootstrap()
+func (boot *Boot) AddPreloadFuncBeforeBootstrap(entry rkentry.Entry, f func()) {
+	if entry == nil || f == nil {
+		return
+	}
+
+	entryName := entry.GetName()
+	entryType := entry.GetType()
+
+	if _, ok := boot.preloadF[entryType]; !ok {
+		boot.preloadF[entryType] = make(map[string]func())
+	}
+
+	boot.preloadF[entryType][entryName] = f
 }
 
 // Bootstrap entries in rkentry.GlobalAppCtx including bellow:
@@ -112,8 +96,8 @@ func NewBoot(opts ...BootOption) *Boot {
 // Internal entries:
 // 1: rkentry.AppInfoEntry
 // 2: rkentry.ConfigEntry
-// 3: rkentry.ZapLoggerEntry
-// 4: rkentry.EventLoggerEntry
+// 3: rkentry.LoggerEntry
+// 4: rkentry.EventEntry
 // 5: rkentry.CertEntry
 //
 // External entries:
@@ -124,8 +108,16 @@ func (boot *Boot) Bootstrap(ctx context.Context) {
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
 	// Bootstrap external entries
-	for _, entry := range rkentry.GlobalAppCtx.ListEntries() {
-		entry.Bootstrap(ctx)
+	for _, m := range rkentry.GlobalAppCtx.ListEntries() {
+		for _, entry := range m {
+			if m, ok := boot.preloadF[entry.GetType()]; ok {
+				if v, ok := m[entry.GetName()]; ok {
+					v()
+				}
+			}
+
+			entry.Bootstrap(ctx)
+		}
 	}
 }
 
@@ -166,81 +158,70 @@ func (boot *Boot) interrupt(ctx context.Context) {
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
 	// Interrupt external entries
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEntries())
-
-	// Interrupt internal entries
-	rkentry.GlobalAppCtx.GetAppInfoEntry().Interrupt(ctx)
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListConfigEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListCertEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListEventLoggerEntriesRaw())
-	boot.interruptHelper(ctx, rkentry.GlobalAppCtx.ListZapLoggerEntriesRaw())
-}
-
-// Helper function which all interrupt() function for each entry.
-func (boot *Boot) interruptHelper(ctx context.Context, m map[string]rkentry.Entry) {
-	for _, entry := range m {
-		entry.Interrupt(ctx)
+	for _, m := range rkentry.GlobalAppCtx.ListEntries() {
+		for _, e := range m {
+			e.Interrupt(ctx)
+		}
 	}
 }
 
-// GetAppInfoEntry returns rkentry.AppInfoEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetAppInfoEntry() *rkentry.AppInfoEntry {
-	return rkentry.GlobalAppCtx.GetAppInfoEntry()
-}
+// readYAML read YAML file
+func (boot *Boot) readYAML() []byte {
+	// case 1: if user provide raw then, continue
+	if len(boot.bootConfigRaw) > 0 {
+		return boot.bootConfigRaw
+	}
 
-// GetZapLoggerEntry returns rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetZapLoggerEntry(name string) *rkentry.ZapLoggerEntry {
-	return rkentry.GlobalAppCtx.GetZapLoggerEntry(name)
-}
+	// case 2: if embed.FS is not nil, then try to read from it
+	if boot.embedFS != nil {
+		res, err := boot.embedFS.ReadFile(boot.bootConfigPath)
+		if err != nil {
+			rkentry.ShutdownWithError(err)
+		}
+		return res
+	}
 
-// GetZapLoggerEntryDefault returns default rkentry.ZapLoggerEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetZapLoggerEntryDefault() *rkentry.ZapLoggerEntry {
-	return rkentry.GlobalAppCtx.GetZapLoggerEntryDefault()
-}
+	// case 3: try to read from local, if bootConfigPath is empty, then try to read from default boot.yaml
+	if len(boot.bootConfigPath) < 1 {
+		boot.bootConfigPath = "boot.yaml"
+	}
+	if !path.IsAbs(boot.bootConfigPath) {
+		wd, _ := os.Getwd()
+		boot.bootConfigPath = path.Join(wd, boot.bootConfigPath)
+	}
 
-// GetEventLoggerEntry returns rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetEventLoggerEntry(name string) *rkentry.EventLoggerEntry {
-	return rkentry.GlobalAppCtx.GetEventLoggerEntry(name)
-}
-
-// GetEventLoggerEntryDefault returns default rkentry.EventLoggerEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetEventLoggerEntryDefault() *rkentry.EventLoggerEntry {
-	return rkentry.GlobalAppCtx.GetEventLoggerEntryDefault()
-}
-
-// GetConfigEntry returns rkentry.ConfigEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetConfigEntry(name string) *rkentry.ConfigEntry {
-	return rkentry.GlobalAppCtx.GetConfigEntry(name)
-}
-
-// GetCertEntry returns rkentry.CertEntry from rkentry.GlobalAppCtx.
-func (boot *Boot) GetCertEntry(name string) *rkentry.CertEntry {
-	return rkentry.GlobalAppCtx.GetCertEntry(name)
-}
-
-// GetEntry returns rkentry.Entry interface which user needs to convert by himself.
-func (boot *Boot) GetEntry(name string) interface{} {
-	return rkentry.GlobalAppCtx.GetEntry(name)
+	res, err := ioutil.ReadFile(boot.bootConfigPath)
+	if err != nil {
+		rkentry.ShutdownWithError(err)
+	}
+	return res
 }
 
 // sync logs
 func syncLog(eventId string) {
 	if r := recover(); r != nil {
 		stackTrace := fmt.Sprintf("Panic occured, shutting down... \n%s", string(debug.Stack()))
-		for _, v := range rkentry.GlobalAppCtx.ListZapLoggerEntries() {
-			if v == rkentry.GlobalAppCtx.GetZapLoggerEntryDefault() {
+		for _, v := range rkentry.GlobalAppCtx.ListEntriesByType(rkentry.LoggerEntryType) {
+			logger, ok := v.(*rkentry.LoggerEntry)
+			if !ok {
 				continue
 			}
-			if v.Logger != nil {
-				v.Logger.Error(stackTrace,
+
+			if logger != nil {
+				logger.Error(stackTrace,
 					zap.String("eventId", eventId),
 					zap.Any("RootCause", r))
 			}
-			v.Sync()
+			logger.Sync()
 		}
 
-		for _, v := range rkentry.GlobalAppCtx.ListEventLoggerEntries() {
-			v.Sync()
+		for _, v := range rkentry.GlobalAppCtx.ListEntriesByType(rkentry.EventEntryType) {
+			event, ok := v.(*rkentry.EventEntry)
+			if !ok {
+				continue
+			}
+
+			event.Sync()
 		}
 
 		panic(r)

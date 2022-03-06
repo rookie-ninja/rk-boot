@@ -1,0 +1,8 @@
+---
+logger:
+  - name: my-logger
+event:
+  - name: my-event
+myEntry:
+  name: ut
+  enabled: true
