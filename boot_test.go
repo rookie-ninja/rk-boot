@@ -7,19 +7,16 @@ package rkboot
 
 import (
 	"context"
+	"embed"
 	"encoding/json"
-	rkcommon "github.com/rookie-ninja/rk-common/common"
-	"github.com/rookie-ninja/rk-entry/entry"
+	"github.com/rookie-ninja/rk-entry/v2/entry"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
-	"os"
-	"path"
 	"syscall"
 	"testing"
 	"time"
 )
 
-func TestNewBoot_HappyCase(t *testing.T) {
+func TestNewBoot_WithRawCase(t *testing.T) {
 	config := `
 ---
 myEntry:
@@ -27,23 +24,14 @@ myEntry:
   enabled: true
 `
 
-	filePath := createFileAtTestTempDir(t, "ut-boot.yaml", config)
-
-	boot := NewBoot(WithBootConfigPath(filePath))
+	boot := NewBoot(WithBootConfigRaw([]byte(config)))
 	boot.AddShutdownHookFunc("ut-shutdown", func() {
 		// noop
 	})
 
 	boot.Bootstrap(context.TODO())
 
-	assert.NotNil(t, boot.GetAppInfoEntry())
-	assert.NotNil(t, boot.GetZapLoggerEntry(rkentry.DefaultZapLoggerEntryName))
-	assert.NotNil(t, boot.GetZapLoggerEntryDefault())
-	assert.NotNil(t, boot.GetEventLoggerEntry(rkentry.DefaultEventLoggerEntryName))
-	assert.NotNil(t, boot.GetEventLoggerEntryDefault())
-	assert.Nil(t, boot.GetConfigEntry(""))
-	assert.Nil(t, boot.GetCertEntry(""))
-	assert.NotNil(t, boot.GetEntry("ut"))
+	assert.Len(t, rkentry.GlobalAppCtx.ListEntriesByType("myEntry"), 1)
 
 	go func() {
 		boot.WaitForShutdownSig(context.TODO())
@@ -52,87 +40,35 @@ myEntry:
 	time.Sleep(1 * time.Second)
 	rkentry.GlobalAppCtx.GetShutdownSig() <- syscall.SIGTERM
 	time.Sleep(1 * time.Second)
-	rkentry.GlobalAppCtx.RemoveEntry("ut")
+	rkentry.GlobalAppCtx.RemoveEntry(rkentry.GlobalAppCtx.GetEntry("myEntry", "ut"))
 }
+
+//go:embed testdata/boot.yaml
+var embedFS embed.FS
 
 func TestNewBoot_WithEmbedCase(t *testing.T) {
-	config := `
----
-myEntry:
-  name: ut
-  enabled: true
-`
-	// provide boot config as string
-	boot := NewBoot(WithBootConfigString(config))
-	wd, _ := os.Getwd()
-	bytes, _ := ioutil.ReadFile(path.Join(wd, "boot-gen.yaml"))
-	assert.Equal(t, config, string(bytes))
+	boot := NewBoot(WithBootConfigPath("testdata/boot.yaml", &embedFS))
+	myEntry := rkentry.GlobalAppCtx.GetEntry("myEntry", "ut")
+	assert.NotNil(t, myEntry)
+
+	preCall := false
+
+	boot.AddPreloadFuncBeforeBootstrap(myEntry, func() {
+		preCall = true
+	})
 
 	boot.Bootstrap(context.TODO())
 	boot.interrupt(context.TODO())
-	rkentry.GlobalAppCtx.RemoveEntry("ut")
-	os.Remove(path.Join(wd, "boot-gen.yaml"))
 
-	// provide boot config as byte
-	boot = NewBoot(WithBootConfigBytes([]byte(config)))
-	wd, _ = os.Getwd()
-	bytes, _ = ioutil.ReadFile(path.Join(wd, "boot-gen.yaml"))
-	assert.Equal(t, config, string(bytes))
+	assert.True(t, preCall)
 
-	boot.Bootstrap(context.TODO())
-	boot.interrupt(context.TODO())
-	rkentry.GlobalAppCtx.RemoveEntry("ut")
-	os.Remove(path.Join(wd, "boot-gen.yaml"))
-}
-
-func TestNewBoot_Panic(t *testing.T) {
-	defer assertPanic(t)
-	defer rkentry.GlobalAppCtx.RemoveEntry("ut")
-
-	config := `
----
-zapLogger:
-  - name: zap
-myEntry:
-  name: ut
-  enabled: true
-  shouldPanic: true
-`
-
-	filePath := createFileAtTestTempDir(t, "ut-boot.yaml", config)
-
-	boot := NewBoot(WithBootConfigPath(filePath))
-	boot.Bootstrap(context.TODO())
+	rkentry.GlobalAppCtx.RemoveEntry(rkentry.GlobalAppCtx.GetEntry("myEntry", "ut"))
 }
 
 func TestNewBoot_EmptyConfig(t *testing.T) {
 	defer assertPanic(t)
 
 	NewBoot()
-}
-
-func TestBoot_GetEntry(t *testing.T) {
-	config := `
----
-gin:
-  - name: ut-gin
-    port: 8080
-    enabled: true
-`
-
-	filePath := createFileAtTestTempDir(t, "ut-boot-gin.yaml", config)
-
-	boot := NewBoot(WithBootConfigPath(filePath))
-	boot.Bootstrap(context.TODO())
-
-	assert.Nil(t, boot.GetEntry(rkentry.GlobalAppCtx.GetAppInfoEntry().GetName()))
-}
-
-func createFileAtTestTempDir(t *testing.T, filename, content string) string {
-	tempDir := path.Join(t.TempDir(), filename)
-
-	assert.Nil(t, ioutil.WriteFile(tempDir, []byte(content), os.ModePerm))
-	return tempDir
 }
 
 func assertPanic(t *testing.T) {
@@ -162,12 +98,12 @@ type BootConfig struct {
 
 // An implementation of:
 // type EntryRegFunc func(string) map[string]rkentry.Entry
-func RegisterMyEntriesFromConfig(configFilePath string) map[string]rkentry.Entry {
+func RegisterMyEntriesFromConfig(raw []byte) map[string]rkentry.Entry {
 	res := make(map[string]rkentry.Entry)
 
 	// 1: decode config map into boot config struct
 	config := &BootConfig{}
-	rkcommon.UnmarshalBootConfig(configFilePath, config)
+	rkentry.UnmarshalBootYAML(raw, config)
 
 	// 3: construct entry
 	if config.MyEntry.Enabled {
