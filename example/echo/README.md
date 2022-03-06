@@ -1,25 +1,25 @@
 # Example
-Middleware & bootstrapper designed for [zeromicro/go-zero](https://github.com/zeromicro/go-zero) web framework. 
+Middleware & bootstrapper designed for [labstack/echo](https://github.com/labstack/echo) web framework. 
 
 ## Documentation
-- [Github](https://github.com/rookie-ninja/rk-zero)
+- [Github](https://github.com/rookie-ninja/rk-echo)
 - [Official Docs]() will be updated for v2 soon
 
-![image](docs/img/zero-arch.png)
+![image](docs/img/echo-arch.png)
 
 ## Installation
 [rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-gin as dependency since we are testing GIN.
 
 ```shell
 go get github.com/rookie-ninja/rk-boot/v2
-go get github.com/rookie-ninja/rk-zero
+go get github.com/rookie-ninja/rk-echo
 ```
 
 ## Quick start
 ### 1.Create boot.yaml
 ```yaml
 ---
-zero:
+echo:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required
@@ -33,15 +33,19 @@ zero:
 
 ### 2.Create main.go
 ```go
+// Copyright (c) 2021 rookie-ninja
+//
+// Use of this source code is governed by an Apache-style
+// license that can be found in the LICENSE file.
 package main
 
 import (
 	"context"
-	"encoding/json"
+	_ "embed"
 	"fmt"
+	"github.com/labstack/echo/v4"
 	"github.com/rookie-ninja/rk-boot/v2"
-	"github.com/rookie-ninja/rk-zero/boot"
-	"github.com/zeromicro/go-zero/rest"
+	"github.com/rookie-ninja/rk-echo/boot"
 	"net/http"
 )
 
@@ -64,12 +68,8 @@ func main() {
 	boot := rkboot.NewBoot()
 
 	// Register handler
-	zeroEntry := rkzero.GetZeroEntry("greeter")
-	zeroEntry.Server.AddRoute(rest.Route{
-		Method:  http.MethodGet,
-		Path:    "/v1/greeter",
-		Handler: Greeter,
-	})
+	echoEntry := rkecho.GetEchoEntry("greeter")
+	echoEntry.Echo.GET("/v1/greeter", Greeter)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
@@ -78,21 +78,17 @@ func main() {
 }
 
 // Greeter handler
-// @Summary Greeter
+// @Summary Greeter service
 // @Id 1
-// @Tags Hello
 // @version 1.0
-// @Param name query string true "name"
 // @produce application/json
+// @Param name query string true "Input name"
 // @Success 200 {object} GreeterResponse
 // @Router /v1/greeter [get]
-func Greeter(writer http.ResponseWriter, request *http.Request) {
-	writer.WriteHeader(http.StatusOK)
-	resp := &GreeterResponse{
-		Message: fmt.Sprintf("Hello %s!", request.URL.Query().Get("name")),
-	}
-	bytes, _ := json.Marshal(resp)
-	writer.Write(bytes)
+func Greeter(ctx echo.Context) error {
+	return ctx.JSON(http.StatusOK, &GreeterResponse{
+		Message: fmt.Sprintf("Hello %s!", ctx.QueryParam("name")),
+	})
 }
 
 type GreeterResponse struct {
