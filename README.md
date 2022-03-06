@@ -43,21 +43,21 @@ We will add more bootstrapper for popular third-party dependencies.
 ## Features V2
 We will migrate dependencies from v1 to v2 as quick as possible.
 
-| Category      | Name                                                           | rk-boot version | Installation                              | Example                      |
-|---------------|----------------------------------------------------------------|-----------------|-------------------------------------------|------------------------------|
-| Web Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)              | V2              | go get github.com/rookie-ninja/rk-gin/v2  | [gin-example](example/gin)   |
-| Web Framework | [gRPC](https://grpc.io/docs/languages/go/)                     | V2              | go get github.com/rookie-ninja/rk-grpc/v2 | [grpc-example](example/grpc) |
-| Web Framework | [labstack/echo](https://github.com/labstack/echo)              | V1              |                                           |                              |
-| Web Framework | [gogf/gf](https://github.com/gogf/gf)                          | V1              |                                           |                              |
-| Web Framework | [gofiber/fiber](https://github.com/gofiber/fiber)              | V1              |                                           |                              |
-| Web Framework | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | V1              |                                           |                              |
-| Web Framework | [gorilla/mux](https://github.com/gorilla/mux)                  | V1              |                                           |                              |
-| Database ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)           | V1              |                                           |                              |
-| Database ORM  | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)         | V1              |                                           |                              |
-| Database ORM  | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)  | V1              |                                           |                              |
-| Database ORM  | [postgreSQL](https://github.com/rookie-ninja/rk-db/postgres)   | V1              |                                           |                              |
-| Database ORM  | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse) | V1              |                                           |                              |
-| Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | V1              |                                           |                              |
+| Category      | Name                                                           | rk-boot v2 | Installation                              | Example                      |
+|---------------|----------------------------------------------------------------|------------|-------------------------------------------|------------------------------|
+| Web Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)              | ✅          | go get github.com/rookie-ninja/rk-gin/v2  | [gin-example](example/gin)   |
+|               | [gRPC](https://grpc.io/docs/languages/go/)                     | ✅          | go get github.com/rookie-ninja/rk-grpc/v2 | [grpc-example](example/grpc) |
+|               | [labstack/echo](https://github.com/labstack/echo)              | ❌          |                                           |                              |
+|               | [gogf/gf](https://github.com/gogf/gf)                          | ❌          |                                           |                              |
+|               | [gofiber/fiber](https://github.com/gofiber/fiber)              | ❌          |                                           |                              |
+|               | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | ✅          | go get github.com/rookie-ninja/rk-zero    | [zero-example](example/zero) |
+|               | [gorilla/mux](https://github.com/gorilla/mux)                  | ❌          |                                           |                              |
+| Database ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)           | ❌          |                                           |                              |
+|               | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)         | ❌          |                                           |                              |
+|               | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)  | ❌          |                                           |                              |
+|               | [postgreSQL](https://github.com/rookie-ninja/rk-db/postgres)   | ❌          |                                           |                              |
+|               | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse) | ❌          |                                           |                              |
+| Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ❌          |                                           |                              |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
@@ -94,6 +94,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot/v2"
 	"github.com/rookie-ninja/rk-gin/v2/boot"
@@ -119,7 +120,7 @@ func main() {
 
 	// Register handler
 	entry := rkgin.GetGinEntry("greeter")
-	entry.Router.GET("/v1/hello", hello)
+	entry.Router.GET("/v1/greeter", Greeter)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
@@ -127,17 +128,23 @@ func main() {
 	boot.WaitForShutdownSig(context.TODO())
 }
 
-// @Summary Hello
+// Greeter handler
+// @Summary Greeter
 // @Id 1
 // @Tags Hello
 // @version 1.0
+// @Param name query string true "name"
 // @produce application/json
-// @Success 200 string string
-// @Router /v1/hello [get]
-func hello(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, gin.H{
-		"message": "hello!",
+// @Success 200 {object} GreeterResponse
+// @Router /v1/greeter [get]
+func Greeter(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, &GreeterResponse{
+		Message: fmt.Sprintf("Hello %s!", ctx.Query("name")),
 	})
+}
+
+type GreeterResponse struct {
+	Message string
 }
 ```
 
@@ -145,8 +152,8 @@ func hello(ctx *gin.Context) {
 ```shell script
 $ go run main.go
 
-$ curl -X GET localhost:8080/v1/greeter
-{"message":"hello!"}
+$ curl -X GET localhost:8080/v1/greeter?name=rk-dev
+{"Message":"Hello rk-dev!"}
 
 $ curl -X GET localhost:8080/rk/v1/ready
 {
