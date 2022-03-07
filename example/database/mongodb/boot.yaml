@@ -1,0 +1,54 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+mongo:
+  - name: "my-mongo"                            # Required
+    enabled: true                               # Required
+    simpleURI: "mongodb://localhost:27017"      # Required
+    database:
+      - name: "users"                           # Required
+#    description: "description"
+#    locale: "*::*::*::*"
+#    certEntry: ""
+#    loggerEntry: ""
+#    # Belongs to mongoDB client options
+#    # Please refer to https://github.com/mongodb/mongo-go-driver/blob/master/mongo/options/clientoptions.go
+#    appName: ""
+#    auth:
+#      mechanism: ""
+#      mechanismProperties:
+#        a: b
+#      source: ""
+#      username: ""
+#      password: ""
+#      passwordSet: false
+#    connectTimeoutMs: 500
+#    compressors: []
+#    direct: false
+#    disableOCSPEndpointCheck: false
+#    heartbeatIntervalMs: 10
+#    hosts: []
+#    loadBalanced: false
+#    localThresholdMs: 1
+#    maxConnIdleTimeMs: 1
+#    maxPoolSize: 1
+#    minPoolSize: 1
+#    maxConnecting: 1
+#    replicaSet: ""
+#    retryReads: false
+#    retryWrites: false
+#    serverAPIOptions:
+#      serverAPIVersion: ""
+#      strict: false
+#      deprecationErrors: false
+#    serverSelectionTimeoutMs: 1
+#    socketTimeout: 1
+#    srvMaxHots: 1
+#    srvServiceName: ""
+#    zlibLevel: 1
+#    zstdLevel: 1
+#    authenticateToAnything: false
+
+

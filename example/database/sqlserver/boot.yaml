@@ -1,0 +1,18 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+sqlServer:
+  - name: user-db                       # Required
+    enabled: true                       # Required
+    locale: "*::*::*::*"                # Required
+    addr: "localhost:1433"              # Optional, default: localhost:1433
+    user: sa                            # Optional, default: sa
+    pass: pass                          # Optional, default: pass
+    database:
+      - name: user                      # Required
+        autoCreate: true                # Optional, default: false
+#        dryRun: true                   # Optional, default: false
+#        params: []                     # Optional, default: []
+#    loggerEntry: ""                    # Optional, default: default logger with STDOUT

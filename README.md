@@ -43,21 +43,23 @@ We will add more bootstrapper for popular third-party dependencies.
 ## Features V2
 We will migrate dependencies from v1 to v2 as quick as possible.
 
-| Category      | Name                                                           | rk-boot v2 | Installation                              | Example                 |
-|---------------|----------------------------------------------------------------|------------|-------------------------------------------|-------------------------|
-| Web Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)              | ✅          | go get github.com/rookie-ninja/rk-gin/v2  | [example](example/gin)  |
-|               | [gRPC](https://grpc.io/docs/languages/go/)                     | ✅          | go get github.com/rookie-ninja/rk-grpc/v2 | [example](example/grpc) |
-|               | [labstack/echo](https://github.com/labstack/echo)              | ✅          | go get github.com/rookie-ninja/rk-echo    | [example](example/echo) |
-|               | [gogf/gf](https://github.com/gogf/gf)                          | ❌          |                                           |                         |
-|               | [gofiber/fiber](https://github.com/gofiber/fiber)              | ❌          |                                           |                         |
-|               | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | ✅          | go get github.com/rookie-ninja/rk-zero    | [example](example/zero) |
-|               | [gorilla/mux](https://github.com/gorilla/mux)                  | ✅          | go get github.com/rookie-ninja/rk-mux     | [example](example/mux)  |
-| Database ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)           | ❌          |                                           |                         |
-|               | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)         | ❌          |                                           |                         |
-|               | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)  | ❌          |                                           |                         |
-|               | [postgreSQL](https://github.com/rookie-ninja/rk-db/postgres)   | ❌          |                                           |                         |
-|               | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse) | ❌          |                                           |                         |
-| Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ❌          |                                           |                         |
+|      Category      | Name                                                           | V2  | go get                                   | Example                                |
+|:------------------:|----------------------------------------------------------------|-----|------------------------------------------|----------------------------------------|
+| Web<br/> Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)              | ✅   | github.com/rookie-ninja/rk-gin/v2        | [example](example/web/gin)             |
+|                    | [gRPC](https://grpc.io/docs/languages/go/)                     | ✅   | github.com/rookie-ninja/rk-grpc/v2       | [example](example/web/grpc)            |
+|                    | [labstack/echo](https://github.com/labstack/echo)              | ✅   | github.com/rookie-ninja/rk-echo          | [example](example/web/echo)            |
+|                    | [gogf/gf](https://github.com/gogf/gf)                          | ❌   |                                          |                                        |
+|                    | [gofiber/fiber](https://github.com/gofiber/fiber)              | ❌   |                                          |                                        |
+|                    | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | ✅   | github.com/rookie-ninja/rk-zero          | [example](example/web/zero)            |
+|                    | [gorilla/mux](https://github.com/gorilla/mux)                  | ✅   | github.com/rookie-ninja/rk-mux           | [example](example/web/mux)             |
+| Database<br/> ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)           | ✅   | github.com/rookie-ninja/rk-db/mysql      | [example](example/database/mysql)      |
+|                    | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)         | ✅   | github.com/rookie-ninja/rk-db/sqlite     | [example](example/database/sqlite)     |
+|                    | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)  | ✅   | github.com/rookie-ninja/rk-db/sqlserver  | [example](example/database/sqlserver)  |
+|                    | [postgreSQL](https://github.com/rookie-ninja/rk-db/postgres)   | ✅   | github.com/rookie-ninja/rk-db/postgres   | [example](example/database/postgres)   |
+|                    | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse) | ✅   | github.com/rookie-ninja/rk-db/clickhouse | [example](example/database/clickhouse) |
+|                    | [MongoDB](https://github.com/rookie-ninja/rk-db/mongodb)       | ✅   | github.com/rookie-ninja/rk-db/mongodb    | [example](example/database/mongodb)    |
+|                    | [Redis](https://github.com/rookie-ninja/rk-db/redis)           | ✅   | github.com/rookie-ninja/rk-db/redis      | [example](example/database/redis)      |
+|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ❌   |                                          |                                        |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
