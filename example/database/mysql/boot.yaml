@@ -1,0 +1,19 @@
+---
+gin:
+  - name: user-service
+    port: 8080
+    enabled: true
+mysql:
+  - name: user-db                     # Required
+    enabled: true                     # Required
+    locale: "*::*::*::*"              # Required
+    addr: "localhost:3306"            # Optional, default: localhost:3306
+    user: root                        # Optional, default: root
+    pass: pass                        # Optional, default: pass
+    protocol: tcp                     # Optional, default: tcp
+    database:
+      - name: user                    # Required
+        autoCreate: true              # Optional, default: false
+#        dryRun: false                # Optional, default: false
+#        params: []                   # Optional, default: ["charset=utf8mb4","parseTime=True","loc=Local"]
+#    loggerEntry: ""                  # Optional, default: default logger with STDOUT
