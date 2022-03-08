@@ -1,0 +1,12 @@
+---
+gin:
+  - name: cache-service
+    port: 8080
+    enabled: true
+cache:
+  - name: redis-cache
+    enabled: true
+    local:
+      enabled: false
+    redis:
+      enabled: true

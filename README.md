@@ -59,7 +59,7 @@ We will migrate dependencies from v1 to v2 as quick as possible.
 |                    | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse) | ✅   | github.com/rookie-ninja/rk-db/clickhouse | [example](example/database/clickhouse) |
 |                    | [MongoDB](https://github.com/rookie-ninja/rk-db/mongodb)       | ✅   | github.com/rookie-ninja/rk-db/mongodb    | [example](example/database/mongodb)    |
 |                    | [Redis](https://github.com/rookie-ninja/rk-db/redis)           | ✅   | github.com/rookie-ninja/rk-db/redis      | [example](example/database/redis)      |
-|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ❌   |                                          |                                        |
+|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ✅   | github.com/rookie-ninja/rk-cache/redis   | [example](example/cache/redis)         |
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
