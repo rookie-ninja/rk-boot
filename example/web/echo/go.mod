@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/labstack/echo/v4 v4.6.1
 	github.com/rookie-ninja/rk-boot/v2 v2.0.0
-	github.com/rookie-ninja/rk-echo v1.0.0
+	github.com/rookie-ninja/rk-echo v1.0.1
 )
 
 require (
