@@ -6,7 +6,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rookie-ninja/rk-boot/v2"
 	"github.com/rookie-ninja/rk-db/mysql"
@@ -86,8 +85,6 @@ func GetUser(ctx *gin.Context) {
 	uid := ctx.Param("id")
 	user := &User{}
 	res := userDb.Where("id = ?", uid).Find(user)
-
-	fmt.Println(ctx.Request.URL.Query())
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
