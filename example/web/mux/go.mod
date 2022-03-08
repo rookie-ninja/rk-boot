@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/rookie-ninja/rk-boot/v2 v2.0.1
-	github.com/rookie-ninja/rk-mux v1.0.0
+	github.com/rookie-ninja/rk-mux v1.0.1
 )
 
 require (

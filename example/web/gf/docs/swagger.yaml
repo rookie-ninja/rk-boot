@@ -1,0 +1,40 @@
+definitions:
+  main.GreeterResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample rk-demo server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /v1/greeter:
+    get:
+      operationId: "1"
+      parameters:
+      - description: Input name
+        in: query
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.GreeterResponse'
+      summary: Greeter service
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
