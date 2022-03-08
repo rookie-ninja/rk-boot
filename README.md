@@ -170,11 +170,11 @@ $ curl -X GET localhost:8080/rk/v1/alive
 
 - Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
 
-![image](example/gin/docs/img/simple-sw.png)
+![image](example/web/gin/docs/img/simple-sw.png)
 
 - Docs UI via: [http://localhost:8080/docs](http://localhost:8080/docs)
 
-![image](example/gin/docs/img/simple-docs.png)
+![image](example/web/gin/docs/img/simple-docs.png)
 
 ## Development Status: Stable
 
