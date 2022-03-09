@@ -3,8 +3,9 @@ module github.com/rookie-ninja/rk-demo
 go 1.17
 
 require (
-	github.com/rookie-ninja/rk-boot/v2 v2.0.1
-	github.com/rookie-ninja/rk-gf v1.0.0
+	github.com/gogf/gf/v2 v2.0.0-rc3
+	github.com/rookie-ninja/rk-boot/v2 v2.0.3
+	github.com/rookie-ninja/rk-gf v1.0.1
 )
 
 require (
@@ -20,7 +21,6 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
-	github.com/gogf/gf/v2 v2.0.0-rc3 // indirect
 	github.com/golang-jwt/jwt/v4 v4.3.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -41,7 +41,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.0.3 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.0.4 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.10 // indirect
 	github.com/rookie-ninja/rk-query v1.2.11 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
