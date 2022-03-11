@@ -187,11 +187,18 @@ gin:
 #            timeoutMs: 1000                               # Optional, default: 5000
 #      jwt:
 #        enabled: true                                     # Optional, default: false
-#        signingKey: "my-secret"                           # Required
-#        ignore: [""]                                      # Optional, default: []
-#        signingKeys:                                      # Optional
-#          - "key:value"
-#        signingAlgo: ""                                   # Optional, default: "HS256"
+#        ignore: [ "" ]                                    # Optional, default: []
+#        signerEntry: ""                                   # Optional, default: ""
+#        symmetric:                                        # Optional
+#          algorithm: ""                                   # Required, default: ""
+#          token: ""                                       # Optional, default: ""
+#          tokenPath: ""                                   # Optional, default: ""
+#        asymmetric:                                       # Optional
+#          algorithm: ""                                   # Required, default: ""
+#          privateKey: ""                                  # Optional, default: ""
+#          privateKeyPath: ""                              # Optional, default: ""
+#          publicKey: ""                                   # Optional, default: ""
+#          publicKeyPath: ""                               # Optional, default: ""
 #        tokenLookup: "header:<name>"                      # Optional, default: "header:Authorization"
 #        authScheme: "Bearer"                              # Optional, default: "Bearer"
 #      secure:
