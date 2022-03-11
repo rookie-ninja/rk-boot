@@ -3,7 +3,7 @@ module github.com/rookie-ninja/rk-boot/v2
 go 1.17
 
 require (
-	github.com/rookie-ninja/rk-entry/v2 v2.0.4
+	github.com/rookie-ninja/rk-entry/v2 v2.0.5
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.21.0
 )
@@ -13,6 +13,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.3.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.3.0 // indirect

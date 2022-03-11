@@ -131,6 +131,7 @@ github.com/go-stack/stack v1.8.0/go.mod h1:v0f6uXyyMGvRgIKkXu+yp6POWl0qKG85gN/me
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/gogo/protobuf v1.1.1/go.mod h1:r8qH/GZQm5c6nD/R0oafs1akxWv10x8SbQlK7atdtwQ=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
+github.com/golang-jwt/jwt/v4 v4.3.0 h1:kHL1vqdqWNfATmA0FNMdmZNMyZI1U6O31X4rlIPoBog=
 github.com/golang-jwt/jwt/v4 v4.3.0/go.mod h1:/xlHOz8bRuivTWchD4jCa+NbatV+wEUSzwAxVc6locg=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6/go.mod h1:cIg4eruTrX1D+g88fzRXU5OdNfaM+9IcxsU14FzY7Hc=
@@ -337,8 +338,8 @@ github.com/prometheus/procfs v0.7.3 h1:4jVXhlkAyzOScmCkXBTOLRLTz8EeU+eyjrwB/EPq0
 github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1xBZuNvfVA=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
-github.com/rookie-ninja/rk-entry/v2 v2.0.4 h1:cY2cCD4qGxnqNIoWO/wgqmZ62NdaQaUNuUWmIc9+KUg=
-github.com/rookie-ninja/rk-entry/v2 v2.0.4/go.mod h1:6D5pPFJ58SJV0SBy26XOKNsODYVtwEHwZ9kKuwb35XU=
+github.com/rookie-ninja/rk-entry/v2 v2.0.5 h1:e/Upzb5CxhziaNvDJJct5BrWQVsqnWaDG8FQ172+8gI=
+github.com/rookie-ninja/rk-entry/v2 v2.0.5/go.mod h1:6D5pPFJ58SJV0SBy26XOKNsODYVtwEHwZ9kKuwb35XU=
 github.com/rookie-ninja/rk-logger v1.2.10 h1:tBttXQTDBOCgEOd8i/KdkO6UqaUYuZ0q+7gJdRGVPUE=
 github.com/rookie-ninja/rk-logger v1.2.10/go.mod h1:BgOmPpVjIHCHhqo1tqf3jUd/71Rg+Ptwi6pBeaOnOQw=
 github.com/rookie-ninja/rk-query v1.2.11 h1:w2lCnzGvl4P9JDukEwdV4tfAtTsLSjFH/D8fjT4vN+U=
