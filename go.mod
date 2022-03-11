@@ -3,7 +3,7 @@ module github.com/rookie-ninja/rk-boot/v2
 go 1.17
 
 require (
-	github.com/rookie-ninja/rk-entry/v2 v2.0.5
+	github.com/rookie-ninja/rk-entry/v2 v2.0.6
 	github.com/stretchr/testify v1.7.0
 	go.uber.org/zap v1.21.0
 )
