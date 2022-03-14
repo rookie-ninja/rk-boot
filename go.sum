@@ -338,8 +338,8 @@ github.com/prometheus/procfs v0.7.3 h1:4jVXhlkAyzOScmCkXBTOLRLTz8EeU+eyjrwB/EPq0
 github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1xBZuNvfVA=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
-github.com/rookie-ninja/rk-entry/v2 v2.0.7 h1:FCuupanQPH+bwO0FlvJTuD2mvdfLIH+V3a2/ahjUTdI=
-github.com/rookie-ninja/rk-entry/v2 v2.0.7/go.mod h1:6D5pPFJ58SJV0SBy26XOKNsODYVtwEHwZ9kKuwb35XU=
+github.com/rookie-ninja/rk-entry/v2 v2.0.8 h1:ShUemu3+w+SK+XEAhOp8kYElKwYfGJfcipOJWV3UHLw=
+github.com/rookie-ninja/rk-entry/v2 v2.0.8/go.mod h1:6D5pPFJ58SJV0SBy26XOKNsODYVtwEHwZ9kKuwb35XU=
 github.com/rookie-ninja/rk-logger v1.2.10 h1:tBttXQTDBOCgEOd8i/KdkO6UqaUYuZ0q+7gJdRGVPUE=
 github.com/rookie-ninja/rk-logger v1.2.10/go.mod h1:BgOmPpVjIHCHhqo1tqf3jUd/71Rg+Ptwi6pBeaOnOQw=
 github.com/rookie-ninja/rk-query v1.2.11 h1:w2lCnzGvl4P9JDukEwdV4tfAtTsLSjFH/D8fjT4vN+U=
