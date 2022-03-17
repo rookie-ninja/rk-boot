@@ -41,7 +41,7 @@ We will add more bootstrapper for popular third-party dependencies.
 - Save learning time of writing initializing procedure of popular frameworks and libraries.
 - User defined Entry for customization.
 
-## Features V2
+## Plugins V2
 We will migrate dependencies from v1 to v2 as quick as possible.
 
 |      Category      | Name                                                                  | V2  | go get                                      | Example                                |
