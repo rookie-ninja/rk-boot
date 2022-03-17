@@ -158,6 +158,4 @@ $ curl localhost:8080/v1/get
 #### 4.3 Validate Redis
 The key of cache will be encoded with MD5 and value will be base64 encoded.
 
-![image](docs/img/redis.png)
-
 

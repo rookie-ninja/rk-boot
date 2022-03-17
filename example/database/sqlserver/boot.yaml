@@ -6,7 +6,7 @@ gin:
 sqlServer:
   - name: user-db                       # Required
     enabled: true                       # Required
-    locale: "*::*::*::*"                # Required
+    domain: "*"                         # Optional
     addr: "localhost:1433"              # Optional, default: localhost:1433
     user: sa                            # Optional, default: sa
     pass: pass                          # Optional, default: pass

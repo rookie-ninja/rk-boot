@@ -175,7 +175,7 @@ redis:
   - name: redis                      # Required
     enabled: true                    # Required
     addrs: ["localhost:6379"]        # Required, One addr is for single, multiple is for cluster
-    locale: "*::*::*::*"
+#    domain: "*"                     # Optional
 #    description: ""                 # Optional
 #
 #    # For HA
@@ -208,4 +208,36 @@ redis:
 #
 #    # For logger
 #    loggerEntry: ""                 # Optional, default: default logger with STDOUT
+```
+
+### Usage of domain
+
+```
+RK use <domain> to distinguish different environment.
+Variable of <locale> could be composed as form of <domain>
+- domain: Stands for different environment, like dev, test, prod and so on, users can define it by themselves.
+          Environment variable: DOMAIN
+          Eg: prod
+          Wildcard: supported
+
+How it works?
+Firstly, get environment variable named as  DOMAIN.
+Secondly, compare every element in locale variable and environment variable.
+If variables in locale represented as wildcard(*), we will ignore comparison step.
+
+Example:
+# let's assuming we are going to define DB address which is different based on environment.
+# Then, user can distinguish DB address based on locale.
+# We recommend to include locale with wildcard.
+---
+DB:
+  - name: redis-default
+    domain: "*"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-test
+    domain: "test"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-prod
+    domain: "prod"
+    addr: "176.0.0.1:6379"
 ```

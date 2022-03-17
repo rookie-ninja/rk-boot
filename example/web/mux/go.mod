@@ -3,8 +3,8 @@ module github.com/rookie-ninja/rk-demo
 go 1.17
 
 require (
-	github.com/rookie-ninja/rk-boot/v2 v2.0.3
-	github.com/rookie-ninja/rk-mux v1.0.2
+	github.com/rookie-ninja/rk-boot/v2 v2.1.0
+	github.com/rookie-ninja/rk-mux v1.1.0
 )
 
 require (
@@ -24,14 +24,13 @@ require (
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
-	github.com/pkg/errors v0.9.1 // indirect
 	github.com/prometheus/client_golang v1.12.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.0.4 // indirect
-	github.com/rookie-ninja/rk-logger v1.2.10 // indirect
-	github.com/rookie-ninja/rk-query v1.2.11 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.1.3 // indirect
+	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
+	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/spf13/afero v1.6.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
@@ -40,11 +39,11 @@ require (
 	github.com/streadway/handy v0.0.0-20190108123426-d5acb3125c2a // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	go.opentelemetry.io/contrib v1.4.0 // indirect
-	go.opentelemetry.io/otel v1.4.1 // indirect
-	go.opentelemetry.io/otel/exporters/jaeger v1.4.1 // indirect
-	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.4.1 // indirect
-	go.opentelemetry.io/otel/sdk v1.4.1 // indirect
-	go.opentelemetry.io/otel/trace v1.4.1 // indirect
+	go.opentelemetry.io/otel v1.5.0 // indirect
+	go.opentelemetry.io/otel/exporters/jaeger v1.5.0 // indirect
+	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.5.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.5.0 // indirect
+	go.opentelemetry.io/otel/trace v1.5.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect

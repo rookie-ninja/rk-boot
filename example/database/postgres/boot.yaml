@@ -6,7 +6,7 @@ gin:
 postgres:
   - name: user-db                     # Required
     enabled: true                     # Required
-    locale: "*::*::*::*"              # Required
+    domain: "*"                       # Optional
     addr: "localhost:5432"            # Optional, default: localhost:5432
     user: postgres                    # Optional, default: postgres
     pass: pass                        # Optional, default: pass

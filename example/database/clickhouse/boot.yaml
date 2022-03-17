@@ -6,7 +6,7 @@ gin:
 clickhouse:
   - name: user-db                          # Required
     enabled: true                          # Required
-    locale: "*::*::*::*"                   # Required
+    domain: "*"                            # Optional
     addr: "localhost:9000"                 # Optional, default: localhost:9000
     user: default                          # Optional, default: default
     pass: ""                               # Optional, default: ""

@@ -6,7 +6,7 @@ gin:
 mysql:
   - name: user-db                     # Required
     enabled: true                     # Required
-    locale: "*::*::*::*"              # Required
+    domain: "*"                       # Optional
     addr: "localhost:3306"            # Optional, default: localhost:3306
     user: root                        # Optional, default: root
     pass: pass                        # Optional, default: pass
