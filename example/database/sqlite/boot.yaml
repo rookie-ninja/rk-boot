@@ -6,7 +6,7 @@ gin:
 sqlite:
   - name: user-db                     # Required
     enabled: true                     # Required
-    locale: "*::*::*::*"              # Required
+    domain: "*"                       # Optional
     database:
       - name: user                    # Required
 #        inMemory: true               # Optional, default: false

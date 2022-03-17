@@ -39,7 +39,7 @@ gin:
 mysql:
   - name: user-db                     # Required
     enabled: true                     # Required
-    locale: "*::*::*::*"              # Required
+    domain: "*"                       # Optional
     addr: "localhost:3306"            # Optional, default: localhost:3306
     user: root                        # Optional, default: root
     pass: pass                        # Optional, default: pass
@@ -261,7 +261,7 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 |---------------------------|----------|------------------------------------|----------|--------------------------------------------------|
 | mysql.name                | Required | The name of entry                  | string   | MySql                                            |
 | mysql.enabled             | Required | Enable entry or not                | bool     | false                                            |
-| mysql.locale              | Required | See locale description bellow      | string   | ""                                               |
+| mysql.domain              | Required | See domain description bellow      | string   | ""                                               |
 | mysql.description         | Optional | Description of echo entry.         | string   | ""                                               |
 | mysql.user                | Optional | MySQL username                     | string   | root                                             |
 | mysql.pass                | Optional | MySQL password                     | string   | pass                                             |
@@ -273,3 +273,34 @@ User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the
 | mysql.database.params     | Optional | Connection params                  | []string | ["charset=utf8mb4","parseTime=True","loc=Local"] |
 | mysql.loggerEntry         | Optional | Reference of zap logger entry name | string   | ""                                               |
 
+### Usage of domain
+
+```
+RK use <domain> to distinguish different environment.
+Variable of <locale> could be composed as form of <domain>
+- domain: Stands for different environment, like dev, test, prod and so on, users can define it by themselves.
+          Environment variable: DOMAIN
+          Eg: prod
+          Wildcard: supported
+
+How it works?
+Firstly, get environment variable named as  DOMAIN.
+Secondly, compare every element in locale variable and environment variable.
+If variables in locale represented as wildcard(*), we will ignore comparison step.
+
+Example:
+# let's assuming we are going to define DB address which is different based on environment.
+# Then, user can distinguish DB address based on locale.
+# We recommend to include locale with wildcard.
+---
+DB:
+  - name: redis-default
+    domain: "*"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-test
+    domain: "test"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-prod
+    domain: "prod"
+    addr: "176.0.0.1:6379"
+```

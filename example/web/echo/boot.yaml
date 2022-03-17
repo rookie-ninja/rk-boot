@@ -10,7 +10,7 @@
 #logger:
 #  - name: my-logger                                       # Required
 #    description: "Description of entry"                   # Optional
-#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    domain: "*"                                           # Optional, default: "*"
 #    zap:                                                  # Optional
 #      level: info                                         # Optional, default: info
 #      development: true                                   # Optional, default: true
@@ -55,7 +55,7 @@
 #event:
 #  - name: my-event                                        # Required
 #    description: "Description of entry"                   # Optional
-#    locale: "*::*::*::*"                                  # Optional, default: "*::*::*::*"
+#    domain: "*"                                           # Optional, default: "*"
 #    encoding: console                                     # Optional, default: console
 #    outputPaths: ["stdout"]                               # Optional, default: [stdout]
 #    lumberjack:                                           # Optional, default: nil
@@ -79,15 +79,15 @@
 #cert:
 #  - name: my-cert                                         # Required
 #    description: "Description of entry"                   # Optional, default: ""
-#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
+#    domain: "*"                                           # Optional, default: "*"
 #    caPath: "certs/ca.pem"                                # Optional, default: ""
 #    certPemPath: "certs/server-cert.pem"                  # Optional, default: ""
 #    keyPemPath: "certs/server-key.pem"                    # Optional, default: ""
 #config:
 #  - name: my-config                                       # Required
 #    description: "Description of entry"                   # Optional, default: ""
-#    locale: "*::*::*::*"                                  # Optional, default: *::*::*::*
-##    path: "config/config.yaml"                            # Optional
+#    domain: "*"                                           # Optional, default: "*"
+#    path: "config/config.yaml"                            # Optional
 #    envPrefix: ""                                         # Optional, default: ""
 #    content:                                              # Optional, defualt: empty map
 #      key: value
@@ -95,34 +95,37 @@ echo:
   - name: greeter                                          # Required
     port: 8080                                             # Required
     enabled: true                                          # Required
-    sw:
-      enabled: true                                       # Optional, default: false
+#    description: "greeter server"                         # Optional, default: ""
+#    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
+#    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    sw:
+#      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
 #      jsonPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
-    commonService:
-      enabled: true                                       # Optional, default: false
-#      pathPrefix: ""                                      # Optional, default: "/rk/v1/"
-    docs:
-      enabled: true                                       # Optional, default: false
+#    docs:
+#      enabled: true                                       # Optional, default: false
 #      path: "docs"                                        # Optional, default: "docs"
 #      specPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
 #      style:                                              # Optional
 #        theme: "light"                                    # Optional, default: "light"
 #      debug: false                                        # Optional, default: false
-#    description: "greeter server"                         # Optional, default: ""
-#    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
-#    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
-#    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
+#    commonService:
+#      enabled: true                                       # Optional, default: false
+#      pathPrefix: ""                                      # Optional, default: "/rk/v1/"
 #    static:
 #      enabled: true                                       # Optional, default: false
 #      path: "/static"                                     # Optional, default: /static
 #      sourceType: local                                   # Optional, options: local, embed.FS can be used either, need to specify in code
 #      sourcePath: "."                                     # Optional, full path of source directory
+#    pprof:
+#      enabled: true                                       # Optional, default: false
+#      path: "/pprof"                                      # Optional, default: /pprof
 #    prom:
 #      enabled: true                                       # Optional, default: false
-#      path: ""                                            # Optional, default: "metrics"
+#      path: ""                                            # Optional, default: "/metrics"
 #      pusher:
 #        enabled: false                                    # Optional, default: false
 #        jobName: "greeter-pusher"                         # Required
@@ -178,13 +181,27 @@ echo:
 #        paths:
 #          - path: "/rk/v1/healthy"                        # Optional, default: ""
 #            reqPerSec: 0                                  # Optional, default: 1000000
+#      timeout:
+#        enabled: false                                    # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        timeoutMs: 5000                                   # Optional, default: 5000
+#        paths:
+#          - path: "/rk/v1/healthy"                        # Optional, default: ""
+#            timeoutMs: 1000                               # Optional, default: 5000
 #      jwt:
 #        enabled: true                                     # Optional, default: false
-#        signingKey: "my-secret"                           # Required
-#        ignore: [""]                                      # Optional, default: []
-#        signingKeys:                                      # Optional
-#          - "key:value"
-#        signingAlgo: ""                                   # Optional, default: "HS256"
+#        ignore: [ "" ]                                    # Optional, default: []
+#        signerEntry: ""                                   # Optional, default: ""
+#        symmetric:                                        # Optional
+#          algorithm: ""                                   # Required, default: ""
+#          token: ""                                       # Optional, default: ""
+#          tokenPath: ""                                   # Optional, default: ""
+#        asymmetric:                                       # Optional
+#          algorithm: ""                                   # Required, default: ""
+#          privateKey: ""                                  # Optional, default: ""
+#          privateKeyPath: ""                              # Optional, default: ""
+#          publicKey: ""                                   # Optional, default: ""
+#          publicKeyPath: ""                               # Optional, default: ""
 #        tokenLookup: "header:<name>"                      # Optional, default: "header:Authorization"
 #        authScheme: "Bearer"                              # Optional, default: "Bearer"
 #      secure:
@@ -210,6 +227,10 @@ echo:
 #        cookieMaxAge: 86400                               # Optional, default: 86400
 #        cookieHttpOnly: false                             # Optional, default: false
 #        cookieSameSite: "default"                         # Optional, default: "default", options: lax, strict, none, default
+#      gzip:
+#        enabled: true                                     # Optional, default: false
+#        ignore: [""]                                      # Optional, default: []
+#        level: bestSpeed                                  # Optional, options: [noCompression, bestSpeed， bestCompression, defaultCompression, huffmanOnly]
 #      cors:
 #        enabled: true                                     # Optional, default: false
 #        ignore: [""]                                      # Optional, default: []

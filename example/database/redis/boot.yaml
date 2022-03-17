@@ -7,7 +7,7 @@ redis:
   - name: redis                      # Required
     enabled: true                    # Required
     addrs: ["localhost:6379"]        # Required, One addr is for single, multiple is for cluster
-    locale: "*::*::*::*"
+#    domain: "*"                     # Optional
 #    description: ""                 # Optional
 #
 #    # For HA
