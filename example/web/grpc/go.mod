@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.8.0
 	github.com/rookie-ninja/rk-boot/v2 v2.1.0
-	github.com/rookie-ninja/rk-grpc/v2 v2.1.0
+	github.com/rookie-ninja/rk-grpc/v2 v2.1.1
 	google.golang.org/grpc v1.44.0
 	google.golang.org/protobuf v1.27.1
 )
