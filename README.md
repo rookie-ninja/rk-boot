@@ -43,27 +43,32 @@ We will add more bootstrapper for popular third-party dependencies.
 ## Plugins V2
 We will migrate dependencies from v1 to v2 as quick as possible.
 
-|      Category      | Name                                                                  | V2  | go get                                      | Example                                |
-|:------------------:|-----------------------------------------------------------------------|-----|---------------------------------------------|----------------------------------------|
-| Web<br/> Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)                     | ✅   | github.com/rookie-ninja/rk-gin/v2           | [example](example/web/gin)             |
-|                    | [gRPC](https://grpc.io/docs/languages/go/)                            | ✅   | github.com/rookie-ninja/rk-grpc/v2          | [example](example/web/grpc)            |
-|                    | [labstack/echo](https://github.com/labstack/echo)                     | ✅   | github.com/rookie-ninja/rk-echo             | [example](example/web/echo)            |
-|                    | [gogf/gf](https://github.com/gogf/gf)                                 | ✅   | github.com/rookie-ninja/rk-gf               | [example](example/web/gf)              |
-|                    | [gofiber/fiber](https://github.com/gofiber/fiber)                     | ✅   | github.com/rookie-ninja/rk-fiber            | [example](example/web/fiber)           |
-|                    | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)             | ✅   | github.com/rookie-ninja/rk-zero             | [example](example/web/zero)            |
-|                    | [gorilla/mux](https://github.com/gorilla/mux)                         | ✅   | github.com/rookie-ninja/rk-mux              | [example](example/web/mux)             |
-| Database<br/> ORM  | [MySQL](https://github.com/rookie-ninja/rk-db/mysql)                  | ✅   | github.com/rookie-ninja/rk-db/mysql         | [example](example/database/mysql)      |
-|                    | [SQLite](https://github.com/rookie-ninja/rk-db/sqlite)                | ✅   | github.com/rookie-ninja/rk-db/sqlite        | [example](example/database/sqlite)     |
-|                    | [SQL Server](https://github.com/rookie-ninja/rk-db/sqlserver)         | ✅   | github.com/rookie-ninja/rk-db/sqlserver     | [example](example/database/sqlserver)  |
-|                    | [postgreSQL](https://github.com/rookie-ninja/rk-db/postgres)          | ✅   | github.com/rookie-ninja/rk-db/postgres      | [example](example/database/postgres)   |
-|                    | [ClickHouse](https://github.com/rookie-ninja/rk-db/clickhouse)        | ✅   | github.com/rookie-ninja/rk-db/clickhouse    | [example](example/database/clickhouse) |
-|                    | [MongoDB](https://github.com/rookie-ninja/rk-db/mongodb)              | ✅   | github.com/rookie-ninja/rk-db/mongodb       | [example](example/database/mongodb)    |
-|                    | [Redis](https://github.com/rookie-ninja/rk-db/redis)                  | ✅   | github.com/rookie-ninja/rk-db/redis         | [example](example/database/redis)      |
-|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)                     | ✅   | github.com/rookie-ninja/rk-cache/redis      | [example](example/cache/redis)         |
-|       Cloud        | [AWS](https://github.com/rookie-ninja/rk-cloud/aws)                   | ✅   | github.com/rookie-ninja/rk-cloud/aws        | TODO                                   |
-|                    | [AWS/KMS](https://github.com/rookie-ninja/rk-cloud/aws/kms)           | ✅   | github.com/rookie-ninja/rk-cloud/aws/kms    | TODO                                   |
-|                    | [AWS/KMS/Signer](https://github.com/rookie-ninja/rk-cloud/aws/signer) | ✅   | github.com/rookie-ninja/rk-cloud/aws/signer | TODO                                   |
-|                    | [AWS/KMS/Crypto](https://github.com/rookie-ninja/rk-cloud/aws/crypto) | ✅   | github.com/rookie-ninja/rk-cloud/aws/crypto | TODO                                   |
+|      Category      | Name                                                                   | V2  | go get                                          | Example                                |
+|:------------------:|------------------------------------------------------------------------|-----|-------------------------------------------------|----------------------------------------|
+| Web<br/> Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)                      | ✅   | github.com/rookie-ninja/rk-gin/v2               | [example](example/web/gin)             |
+|                    | [gRPC](https://grpc.io/docs/languages/go/)                             | ✅   | github.com/rookie-ninja/rk-grpc/v2              | [example](example/web/grpc)            |
+|                    | [labstack/echo](https://github.com/labstack/echo)                      | ✅   | github.com/rookie-ninja/rk-echo                 | [example](example/web/echo)            |
+|                    | [gogf/gf](https://github.com/gogf/gf)                                  | ✅   | github.com/rookie-ninja/rk-gf                   | [example](example/web/gf)              |
+|                    | [gofiber/fiber](https://github.com/gofiber/fiber)                      | ✅   | github.com/rookie-ninja/rk-fiber                | [example](example/web/fiber)           |
+|                    | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)              | ✅   | github.com/rookie-ninja/rk-zero                 | [example](example/web/zero)            |
+|                    | [gorilla/mux](https://github.com/gorilla/mux)                          | ✅   | github.com/rookie-ninja/rk-mux                  | [example](example/web/mux)             |
+| Database<br/> ORM  | [MySQL](https://github.com/rookie-ninja/rk-db)                         | ✅   | github.com/rookie-ninja/rk-db/mysql             | [example](example/database/mysql)      |
+|                    | [SQLite](https://github.com/rookie-ninja/rk-db)                        | ✅   | github.com/rookie-ninja/rk-db/sqlite            | [example](example/database/sqlite)     |
+|                    | [SQL Server](https://github.com/rookie-ninja/rk-db)                    | ✅   | github.com/rookie-ninja/rk-db/sqlserver         | [example](example/database/sqlserver)  |
+|                    | [postgreSQL](https://github.com/rookie-ninja/rk-db)                    | ✅   | github.com/rookie-ninja/rk-db/postgres          | [example](example/database/postgres)   |
+|                    | [ClickHouse](https://github.com/rookie-ninja/rk-db)                    | ✅   | github.com/rookie-ninja/rk-db/clickhouse        | [example](example/database/clickhouse) |
+|                    | [MongoDB](https://github.com/rookie-ninja/rk-db)                       | ✅   | github.com/rookie-ninja/rk-db/mongodb           | [example](example/database/mongodb)    |
+|                    | [Redis](https://github.com/rookie-ninja/rk-db)                         | ✅   | github.com/rookie-ninja/rk-db/redis             | [example](example/database/redis)      |
+|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)                      | ✅   | github.com/rookie-ninja/rk-cache/redis          | [example](example/cache/redis)         |
+|       Cloud        | [AWS](https://github.com/rookie-ninja/rk-cloud/aws)                    | ✅   | github.com/rookie-ninja/rk-cloud/aws            | TODO                                   |
+|                    | [AWS/KMS](https://github.com/rookie-ninja/rk-cloud/aws)                | ✅   | github.com/rookie-ninja/rk-cloud/aws/kms        | TODO                                   |
+|                    | [AWS/KMS/Signer](https://github.com/rookie-ninja/rk-cloud/aws)         | ✅   | github.com/rookie-ninja/rk-cloud/aws/signer     | TODO                                   |
+|                    | [AWS/KMS/Crypto](https://github.com/rookie-ninja/rk-cloud/aws)         | ✅   | github.com/rookie-ninja/rk-cloud/aws/crypto     | TODO                                   |
+|                    | [Tencent](https://github.com/rookie-ninja/rk-cloud/tencent)            | ✅   | github.com/rookie-ninja/rk-cloud/tencent        | TODO                                   |
+|                    | [Tencent/KMS](https://github.com/rookie-ninja/rk-cloud/tencent)        | ✅   | github.com/rookie-ninja/rk-cloud/tencent/kms    | TODO                                   |
+|                    | [Tencent/KMS/Signer](https://github.com/rookie-ninja/rk-cloud/tencent) | ✅   | github.com/rookie-ninja/rk-cloud/tencent/signer | TODO                                   |
+|                    | [Tencent/KMS/Crypto](https://github.com/rookie-ninja/rk-cloud/tencent) | ✅   | github.com/rookie-ninja/rk-cloud/tencent/crypto | TODO                                   |
+
 
 ## Quick Start for Gin
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
