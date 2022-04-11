@@ -4,6 +4,12 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+## Join discussing channel
+| Channel            | Code                                             |
+|--------------------|--------------------------------------------------|
+| Wechat group (CN)  | ![image](docs/img/wechat-group-cn.png)           |
+| Slack channel (EN) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
+
 ## Important note about V2
 > RK family is bumping up to V2 which will not be full compatible with V1 including documentation. Please refer to V1 as needed.
 >
