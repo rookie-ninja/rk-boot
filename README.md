@@ -5,6 +5,12 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot?ref=badge_shield)
 
+## Join discussing channel
+| Channel            | Code                                             |
+|--------------------|--------------------------------------------------|
+| Wechat group (CN)  | ![image](docs/img/wechat-group-cn.png)           |
+| Slack channel (EN) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
+
 ## Important note about V2
 > RK family is bumping up to V2 which will not be full compatible with V1 including documentation. Please refer to V1 as needed.
 >
