@@ -99,13 +99,13 @@ gin:
 #    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
 #    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
 #    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
-#    sw:
-#      enabled: true                                       # Optional, default: false
+    sw:
+      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
 #      jsonPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
-#    docs:
-#      enabled: true                                       # Optional, default: false
+    docs:
+      enabled: true                                       # Optional, default: false
 #      path: "docs"                                        # Optional, default: "docs"
 #      specPath: ""                                        # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
@@ -123,8 +123,8 @@ gin:
 #    pprof:
 #      enabled: true                                       # Optional, default: false
 #      path: "/pprof"                                      # Optional, default: /pprof
-#    prom:
-#      enabled: true                                       # Optional, default: false
+    prom:
+      enabled: true                                       # Optional, default: false
 #      path: ""                                            # Optional, default: "/metrics"
 #      pusher:
 #        enabled: false                                    # Optional, default: false
@@ -133,17 +133,17 @@ gin:
 #        basicAuth: "user:pass"                            # Optional, default: ""
 #        intervalMs: 10000                                 # Optional, default: 1000
 #        certEntry: my-cert                                # Optional, default: "", reference of cert entry declared above
-#    middleware:
+    middleware:
 #      ignore: [""]                                        # Optional, default: []
-#      logging:
-#        enabled: true                                     # Optional, default: false
+      logging:
+        enabled: true                                     # Optional, default: false
 #        ignore: [""]                                      # Optional, default: []
 #        loggerEncoding: "console"                         # Optional, default: "console"
 #        loggerOutputPaths: ["logs/app.log"]               # Optional, default: ["stdout"]
 #        eventEncoding: "console"                          # Optional, default: "console"
 #        eventOutputPaths: ["logs/event.log"]              # Optional, default: ["stdout"]
-#      prom:
-#        enabled: true                                     # Optional, default: false
+      prom:
+        enabled: true                                     # Optional, default: false
 #        ignore: [""]                                      # Optional, default: []
 #      auth:
 #        enabled: true                                     # Optional, default: false
@@ -152,8 +152,8 @@ gin:
 #          - "user:pass"                                   # Optional, default: []
 #        apiKey:
 #          - "keys"                                        # Optional, default: []
-#      meta:
-#        enabled: true                                     # Optional, default: false
+      meta:
+        enabled: true                                     # Optional, default: false
 #        ignore: [""]                                      # Optional, default: []
 #        prefix: "rk"                                      # Optional, default: "rk"
 #      trace:

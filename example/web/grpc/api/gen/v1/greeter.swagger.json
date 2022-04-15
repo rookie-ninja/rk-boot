@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "v1/hello.proto",
+    "title": "v1/greeter.proto",
     "version": "version not set"
   },
   "tags": [
@@ -73,7 +73,7 @@
     "v1HelloResponse": {
       "type": "object",
       "properties": {
-        "myMessage": {
+        "message": {
           "type": "string"
         }
       }
