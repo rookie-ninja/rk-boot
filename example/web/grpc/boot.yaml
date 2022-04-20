@@ -109,7 +109,7 @@ grpc:
 #      unmarshal:                                          # Optional, default: nil
 #        allowPartial: false                               # Optional, default: false
 #        discardUnknown: false                             # Optional, default: false
-#    noRecvMsgSizeLimit: true                              # Optional, default: false
+#    noRecvMsgSizeLimit: true                              # Optional, default: 4MB
 #    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
 #    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
 #    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
