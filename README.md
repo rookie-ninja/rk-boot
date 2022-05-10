@@ -4,6 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
 [![Sourcegraph](https://sourcegraph.com/github.com/rookie-ninja/rk-boot/-/badge.svg)](https://sourcegraph.com/github.com/rookie-ninja/rk-boot?badge)
 [![GoDoc](https://godoc.org/github.com/rookie-ninja/rk-boot?status.svg)](https://godoc.org/github.com/rookie-ninja/rk-boot)
+[![Release](https://img.shields.io/github/release/rookie-ninja/rk-boot.svg?style=flat-square)](https://github.com/rookie-ninja/rk-boot/releases)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Official site
