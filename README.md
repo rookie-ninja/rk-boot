@@ -2,6 +2,8 @@
 [![build](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/rookie-ninja/rk-boot/branch/master/graph/badge.svg?token=BZ6KWGAXNP)](https://codecov.io/gh/rookie-ninja/rk-boot)
 [![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
+[![Sourcegraph](https://sourcegraph.com/github.com/rookie-ninja/rk-boot/-/badge.svg)](https://sourcegraph.com/github.com/rookie-ninja/rk-boot?badge)
+[![GoDoc](https://godoc.org/github.com/rookie-ninja/rk-boot?status.svg)](https://godoc.org/github.com/rookie-ninja/rk-boot)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Official site
