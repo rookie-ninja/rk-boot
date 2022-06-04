@@ -56,8 +56,11 @@ func NewBoot(opts ...BootOption) *Boot {
 	defer syncLog("N/A")
 
 	boot := &Boot{
-		EventId:  rkmid.GenerateRequestId(),
-		preloadF: map[string]map[string]func(){},
+		EventId:       rkmid.GenerateRequestId(),
+		preloadF:      map[string]map[string]func(){},
+		pluginEntries: map[string]rkentry.Entry{},
+		userEntries:   map[string]rkentry.Entry{},
+		webEntries:    map[string]rkentry.Entry{},
 	}
 
 	for i := range opts {
@@ -70,15 +73,21 @@ func NewBoot(opts ...BootOption) *Boot {
 	rkentry.BootstrapBuiltInEntryFromYAML(raw)
 
 	for _, f := range rkentry.ListPluginEntryRegFunc() {
-		boot.pluginEntries = f(raw)
+		for k, v := range f(raw) {
+			boot.pluginEntries[k] = v
+		}
 	}
 
 	for _, f := range rkentry.ListUserEntryRegFunc() {
-		boot.userEntries = f(raw)
+		for k, v := range f(raw) {
+			boot.userEntries[k] = v
+		}
 	}
 
 	for _, f := range rkentry.ListWebFrameEntryRegFunc() {
-		boot.webEntries = f(raw)
+		for k, v := range f(raw) {
+			boot.webEntries[k] = v
+		}
 	}
 
 	return boot
