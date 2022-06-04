@@ -353,10 +353,10 @@ github.com/prometheus/procfs v0.7.3 h1:4jVXhlkAyzOScmCkXBTOLRLTz8EeU+eyjrwB/EPq0
 github.com/prometheus/procfs v0.7.3/go.mod h1:cz+aTbrPOrUb4q7XlbU9ygM+/jj0fzG6c1xBZuNvfVA=
 github.com/rogpeppe/fastuuid v1.2.0/go.mod h1:jVj6XXZzXRy/MSR5jhDC/2q6DgLz+nrA6LYCDYWNEvQ=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
-github.com/rookie-ninja/rk-entry/v2 v2.2.1 h1:vrTxavLX+uO7tAdnc/lvUqkAxBv6oFxmIkjj08AvWHo=
-github.com/rookie-ninja/rk-entry/v2 v2.2.1/go.mod h1:kCfoXKbC0Dw1rXcTlppCd7JCMJfNF6GY1g0h/FXPSrE=
-github.com/rookie-ninja/rk-fiber v1.2.0 h1:ebayN9mXw80KtuI7dL2yQNneVfTN2Qqrh4WgAyfB3qA=
-github.com/rookie-ninja/rk-fiber v1.2.0/go.mod h1:CZInZDxvYj7ciLU7Non6XJFv9vNeLPt39Vgl3wMiw5Q=
+github.com/rookie-ninja/rk-entry/v2 v2.2.2 h1:5iO8JzMLIjx9O64IN9aLPH8AEJvF69vgOTu3rLwH3vM=
+github.com/rookie-ninja/rk-entry/v2 v2.2.2/go.mod h1:kCfoXKbC0Dw1rXcTlppCd7JCMJfNF6GY1g0h/FXPSrE=
+github.com/rookie-ninja/rk-fiber v1.2.1 h1:Ym3zkoW3I7B3B44bgUPdlvAn98nr98spQvPJ3xndblM=
+github.com/rookie-ninja/rk-fiber v1.2.1/go.mod h1:aGEzLXn10vjyzZP9WAXdEA0TFnnOJY8xEn5A14jUHLE=
 github.com/rookie-ninja/rk-logger v1.2.11 h1:QqfVnTFKVpjFnETB4lAVEzLWm5zSy/ghJpPICz1qo/w=
 github.com/rookie-ninja/rk-logger v1.2.11/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
 github.com/rookie-ninja/rk-query v1.2.14 h1:aYNyMXixpsEYRfEOz9Npt5QG3A6BQlo9vKjYc78x7bc=
