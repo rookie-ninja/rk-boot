@@ -26,6 +26,9 @@ type Boot struct {
 	bootConfigRaw  []byte                       `yaml:"-" json:"-"`
 	preloadF       map[string]map[string]func() `yaml:"-" json:"-"`
 	EventId        string                       `yaml:"-" json:"-"`
+	pluginEntries  map[string]rkentry.Entry
+	userEntries    map[string]rkentry.Entry
+	webEntries     map[string]rkentry.Entry
 }
 
 // BootOption is used as options while bootstrapping from code
@@ -64,12 +67,18 @@ func NewBoot(opts ...BootOption) *Boot {
 	raw := boot.readYAML()
 
 	// Register entries need to pre-build.
-	rkentry.BootstrapPreloadEntryYAML(raw)
+	rkentry.BootstrapBuiltInEntryFromYAML(raw)
 
-	// Register entries
-	regFuncList := rkentry.ListEntryRegFunc()
-	for i := range regFuncList {
-		regFuncList[i](raw)
+	for _, f := range rkentry.ListPluginEntryRegFunc() {
+		boot.pluginEntries = f(raw)
+	}
+
+	for _, f := range rkentry.ListUserEntryRegFunc() {
+		boot.userEntries = f(raw)
+	}
+
+	for _, f := range rkentry.ListWebFrameEntryRegFunc() {
+		boot.webEntries = f(raw)
 	}
 
 	return boot
@@ -91,33 +100,37 @@ func (boot *Boot) AddPreloadFuncBeforeBootstrap(entry rkentry.Entry, f func()) {
 	boot.preloadF[entryType][entryName] = f
 }
 
-// Bootstrap entries in rkentry.GlobalAppCtx including bellow:
-//
-// Internal entries:
-// 1: rkentry.AppInfoEntry
-// 2: rkentry.ConfigEntry
-// 3: rkentry.LoggerEntry
-// 4: rkentry.EventEntry
-// 5: rkentry.CertEntry
-//
-// External entries:
-// User defined entries
+// Bootstrap entries as sequence of plugin, user defined and web framework
 func (boot *Boot) Bootstrap(ctx context.Context) {
 	defer syncLog(boot.EventId)
 
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
-	// Bootstrap external entries
-	for _, m := range rkentry.GlobalAppCtx.ListEntries() {
-		for _, entry := range m {
-			if m, ok := boot.preloadF[entry.GetType()]; ok {
-				if v, ok := m[entry.GetName()]; ok {
-					v()
-				}
+	for _, entry := range boot.pluginEntries {
+		if m, ok := boot.preloadF[entry.GetType()]; ok {
+			if f, ok := m[entry.GetName()]; ok {
+				f()
 			}
-
-			entry.Bootstrap(ctx)
 		}
+		entry.Bootstrap(ctx)
+	}
+
+	for _, entry := range boot.userEntries {
+		if m, ok := boot.preloadF[entry.GetType()]; ok {
+			if f, ok := m[entry.GetName()]; ok {
+				f()
+			}
+		}
+		entry.Bootstrap(ctx)
+	}
+
+	for _, entry := range boot.webEntries {
+		if m, ok := boot.preloadF[entry.GetType()]; ok {
+			if f, ok := m[entry.GetName()]; ok {
+				f()
+			}
+		}
+		entry.Bootstrap(ctx)
 	}
 }
 
@@ -141,17 +154,7 @@ func (boot *Boot) AddShutdownHookFunc(name string, f rkentry.ShutdownHook) {
 	rkentry.GlobalAppCtx.AddShutdownHook(name, f)
 }
 
-// Interrupt entries in rkentry.GlobalAppCtx including bellow:
-//
-// Internal entries:
-// 1: rkentry.AppInfoEntry
-// 2: rkentry.ConfigEntry
-// 3: rkentry.ZapLoggerEntry
-// 4: rkentry.EventLoggerEntry
-// 5: rkentry.CertEntry
-//
-// External entries:
-// User defined entries
+// Interrupt entries as sequence of plugin, user defined and web framework
 func (boot *Boot) interrupt(ctx context.Context) {
 	defer syncLog(boot.EventId)
 

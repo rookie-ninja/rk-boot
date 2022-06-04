@@ -11,6 +11,7 @@
 #  - name: my-logger                                       # Required
 #    description: "Description of entry"                   # Optional
 #    domain: "*"                                           # Optional, default: "*"
+#    default: false                                        # Optional, default: false, use as default logger entry
 #    zap:                                                  # Optional
 #      level: info                                         # Optional, default: info
 #      development: true                                   # Optional, default: true
@@ -56,6 +57,7 @@
 #  - name: my-event                                        # Required
 #    description: "Description of entry"                   # Optional
 #    domain: "*"                                           # Optional, default: "*"
+#    default: false                                        # Optional, default: false, use as default event entry
 #    encoding: console                                     # Optional, default: console
 #    outputPaths: ["stdout"]                               # Optional, default: [stdout]
 #    lumberjack:                                           # Optional, default: nil
@@ -109,7 +111,7 @@ grpc:
 #      unmarshal:                                          # Optional, default: nil
 #        allowPartial: false                               # Optional, default: false
 #        discardUnknown: false                             # Optional, default: false
-#    noRecvMsgSizeLimit: true                              # Optional, default: 4MB
+#    noRecvMsgSizeLimit: true                              # Optional, default: false
 #    certEntry: my-cert                                    # Optional, default: "", reference of cert entry declared above
 #    loggerEntry: my-logger                                # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
 #    eventEntry: my-event                                  # Optional, default: "", reference of cert entry declared above, STDOUT will be used if missing
@@ -148,6 +150,7 @@ grpc:
 #        certEntry: my-cert                                # Optional, default: "", reference of cert entry declared above
 #    middleware:
 #      ignore: [""]                                        # Optional, default: []
+#      errorModel: google                                  # Optional, default: google, [amazon, google] are supported options
 #      logging:
 #        enabled: true                                     # Optional, default: false
 #        ignore: [""]                                      # Optional, default: []
@@ -205,6 +208,7 @@ grpc:
 #        enabled: true                                     # Optional, default: false
 #        ignore: [ "" ]                                    # Optional, default: []
 #        signerEntry: ""                                   # Optional, default: ""
+#        skipVerify: false                                 # Optional, default: false
 #        symmetric:                                        # Optional
 #          algorithm: ""                                   # Required, default: ""
 #          token: ""                                       # Optional, default: ""

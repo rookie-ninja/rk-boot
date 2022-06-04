@@ -83,7 +83,7 @@ func assertPanic(t *testing.T) {
 
 // Register entry, must be in init() function since we need to register entry at beginning
 func init() {
-	rkentry.RegisterEntryRegFunc(RegisterMyEntriesFromConfig)
+	rkentry.RegisterUserEntryRegFunc(RegisterMyEntriesFromConfig)
 }
 
 // A struct which is for unmarshalled YAML
