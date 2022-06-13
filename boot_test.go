@@ -24,14 +24,25 @@ myEntry:
   enabled: true
 `
 
+	triggerBefore := false
+	triggerAfter := false
+
 	boot := NewBoot(WithBootConfigRaw([]byte(config)))
 	boot.AddShutdownHookFunc("ut-shutdown", func() {
 		// noop
+	})
+	boot.AddHookFuncBeforeBootstrap("myEntry", "ut", func(ctx context.Context) {
+		triggerBefore = true
+	})
+	boot.AddHookFuncAfterBootstrap("myEntry", "ut", func(ctx context.Context) {
+		triggerAfter = true
 	})
 
 	boot.Bootstrap(context.TODO())
 
 	assert.Len(t, rkentry.GlobalAppCtx.ListEntriesByType("myEntry"), 1)
+	assert.True(t, triggerBefore)
+	assert.True(t, triggerAfter)
 
 	go func() {
 		boot.WaitForShutdownSig(context.TODO())
@@ -51,16 +62,8 @@ func TestNewBoot_WithEmbedCase(t *testing.T) {
 	myEntry := rkentry.GlobalAppCtx.GetEntry("myEntry", "ut")
 	assert.NotNil(t, myEntry)
 
-	preCall := false
-
-	boot.AddPreloadFuncBeforeBootstrap(myEntry, func() {
-		preCall = true
-	})
-
 	boot.Bootstrap(context.TODO())
 	boot.interrupt(context.TODO())
-
-	assert.True(t, preCall)
 
 	rkentry.GlobalAppCtx.RemoveEntry(rkentry.GlobalAppCtx.GetEntry("myEntry", "ut"))
 }
