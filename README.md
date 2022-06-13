@@ -14,7 +14,7 @@
 ## Join discussing channel
 | Channel            | Code                                             |
 |--------------------|--------------------------------------------------|
-| Wechat group (CN)  | ![image](docs/img/wechat-group-cn.jpeg)          |
+| Wechat group (CN)  | ![image](docs/img/wechat-group-cn.png)           |
 | Slack channel (EN) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
 
 ## Important note about V2
