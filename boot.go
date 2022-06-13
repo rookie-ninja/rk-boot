@@ -19,16 +19,41 @@ import (
 	"runtime/debug"
 )
 
+type hookFuncM map[string]map[string]func(ctx context.Context)
+
+func newHookFuncM() hookFuncM {
+	return map[string]map[string]func(ctx context.Context){}
+}
+
+func (m hookFuncM) addFunc(entryType, entryName string, f func(ctx context.Context)) {
+	if _, ok := m[entryType]; !ok {
+		m[entryType] = make(map[string]func(ctx context.Context))
+	}
+
+	m[entryType][entryName] = f
+}
+
+func (m hookFuncM) getFunc(entryType, entryName string) func(ctx context.Context) {
+	if inner, ok := m[entryType]; ok {
+		if f, ok := inner[entryName]; ok {
+			return f
+		}
+	}
+
+	return func(ctx context.Context) {}
+}
+
 // Boot is a structure for bootstrapping rk style application
 type Boot struct {
-	bootConfigPath string                       `yaml:"-" json:"-"`
-	embedFS        *embed.FS                    `yaml:"-" json:"-"`
-	bootConfigRaw  []byte                       `yaml:"-" json:"-"`
-	preloadF       map[string]map[string]func() `yaml:"-" json:"-"`
-	EventId        string                       `yaml:"-" json:"-"`
-	pluginEntries  map[string]rkentry.Entry
-	userEntries    map[string]rkentry.Entry
-	webEntries     map[string]rkentry.Entry
+	bootConfigPath string    `yaml:"-" json:"-"`
+	embedFS        *embed.FS `yaml:"-" json:"-"`
+	bootConfigRaw  []byte    `yaml:"-" json:"-"`
+	beforeHookF    hookFuncM `yaml:"-" json:"-"`
+	afterHookF     hookFuncM `yaml:"-" json:"-"`
+	EventId        string    `yaml:"-" json:"-"`
+	pluginEntries  map[string]map[string]rkentry.Entry
+	userEntries    map[string]map[string]rkentry.Entry
+	webEntries     map[string]map[string]rkentry.Entry
 }
 
 // BootOption is used as options while bootstrapping from code
@@ -57,10 +82,11 @@ func NewBoot(opts ...BootOption) *Boot {
 
 	boot := &Boot{
 		EventId:       rkmid.GenerateRequestId(),
-		preloadF:      map[string]map[string]func(){},
-		pluginEntries: map[string]rkentry.Entry{},
-		userEntries:   map[string]rkentry.Entry{},
-		webEntries:    map[string]rkentry.Entry{},
+		beforeHookF:   newHookFuncM(),
+		afterHookF:    newHookFuncM(),
+		pluginEntries: map[string]map[string]rkentry.Entry{},
+		userEntries:   map[string]map[string]rkentry.Entry{},
+		webEntries:    map[string]map[string]rkentry.Entry{},
 	}
 
 	for i := range opts {
@@ -73,40 +99,51 @@ func NewBoot(opts ...BootOption) *Boot {
 	rkentry.BootstrapBuiltInEntryFromYAML(raw)
 
 	for _, f := range rkentry.ListPluginEntryRegFunc() {
-		for k, v := range f(raw) {
-			boot.pluginEntries[k] = v
+		for _, v := range f(raw) {
+			if boot.pluginEntries[v.GetType()] == nil {
+				boot.pluginEntries[v.GetType()] = make(map[string]rkentry.Entry)
+			}
+			boot.pluginEntries[v.GetType()][v.GetName()] = v
 		}
 	}
 
 	for _, f := range rkentry.ListUserEntryRegFunc() {
-		for k, v := range f(raw) {
-			boot.userEntries[k] = v
+		for _, v := range f(raw) {
+			if boot.userEntries[v.GetType()] == nil {
+				boot.userEntries[v.GetType()] = make(map[string]rkentry.Entry)
+			}
+			boot.userEntries[v.GetType()][v.GetName()] = v
 		}
 	}
 
 	for _, f := range rkentry.ListWebFrameEntryRegFunc() {
-		for k, v := range f(raw) {
-			boot.webEntries[k] = v
+		for _, v := range f(raw) {
+			if boot.webEntries[v.GetType()] == nil {
+				boot.webEntries[v.GetType()] = make(map[string]rkentry.Entry)
+			}
+			boot.webEntries[v.GetType()][v.GetName()] = v
 		}
 	}
 
 	return boot
 }
 
-// AddPreloadFuncBeforeBootstrap run functions before certain entry Bootstrap()
-func (boot *Boot) AddPreloadFuncBeforeBootstrap(entry rkentry.Entry, f func()) {
-	if entry == nil || f == nil {
+// AddHookFuncBeforeBootstrap run functions before certain entry Bootstrap()
+func (boot *Boot) AddHookFuncBeforeBootstrap(entryType, entryName string, f func(ctx context.Context)) {
+	if f == nil {
 		return
 	}
 
-	entryName := entry.GetName()
-	entryType := entry.GetType()
+	boot.beforeHookF.addFunc(entryType, entryName, f)
+}
 
-	if _, ok := boot.preloadF[entryType]; !ok {
-		boot.preloadF[entryType] = make(map[string]func())
+// AddHookFuncAfterBootstrap run functions before certain entry Bootstrap()
+func (boot *Boot) AddHookFuncAfterBootstrap(entryType, entryName string, f func(ctx context.Context)) {
+	if f == nil {
+		return
 	}
 
-	boot.preloadF[entryType][entryName] = f
+	boot.afterHookF.addFunc(entryType, entryName, f)
 }
 
 // Bootstrap entries as sequence of plugin, user defined and web framework
@@ -115,31 +152,28 @@ func (boot *Boot) Bootstrap(ctx context.Context) {
 
 	ctx = context.WithValue(ctx, "eventId", boot.EventId)
 
-	for _, entry := range boot.pluginEntries {
-		if m, ok := boot.preloadF[entry.GetType()]; ok {
-			if f, ok := m[entry.GetName()]; ok {
-				f()
-			}
+	for entryType, byEntryName := range boot.pluginEntries {
+		for entryName, e := range byEntryName {
+			boot.beforeHookF.getFunc(entryType, entryName)(ctx)
+			e.Bootstrap(ctx)
+			boot.afterHookF.getFunc(entryType, entryName)(ctx)
 		}
-		entry.Bootstrap(ctx)
 	}
 
-	for _, entry := range boot.userEntries {
-		if m, ok := boot.preloadF[entry.GetType()]; ok {
-			if f, ok := m[entry.GetName()]; ok {
-				f()
-			}
+	for entryType, byEntryName := range boot.userEntries {
+		for entryName, e := range byEntryName {
+			boot.beforeHookF.getFunc(entryType, entryName)(ctx)
+			e.Bootstrap(ctx)
+			boot.afterHookF.getFunc(entryType, entryName)(ctx)
 		}
-		entry.Bootstrap(ctx)
 	}
 
-	for _, entry := range boot.webEntries {
-		if m, ok := boot.preloadF[entry.GetType()]; ok {
-			if f, ok := m[entry.GetName()]; ok {
-				f()
-			}
+	for entryType, byEntryName := range boot.webEntries {
+		for entryName, e := range byEntryName {
+			boot.beforeHookF.getFunc(entryType, entryName)(ctx)
+			e.Bootstrap(ctx)
+			boot.afterHookF.getFunc(entryType, entryName)(ctx)
 		}
-		entry.Bootstrap(ctx)
 	}
 }
 
