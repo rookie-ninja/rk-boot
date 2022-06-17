@@ -12,7 +12,7 @@ This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We su
 ```
 go get github.com/rookie-ninja/rk-boot/v2
 go get github.com/rookie-ninja/rk-gin/v2
-go get github.com/rookie-ninja/rk-db/mongo
+go get github.com/rookie-ninja/rk-db/mongodb
 ```
 
 ## Quick Start
@@ -184,9 +184,6 @@ func UpdateUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, "user not found")
 		return
 	}
-
-	bytes, _ := json.Marshal(user)
-	fmt.Println(string(bytes))
 
 	ctx.JSON(http.StatusOK, user)
 }
