@@ -133,7 +133,7 @@ func GetTodo(ctx *gin.Context) {
 // @Router /v1/todo [post]
 func CreateTodo(ctx *gin.Context) {
 	t := &Todo{}
-	ctx.BindJSON(&t)
+	ctx.BindJSON(t)
 	t.Completed = false
 	t.CreatedAt = time.Now()
 
@@ -159,7 +159,7 @@ func CreateTodo(ctx *gin.Context) {
 func UpdateTodo(ctx *gin.Context) {
 	id, _ := primitive.ObjectIDFromHex(ctx.Param("id"))
 	t := &Todo{}
-	ctx.BindJSON(&t)
+	ctx.BindJSON(t)
 	t.CreatedAt = time.Now()
 
 	res, err := todoCollection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{
