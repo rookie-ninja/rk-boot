@@ -53,10 +53,10 @@ func main() {
 
 type Todo struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Title     string             `json:"title"`
-	Body      string             `json:"body"`
-	Completed bool               `json:"completed"`
-	CreatedAt time.Time          `json:"created_at"`
+	Title     string             `json:"title" bson:"title"`
+	Body      string             `json:"body" bson:"body"`
+	Completed bool               `json:"completed" bson:"completed"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
 
 // @Summary Hello world
@@ -114,8 +114,8 @@ func GetTodo(ctx *gin.Context) {
 		return
 	}
 
-	t := Todo{}
-	err := res.Decode(&t)
+	t := &Todo{}
+	err := res.Decode(t)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -133,11 +133,17 @@ func GetTodo(ctx *gin.Context) {
 // @Router /v1/todo [post]
 func CreateTodo(ctx *gin.Context) {
 	t := &Todo{}
-	ctx.BindJSON(t)
+	err := ctx.BindJSON(t)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	// default value if not input
 	t.Completed = false
 	t.CreatedAt = time.Now()
 
-	_, err := todoCollection.InsertOne(context.Background(), t)
+	_, err = todoCollection.InsertOne(context.Background(), t)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -159,7 +165,14 @@ func CreateTodo(ctx *gin.Context) {
 func UpdateTodo(ctx *gin.Context) {
 	id, _ := primitive.ObjectIDFromHex(ctx.Param("id"))
 	t := &Todo{}
-	ctx.BindJSON(t)
+
+	err := ctx.BindJSON(t)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	// default value if not input
 	t.CreatedAt = time.Now()
 
 	res, err := todoCollection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{

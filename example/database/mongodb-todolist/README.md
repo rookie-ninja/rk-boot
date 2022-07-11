@@ -19,7 +19,7 @@ go get github.com/rookie-ninja/rk-gin/v2
 ```yaml
 ---
 gin:
-  - name: rk-demo
+  - name: todo-service
     port: 3000
     enabled: true
     commonService:
@@ -35,6 +35,12 @@ gin:
         enabled: true
       prom:
         enabled: true
+mongo:
+  - name: "todo-mongo" # Required
+    enabled: true # Required
+    simpleURI: "mongodb://localhost:27017" # Required
+    database:
+      - name: "tododb" # Required
 ```
 
 ### 2.Create main.go
@@ -94,10 +100,10 @@ func main() {
 
 type Todo struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Title     string             `json:"title"`
-	Body      string             `json:"body"`
-	Completed bool               `json:"completed"`
-	CreatedAt time.Time          `json:"created_at"`
+	Title     string             `json:"title" bson:"title"`
+	Body      string             `json:"body" bson:"body"`
+	Completed bool               `json:"completed" bson:"completed"`
+	CreatedAt time.Time          `json:"created_at" bson:"created_at"`
 }
 
 // @Summary Hello world
@@ -155,8 +161,8 @@ func GetTodo(ctx *gin.Context) {
 		return
 	}
 
-	t := Todo{}
-	err := res.Decode(&t)
+	t := &Todo{}
+	err := res.Decode(t)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -174,11 +180,17 @@ func GetTodo(ctx *gin.Context) {
 // @Router /v1/todo [post]
 func CreateTodo(ctx *gin.Context) {
 	t := &Todo{}
-	ctx.BindJSON(&t)
+	err := ctx.BindJSON(t)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	// default value if not input
 	t.Completed = false
 	t.CreatedAt = time.Now()
 
-	_, err := todoCollection.InsertOne(context.Background(), t)
+	_, err = todoCollection.InsertOne(context.Background(), t)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, err)
@@ -200,7 +212,14 @@ func CreateTodo(ctx *gin.Context) {
 func UpdateTodo(ctx *gin.Context) {
 	id, _ := primitive.ObjectIDFromHex(ctx.Param("id"))
 	t := &Todo{}
-	ctx.BindJSON(&t)
+
+	err := ctx.BindJSON(t)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	// default value if not input
 	t.CreatedAt = time.Now()
 
 	res, err := todoCollection.UpdateOne(context.Background(), bson.M{"_id": id}, bson.M{
@@ -273,7 +292,7 @@ $ curl -X GET localhost:3000/rk/v1/alive
 }
 ```
 
-- Swagger UI: [http://localhost:3000/sw](http://localhost:3000/sw)
+- Swagger UI: [http://localhost:3000/sw/](http://localhost:3000/sw/)
 
 - Docs UI via: [http://localhost:3000/docs](http://localhost:3000/docs)
 
