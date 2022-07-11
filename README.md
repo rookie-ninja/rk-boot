@@ -218,3 +218,7 @@ issues and pull requests, but you can also report any negative conduct to
 lark@rkdev.info.
 
 Released under the [Apache 2.0 License](LICENSE).
+
+## Stars
+
+[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
