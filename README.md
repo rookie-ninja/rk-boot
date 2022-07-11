@@ -220,6 +220,8 @@ lark@rkdev.info.
 
 Released under the [Apache 2.0 License](LICENSE).
 
+## Star
+[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot?ref=badge_large)
