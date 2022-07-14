@@ -220,5 +220,6 @@ Released under the [Apache 2.0 License](LICENSE).
 | Wechat group (Chinese)  | ![image](docs/img/wechat-group-cn.png)           |
 | Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/) |
 
-## Stars
-[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=rookie-ninja/rk-boot&type=Date)](https://star-history.com/#rookie-ninja/rk-boot&Date)
