@@ -21,7 +21,7 @@
   <a href="https://rkdev.info">
     <img src="https://img.shields.io/badge/Official Site-blue?logo=mdbook&logoColor=white&style=for-the-badge" alt="Docs Badge"/>
   </a>
-  <a href="https://rk-syz1767.slack.com/rk-boot">
+  <a href="https://rk-syz1767.slack.com/">
     <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Docs Badge"/>
   </a>
 </div>
@@ -218,7 +218,7 @@ Released under the [Apache 2.0 License](LICENSE).
 | Channel                 | Code                                             |
 |-------------------------|--------------------------------------------------|
 | Wechat group (Chinese)  | ![image](docs/img/wechat-group-cn.png)           |
-| Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
+| Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/) |
 
 ## Stars
 [![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
