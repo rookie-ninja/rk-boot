@@ -40,15 +40,18 @@ Standardize, unify and simplify microservice is huge challenge when project are 
 ## Quick Start
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
 
-- Installation
-  [rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-gin as dependency since we are testing GIN.
+### Install 
 
 ```shell
 go get github.com/rookie-ninja/rk-boot/v2
 go get github.com/rookie-ninja/rk-gin/v2
 ```
 
-- boot.yaml
+### Code
+
+<details>
+  <summary>boot.yaml</summary>
+
 ```yaml
 ---
 gin:
@@ -58,8 +61,11 @@ gin:
     sw:
       enabled: true                                        # Optional, default: false
 ```
+</details>
 
-- main.go
+<details>
+  <summary>main.go</summary>
+
 ```go
 // Copyright (c) 2021 rookie-ninja
 //
@@ -123,8 +129,13 @@ type GreeterResponse struct {
 	Message string
 }
 ```
+</details>
 
-- validate
+### Validate
+
+<details>
+  <summary>Check API</summary>
+
 ```shell script
 $ go run main.go
 
@@ -141,10 +152,15 @@ $ curl -X GET localhost:8080/rk/v1/alive
   "alive": true
 }
 ```
+</details>
 
-- Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
+<details>
+  <summary>Check Swagger UI</summary>
+
+Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
 
 ![image](example/web/gin/docs/img/simple-sw.png)
+</details>
 
 ## Supported plugins
 <table>
