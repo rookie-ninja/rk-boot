@@ -1,93 +1,47 @@
-# rk-boot
-[![build](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml/badge.svg)](https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/rookie-ninja/rk-boot/branch/master/graph/badge.svg?token=BZ6KWGAXNP)](https://codecov.io/gh/rookie-ninja/rk-boot)
-[![Go Report Card](https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot)](https://goreportcard.com/report/github.com/rookie-ninja/rk-boot)
-[![Sourcegraph](https://sourcegraph.com/github.com/rookie-ninja/rk-boot/-/badge.svg)](https://sourcegraph.com/github.com/rookie-ninja/rk-boot?badge)
-[![GoDoc](https://godoc.org/github.com/rookie-ninja/rk-boot?status.svg)](https://godoc.org/github.com/rookie-ninja/rk-boot)
-[![Release](https://img.shields.io/github/release/rookie-ninja/rk-boot.svg?style=flat-square)](https://github.com/rookie-ninja/rk-boot/releases)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot?ref=badge_shield)
+<p align="center">
+  <a href="https://rkdev.info"><img src="docs/img/rk-boot-logo.png" alt="rk-boot" width="298" /></a> 
+</p>
+<p align="center">
+  Build microservice with rk-boot and let the team take over clean and tidy code.
+</p>
+<p align="center">
+ <a href="https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml"><img src="https://github.com/rookie-ninja/rk-boot/actions/workflows/ci.yml/badge.svg"></a>
+ <a href="https://codecov.io/gh/rookie-ninja/rk-boot"><img src="https://codecov.io/gh/rookie-ninja/rk-boot/branch/master/graph/badge.svg?token=BZ6KWGAXNP"></a>
+ <a href="https://goreportcard.com/report/github.com/rookie-ninja/rk-boot"><img src="https://goreportcard.com/badge/github.com/rookie-ninja/rk-boot"></a>
+ <a href="https://sourcegraph.com/github.com/rookie-ninja/rk-boot?badge"><img src="https://sourcegraph.com/github.com/rookie-ninja/rk-boot/-/badge.svg"></a>
+ <a href="https://godoc.org/github.com/rookie-ninja/rk-boot"><img src="https://godoc.org/github.com/rookie-ninja/rk-boot?status.svg"></a>
+ <a href="https://github.com/rookie-ninja/rk-boot/releases"><img src="https://img.shields.io/github/release/rookie-ninja/rk-boot.svg?style=flat-square"></a>
+ <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"></a>
+<p>
 
-## Official site
-[rkdev.info](https://rkdev.info)
+<div id="badges" align="center">
+  <a href="https://medium.com/@pointgoal">
+    <img src="https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white" alt="Medium Badge"/>
+  </a>
+  <a href="https://rkdev.info">
+    <img src="https://img.shields.io/badge/Official Site-blue?logo=mdbook&logoColor=white&style=for-the-badge" alt="Docs Badge"/>
+  </a>
+  <a href="https://rk-syz1767.slack.com/rk-boot">
+    <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Docs Badge"/>
+  </a>
+</div>
 
-## Join discussing channel
-| Channel            | Code                                             |
-|--------------------|--------------------------------------------------|
-| Wechat group (CN)  | ![image](docs/img/wechat-group-cn.png)           |
-| Slack channel (EN) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
-
-## Important note about V2
-> RK family is bumping up to V2 which will not be full compatible with V1 including documentation. Please refer to V1 as needed.
->
-> From V2, rk-boot will not include any of dependencies which implement rkentry.Entry. As a result, user need to pull rk-boot and rk-xxx or user implemented Entry manually.
-> 
-> We think it will be a better experience for dependency management.
-> 
-> For example, if we hope to start Gin web framework, we need to pull both of rk-boot and rk-gin. [example](example/gin)
-
-## Official document
-V2 documentation will be updated soon. Please refer to github docs now.
+<p align="center">
+ <a href=""><img src="docs/img/rk-op.gif"></a>
+<p>
 
 ## Concept
-rk-boot is a library which support bootstrapping server at runtime via YAML file. It is a little like [spring boot](https://spring.io/quickstart) way.
+rk-boot is a library which can manage backend service dependencies with YAML.
 
-![arch](docs/img/boot-arch.png)
+Standardize, unify and simplify microservice is huge challenge when project are getting bigger. Build microservice with rk-boot and let the team take over clean and tidy code.
 
-### Goal
-We hope user can achieve bellow goals while designing/implementing microservice.
+![image](docs/img/boot-arch.png)
 
-- 1: **Decide** which dependencies to use. (For example, MySQL, Redis, AWS, Gin are the required dependencies.)
-- 2: **Add** dependencies in boot.yaml (where rk-boot will automatically initiate dependency client instances.)
-- 3: **Implement** your own codes (without caring about logging, metrics and tracing of dependency client.)
-- 4: **Monitor** service and dependency (via a standard dashboard.)
-
-We are planning to achieve this goal by unify dependency input(by boot.yaml) and output(logging format, metrics format etc).
-
-We will add more bootstrapper for popular third-party dependencies.
-
-### Why do I want it?
-- Build application with unified project layout at enterprise level .
-- Build API with the unified format of logging, metrics, tracing, authorization at enterprise level.
-- Make application replace core dependencies quickly.
-- Save learning time of writing initializing procedure of popular frameworks and libraries.
-- User defined Entry for customization.
-
-## Plugins V2
-We will migrate dependencies from v1 to v2 as quick as possible.
-
-|      Category      | Name                                                           | V2  | go get                                          | Example                                |
-|:------------------:|----------------------------------------------------------------|-----|-------------------------------------------------|----------------------------------------|
-| Web<br/> Framework | [gin-gonic/gin](https://github.com/gin-gonic/gin)              | ✅   | github.com/rookie-ninja/rk-gin/v2               | [example](example/web/gin)             |
-|                    | [gRPC](https://grpc.io/docs/languages/go/)                     | ✅   | github.com/rookie-ninja/rk-grpc/v2              | [example](example/web/grpc)            |
-|                    | [labstack/echo](https://github.com/labstack/echo)              | ✅   | github.com/rookie-ninja/rk-echo                 | [example](example/web/echo)            |
-|                    | [gogf/gf](https://github.com/gogf/gf)                          | ✅   | github.com/rookie-ninja/rk-gf                   | [example](example/web/gf)              |
-|                    | [gofiber/fiber](https://github.com/gofiber/fiber)              | ✅   | github.com/rookie-ninja/rk-fiber                | [example](example/web/fiber)           |
-|                    | [zeromicro/go-zero](https://github.com/zeromicro/go-zero)      | ✅   | github.com/rookie-ninja/rk-zero                 | [example](example/web/zero)            |
-|                    | [gorilla/mux](https://github.com/gorilla/mux)                  | ✅   | github.com/rookie-ninja/rk-mux                  | [example](example/web/mux)             |
-| Database<br/> ORM  | [MySQL](https://github.com/rookie-ninja/rk-db)                 | ✅   | github.com/rookie-ninja/rk-db/mysql             | [example](example/database/mysql)      |
-|                    | [SQLite](https://github.com/rookie-ninja/rk-db)                | ✅   | github.com/rookie-ninja/rk-db/sqlite            | [example](example/database/sqlite)     |
-|                    | [SQL Server](https://github.com/rookie-ninja/rk-db)            | ✅   | github.com/rookie-ninja/rk-db/sqlserver         | [example](example/database/sqlserver)  |
-|                    | [postgreSQL](https://github.com/rookie-ninja/rk-db)            | ✅   | github.com/rookie-ninja/rk-db/postgres          | [example](example/database/postgres)   |
-|                    | [ClickHouse](https://github.com/rookie-ninja/rk-db)            | ✅   | github.com/rookie-ninja/rk-db/clickhouse        | [example](example/database/clickhouse) |
-|                    | [MongoDB](https://github.com/rookie-ninja/rk-db)               | ✅   | github.com/rookie-ninja/rk-db/mongodb           | [example](example/database/mongodb)    |
-|                    | [Redis](https://github.com/rookie-ninja/rk-db)                 | ✅   | github.com/rookie-ninja/rk-db/redis             | [example](example/database/redis)      |
-|      Caching       | [Redis](https://github.com/rookie-ninja/rk-cache)              | ✅   | github.com/rookie-ninja/rk-cache/redis          | [example](example/cache/redis)         |
-|       Cloud        | [AWS](https://github.com/rookie-ninja/rk-cloud)                | ✅   | github.com/rookie-ninja/rk-cloud/aws            | TODO                                   |
-|                    | [AWS/KMS](https://github.com/rookie-ninja/rk-cloud)            | ✅   | github.com/rookie-ninja/rk-cloud/aws/kms        | TODO                                   |
-|                    | [AWS/KMS/Signer](https://github.com/rookie-ninja/rk-cloud)     | ✅   | github.com/rookie-ninja/rk-cloud/aws/signer     | TODO                                   |
-|                    | [AWS/KMS/Crypto](https://github.com/rookie-ninja/rk-cloud)     | ✅   | github.com/rookie-ninja/rk-cloud/aws/crypto     | TODO                                   |
-|                    | [Tencent](https://github.com/rookie-ninja/rk-cloud)            | ✅   | github.com/rookie-ninja/rk-cloud/tencent        | TODO                                   |
-|                    | [Tencent/KMS](https://github.com/rookie-ninja/rk-cloud)        | ✅   | github.com/rookie-ninja/rk-cloud/tencent/kms    | TODO                                   |
-|                    | [Tencent/KMS/Signer](https://github.com/rookie-ninja/rk-cloud) | ✅   | github.com/rookie-ninja/rk-cloud/tencent/signer | TODO                                   |
-|                    | [Tencent/KMS/Crypto](https://github.com/rookie-ninja/rk-cloud) | ✅   | github.com/rookie-ninja/rk-cloud/tencent/crypto | TODO                                   |
-
-
-## Quick Start for Gin
+## Quick Start
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
 
 - Installation
-[rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-gin as dependency since we are testing GIN.
+  [rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-gin as dependency since we are testing GIN.
 
 ```shell
 go get github.com/rookie-ninja/rk-boot/v2
@@ -102,8 +56,6 @@ gin:
     port: 8080                                             # Required
     enabled: true                                          # Required
     sw:
-      enabled: true                                        # Optional, default: false
-    docs:
       enabled: true                                        # Optional, default: false
 ```
 
@@ -194,9 +146,51 @@ $ curl -X GET localhost:8080/rk/v1/alive
 
 ![image](example/web/gin/docs/img/simple-sw.png)
 
-- Docs UI via: [http://localhost:8080/docs](http://localhost:8080/docs)
-
-![image](example/web/gin/docs/img/simple-docs.png)
+## Supported plugins
+<table>
+    <tr>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/gin/" target="_blank"><img src="https://www.rkdev.info/images/grpc.svg" width="110" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/grpc/" target="_blank"><img src="https://www.rkdev.info/images/gin.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/echo/" target="_blank"><img src="https://www.rkdev.info/images/echo.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/gf/" target="_blank"><img src="https://www.rkdev.info/images/goframe.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/fiber/" target="_blank"><img src="https://www.rkdev.info/images/fiber.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/zero/" target="_blank"><img src="https://www.rkdev.info/images/go-zero.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/mux/" target="_blank"><img src="https://www.rkdev.info/images/mux.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/mysql/" target="_blank"><img src="https://www.rkdev.info/images/mysql.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/sqlite/" target="_blank"><img src="https://www.rkdev.info/images/sqlite.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/sqlserver/" target="_blank"><img src="https://www.rkdev.info/images/sqlserver.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/postgres/" target="_blank"><img src="https://www.rkdev.info/images/postgresql.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/clickhouse/" target="_blank"><img src="https://www.rkdev.info/images/clickhouse.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/mongodb/" target="_blank"><img src="https://www.rkdev.info/images/mongodb.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/redis/" target="_blank"><img src="https://www.rkdev.info/images/redis.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://github.com/rookie-ninja/rk-cloud" target="_blank"><img src="https://www.rkdev.info/images/aws.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle"><a href="https://github.com/rookie-ninja/rk-cloud" target="_blank"><img src="https://www.rkdev.info/images/tencentcloud.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/swagger-ui/" target="_blank"><img src="https://www.rkdev.info/images/swagger.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/prometheus-client/" target="_blank"><img src="https://www.rkdev.info/images/prom.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/docs-ui/" target="_blank"><img src="https://www.rkdev.info/images/rapi.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/pprof/" target="_blank"><img src="https://www.rkdev.info/images/pprof.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/config/" target="_blank"><img src="https://www.rkdev.info/images/viper.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/logging/" target="_blank"><img src="https://www.rkdev.info/images/zap.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/tls/" target="_blank"><img src="https://www.rkdev.info/images/tls.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-gzip/" target="_blank"><img src="https://www.rkdev.info/images/gzip.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-timeout/" target="_blank"><img src="https://www.rkdev.info/images/timeout.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+    <tr>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-csrf/" target="_blank"><img src="https://www.rkdev.info/images/csrf.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-cors/" target="_blank"><img src="https://www.rkdev.info/images/cors.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-jwt/" target="_blank"><img src="https://www.rkdev.info/images/jwt.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-auth/" target="_blank"><img src="https://www.rkdev.info/images/auth.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-tracing/" target="_blank"><img src="https://www.rkdev.info/images/trace.svg" width="110" height="100" valign="middle" /></a></td>
+    </tr>
+</table>
 
 ## Development Status: Stable
 
@@ -204,7 +198,7 @@ $ curl -X GET localhost:8080/rk/v1/alive
 Simply run make all to validate your changes. Or run codes in example/ folder.
 
 - make all
-If proto or files in boot/assets were modified, then we need to run it.
+  If proto or files in boot/assets were modified, then we need to run it.
 
 ## Test instruction
 Run unit test with **make test** command.
@@ -220,8 +214,11 @@ lark@rkdev.info.
 
 Released under the [Apache 2.0 License](LICENSE).
 
-## Star
-[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
+## Join discussing channel
+| Channel                 | Code                                             |
+|-------------------------|--------------------------------------------------|
+| Wechat group (Chinese)  | ![image](docs/img/wechat-group-cn.png)           |
+| Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
 
-## License
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Frookie-ninja%2Frk-boot?ref=badge_large)
+## Stars
+[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
