@@ -386,13 +386,13 @@ github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUA
 github.com/rogpeppe/go-internal v1.8.0/go.mod h1:WmiCO8CzOY8rg0OYDC4/i/2WRWAB6poM+XZ2dLUbcbE=
 github.com/rookie-ninja/rk-boot/v2 v2.2.0 h1:O0MzQ23nxNmqIQApDr9R3ojfq9s0TSVEpnWa1Q+MDyg=
 github.com/rookie-ninja/rk-boot/v2 v2.2.0/go.mod h1:5Bvelo483YY8lT5VLUnps8MFH15nWuGCfJ01LOmVDCc=
-github.com/rookie-ninja/rk-db/mongodb v1.2.1 h1:424D5TVmKNibNMCjAAAqS7CoBxkUqGNQh49pzX5/O5E=
-github.com/rookie-ninja/rk-db/mongodb v1.2.1/go.mod h1:KIGU6sWowy1eUW3aMOZVwnsaiNr0j1CrARea273iSiY=
+github.com/rookie-ninja/rk-db/mongodb v1.2.2 h1:AJYy8BpD2LxQPWdE4r9UympLja/jMh88L0V75WWZ+Lo=
+github.com/rookie-ninja/rk-db/mongodb v1.2.2/go.mod h1:KIGU6sWowy1eUW3aMOZVwnsaiNr0j1CrARea273iSiY=
 github.com/rookie-ninja/rk-entry/v2 v2.2.1/go.mod h1:kCfoXKbC0Dw1rXcTlppCd7JCMJfNF6GY1g0h/FXPSrE=
 github.com/rookie-ninja/rk-entry/v2 v2.2.2 h1:5iO8JzMLIjx9O64IN9aLPH8AEJvF69vgOTu3rLwH3vM=
 github.com/rookie-ninja/rk-entry/v2 v2.2.2/go.mod h1:kCfoXKbC0Dw1rXcTlppCd7JCMJfNF6GY1g0h/FXPSrE=
-github.com/rookie-ninja/rk-gin/v2 v2.2.1 h1:ti43WupI2CadQ2I9zQr/ztF38BBGTl2XD/CpShZsR8U=
-github.com/rookie-ninja/rk-gin/v2 v2.2.1/go.mod h1:HdfQ/rOzWWdOouYm84C+87lpO30ZzCnml+1Bx09vhOs=
+github.com/rookie-ninja/rk-gin/v2 v2.2.3 h1:byxRF1Pv+ZYhwA1J1ti3dTEIByyguDgQznY8WlRNWl0=
+github.com/rookie-ninja/rk-gin/v2 v2.2.3/go.mod h1:fpTi324u9gw+4o8eCz2cRsZThb5s4nyWrTrs18IumgY=
 github.com/rookie-ninja/rk-logger v1.2.11 h1:QqfVnTFKVpjFnETB4lAVEzLWm5zSy/ghJpPICz1qo/w=
 github.com/rookie-ninja/rk-logger v1.2.11/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
 github.com/rookie-ninja/rk-query v1.2.14 h1:aYNyMXixpsEYRfEOz9Npt5QG3A6BQlo9vKjYc78x7bc=
