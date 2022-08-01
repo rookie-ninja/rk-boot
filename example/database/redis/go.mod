@@ -6,8 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.8.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/rookie-ninja/rk-boot/v2 v2.2.0
-	github.com/rookie-ninja/rk-db/redis v1.2.1
-	github.com/rookie-ninja/rk-gin/v2 v2.2.1
+	github.com/rookie-ninja/rk-db/redis v1.2.2
+	github.com/rookie-ninja/rk-gin/v2 v2.2.3
 )
 
 require (

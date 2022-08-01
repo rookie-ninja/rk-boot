@@ -6,7 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/rookie-ninja/rk-boot/v2 v2.2.2
 	github.com/rookie-ninja/rk-db/mongodb v1.2.2
-	github.com/rookie-ninja/rk-gin/v2 v2.2.1
+	github.com/rookie-ninja/rk-gin/v2 v2.2.3
 	go.mongodb.org/mongo-driver v1.9.1
 )
 
