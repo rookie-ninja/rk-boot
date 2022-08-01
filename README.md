@@ -21,7 +21,7 @@
   <a href="https://rkdev.info">
     <img src="https://img.shields.io/badge/Official Site-blue?logo=mdbook&logoColor=white&style=for-the-badge" alt="Docs Badge"/>
   </a>
-  <a href="https://rk-syz1767.slack.com/rk-boot">
+  <a href="https://rk-syz1767.slack.com/">
     <img src="https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white" alt="Docs Badge"/>
   </a>
 </div>
@@ -31,7 +31,7 @@
 <p>
 
 ## Concept
-rk-boot is a library which can manage backend service dependencies with YAML. 
+rk-boot is a library which can manage backend service dependencies with YAML.
 
 Standardize, unify and simplify microservice is huge challenge when project are getting bigger. Build microservice with rk-boot and let the team take over clean and tidy code.
 
@@ -40,15 +40,18 @@ Standardize, unify and simplify microservice is huge challenge when project are 
 ## Quick Start
 We will start [gin-gonic/gin](https://github.com/gin-gonic/gin) server with rk-boot.
 
-- Installation
-[rk-boot](https://github.com/rookie-ninja/rk-boot) is required one for all RK family. We pulled rk-gin as dependency since we are testing GIN.
+### Install
 
 ```shell
 go get github.com/rookie-ninja/rk-boot/v2
 go get github.com/rookie-ninja/rk-gin/v2
 ```
 
-- boot.yaml
+### Code
+
+<details>
+  <summary>boot.yaml</summary>
+
 ```yaml
 ---
 gin:
@@ -58,8 +61,11 @@ gin:
     sw:
       enabled: true                                        # Optional, default: false
 ```
+</details>
 
-- main.go
+<details>
+  <summary>main.go</summary>
+
 ```go
 // Copyright (c) 2021 rookie-ninja
 //
@@ -123,8 +129,13 @@ type GreeterResponse struct {
 	Message string
 }
 ```
+</details>
 
-- validate
+### Validate
+
+<details>
+  <summary>Check API</summary>
+
 ```shell script
 $ go run main.go
 
@@ -141,10 +152,15 @@ $ curl -X GET localhost:8080/rk/v1/alive
   "alive": true
 }
 ```
+</details>
 
-- Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
+<details>
+  <summary>Check Swagger UI</summary>
+
+Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
 
 ![image](example/web/gin/docs/img/simple-sw.png)
+</details>
 
 ## Supported plugins
 <table>
@@ -198,7 +214,7 @@ $ curl -X GET localhost:8080/rk/v1/alive
 Simply run make all to validate your changes. Or run codes in example/ folder.
 
 - make all
-If proto or files in boot/assets were modified, then we need to run it.
+  If proto or files in boot/assets were modified, then we need to run it.
 
 ## Test instruction
 Run unit test with **make test** command.
@@ -218,7 +234,8 @@ Released under the [Apache 2.0 License](LICENSE).
 | Channel                 | Code                                             |
 |-------------------------|--------------------------------------------------|
 | Wechat group (Chinese)  | ![image](docs/img/wechat-group-cn.png)           |
-| Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/rk-boot) |
+| Slack channel (English) | [#rk-boot](https://rk-syz1767.slack.com/) |
 
-## Stars
-[![Stargazers over time](https://starchart.cc/rookie-ninja/rk-boot.svg)](https://starchart.cc/rookie-ninja/rk-boot)
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=rookie-ninja/rk-boot&type=Date)](https://star-history.com/#rookie-ninja/rk-boot&Date)
