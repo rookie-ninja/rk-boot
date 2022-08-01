@@ -5,8 +5,8 @@ go 1.17
 require (
 	github.com/gin-gonic/gin v1.8.0
 	github.com/rookie-ninja/rk-boot/v2 v2.2.0
-	github.com/rookie-ninja/rk-db/sqlite v1.2.1
-	github.com/rookie-ninja/rk-gin/v2 v2.2.1
+	github.com/rookie-ninja/rk-db/sqlite v1.2.2
+	github.com/rookie-ninja/rk-gin/v2 v2.2.3
 	gorm.io/gorm v1.22.4
 )
 
