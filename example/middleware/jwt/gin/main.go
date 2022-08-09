@@ -19,6 +19,21 @@ import (
 	"time"
 )
 
+// @title Swagger Example API
+// @version 1.0
+// @description This is a sample rk-boot server.
+// @termsOfService http://swagger.io/terms/
+
+// @securityDefinitions.apikey JWT
+// @in header
+// @name Authorization
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Create a new boot instance.
 	boot := rkboot.NewBoot()
@@ -40,9 +55,18 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
+// Login handler
+// @Summary Login
+// @Id 1
+// @Tags JWT
+// @version 1.0
+// @Security  JWT
+// @Param name query string true "name"
+// @produce application/json
+// @Router /v1/login [get]
 func Login(ctx *gin.Context) {
 	// Simply generate JWT token from user provided name for demo
-	userName := ctx.Query("uname")
+	userName := ctx.Query("name")
 
 	now := time.Now()
 	claims := CustomClaims{
@@ -66,6 +90,14 @@ func Login(ctx *gin.Context) {
 	})
 }
 
+// WhoAmI handler
+// @Summary WhoAmI
+// @Id 2
+// @Tags JWT
+// @version 1.0
+// @Security  JWT
+// @produce application/json
+// @Router /v1/whoami [get]
 func WhoAmI(ctx *gin.Context) {
 	// 1: get JWT token from context which injected into context by middleware
 	token := rkginctx.GetJwtToken(ctx)

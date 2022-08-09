@@ -1,5 +1,5 @@
 .PHONY: all
-all: lint fmt
+all: lint fmt swag
 
 .PHONY: lint
 lint:
@@ -11,6 +11,13 @@ lint:
 fmt:
 	@echo "[fmt] Format go project..."
 	@gofmt -s -w . 2>&1
+	@echo "------------------------------------[Done]"
+
+.PHONY: swag
+swag:
+	@echo "[swag] Running swag..."
+	@swag init --generalInfo main.go --propertyStrategy camelcase
+	@rm -rf docs/docs.go
 	@echo "------------------------------------[Done]"
 
 
