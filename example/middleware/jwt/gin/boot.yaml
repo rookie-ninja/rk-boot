@@ -1,0 +1,20 @@
+---
+gin:
+  - name: greeter                                          # Required
+    port: 8080                                             # Required
+    enabled: true                                          # Required
+    middleware:
+      jwt:
+        enabled: true                                       # Optional, default: false
+        ignore:                                             # Optional, ignore swagger UI path and login path
+          - "/v1/login"
+#        symmetric:                                         # Optional
+#          algorithm: ""                                    # Required, default: ""
+#          token: ""                                        # Optional, default: ""
+#          tokenPath: ""                                    # Optional, default: ""
+#        asymmetric:                                        # Optional
+#          algorithm: ""                                    # Required, default: ""
+#          privateKey: ""                                   # Optional, default: ""
+#          privateKeyPath: ""                               # Optional, default: ""
+#          publicKey: ""                                    # Optional, default: ""
+#          publicKeyPath: ""                                # Optional, default: ""
