@@ -6,8 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.8.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-entry/v2 v2.2.3
-	github.com/rookie-ninja/rk-gin/v2 v2.2.3
+	github.com/rookie-ninja/rk-entry/v2 v2.2.4
+	github.com/rookie-ninja/rk-gin/v2 v2.2.5
 )
 
 replace github.com/rookie-ninja/rk-boot/v2 => ../../../../

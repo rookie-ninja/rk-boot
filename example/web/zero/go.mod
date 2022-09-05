@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-zero v1.2.3
+	github.com/rookie-ninja/rk-zero v1.2.4
 	github.com/zeromicro/go-zero v1.3.4
 )
 
@@ -35,7 +35,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.3 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.4 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
