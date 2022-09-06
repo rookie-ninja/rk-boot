@@ -6,8 +6,8 @@ require (
 	github.com/gin-gonic/gin v1.8.0
 	github.com/go-redis/redis/v8 v8.11.4
 	github.com/rookie-ninja/rk-boot/v2 v2.2.3
-	github.com/rookie-ninja/rk-db/redis v1.2.4
-	github.com/rookie-ninja/rk-gin/v2 v2.2.5
+	github.com/rookie-ninja/rk-db/redis v1.2.5
+	github.com/rookie-ninja/rk-gin/v2 v2.2.7
 )
 
 require (
@@ -43,7 +43,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.4 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.5 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/xid v1.3.0 // indirect

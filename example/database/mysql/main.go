@@ -10,6 +10,7 @@ import (
 	"github.com/rookie-ninja/rk-boot/v2"
 	"github.com/rookie-ninja/rk-db/mysql"
 	"github.com/rookie-ninja/rk-gin/v2/boot"
+	rkginctx "github.com/rookie-ninja/rk-gin/v2/middleware/context"
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
@@ -27,7 +28,7 @@ func main() {
 
 	// Auto migrate database and init global userDb variable
 	mysqlEntry := rkmysql.GetMySqlEntry("user-db")
-	userDb = mysqlEntry.GetDB("user")
+	userDb = mysqlEntry.GetDB("demo")
 	model = User{}
 
 	if !userDb.DryRun {
@@ -72,7 +73,9 @@ type User struct {
 
 func ListUsers(ctx *gin.Context) {
 	userList := make([]User, 0)
-	res := userDb.Find(&userList)
+
+	// inject logger with requestId and traceId
+	res := userDb.WithContext(rkginctx.GormCtx(ctx)).Find(&userList)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
@@ -84,7 +87,7 @@ func ListUsers(ctx *gin.Context) {
 func GetUser(ctx *gin.Context) {
 	uid := ctx.Param("id")
 	user := &User{}
-	res := userDb.Where("id = ?", uid).Find(user)
+	res := userDb.WithContext(rkginctx.GormCtx(ctx)).Where("id = ?", uid).Find(user)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
@@ -104,7 +107,7 @@ func CreateUser(ctx *gin.Context) {
 		Name: ctx.Query("name"),
 	}
 
-	res := userDb.Create(user)
+	res := userDb.WithContext(rkginctx.GormCtx(ctx)).Create(user)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
@@ -119,7 +122,7 @@ func UpdateUser(ctx *gin.Context) {
 		Name: ctx.Query("name"),
 	}
 
-	res := userDb.Where("id = ?", uid).Updates(user)
+	res := userDb.WithContext(rkginctx.GormCtx(ctx)).Where("id = ?", uid).Updates(user)
 
 	if res.Error != nil {
 		ctx.JSON(http.StatusInternalServerError, res.Error)
@@ -139,7 +142,7 @@ func UpdateUser(ctx *gin.Context) {
 
 func DeleteUser(ctx *gin.Context) {
 	uid, _ := strconv.Atoi(ctx.Param("id"))
-	res := userDb.Delete(&User{
+	res := userDb.WithContext(rkginctx.GormCtx(ctx)).Delete(&User{
 		Id: uid,
 	})
 

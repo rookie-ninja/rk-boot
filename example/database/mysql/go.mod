@@ -5,9 +5,9 @@ go 1.17
 require (
 	github.com/gin-gonic/gin v1.8.0
 	github.com/rookie-ninja/rk-boot/v2 v2.2.3
-	github.com/rookie-ninja/rk-db/mysql v1.2.4
-	github.com/rookie-ninja/rk-gin/v2 v2.2.5
-	gorm.io/gorm v1.22.4
+	github.com/rookie-ninja/rk-db/mysql v1.2.6
+	github.com/rookie-ninja/rk-gin/v2 v2.2.7
+	gorm.io/gorm v1.23.8
 )
 
 require (
@@ -29,7 +29,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.3 // indirect
+	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
@@ -44,7 +44,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.4 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.5 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/xid v1.3.0 // indirect
@@ -74,5 +74,5 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0 // indirect
-	gorm.io/driver/mysql v1.2.2 // indirect
+	gorm.io/driver/mysql v1.3.6 // indirect
 )

@@ -4,6 +4,23 @@ Init [gorm](https://github.com/go-gorm/gorm) from YAML config.
 
 This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We suggest use this lib from [rk-boot](https://github.com/rookie-ninja/rk-boot).
 
+## Supported bootstrap
+| Bootstrap  | Description                                             |
+|------------|---------------------------------------------------------|
+| YAML based | Start [gorm](https://github.com/go-gorm/gorm) from YAML |
+| Code based | Start [gorm](https://github.com/go-gorm/gorm) from code |
+
+## Supported Instances
+All instances could be configured via YAML or Code.
+
+**User can enable anyone of those as needed! No mandatory binding!**
+
+| Instance     | Description                                                                                                               |
+|--------------|---------------------------------------------------------------------------------------------------------------------------|
+| gorm.DB      | Compatible with original [gorm](https://github.com/go-gorm/gorm)                                                          |
+| Logger       | Implementation of [gorm](https://github.com/go-gorm/gorm) wrapped by [uber-go/zap](https://github.com/uber-go/zap) logger |
+| AutoCreation | Automatically create DB if missing in MySQL                                                                               |
+
 ## Installation
 - rk-boot: Bootstrapper base
 - rk-gin: Bootstrapper for [gin-gonic/gin](https://github.com/gin-gonic/gin) Web Framework for API
@@ -24,8 +41,10 @@ In the bellow example, we will run MySQL locally and implement API of Create/Lis
 - POST /v1/user/:id, Update user
 - DELETE /v1/user/:id, Delete user
 
+Please refer example at [example](example).
+
 ### 1.Create boot.yaml
-[boot.yaml](boot.yaml)
+[boot.yaml](example/boot.yaml)
 
 - Create web server with Gin framework at port 8080
 - Create MySQL entry which connects MySQL at localhost:3306
@@ -43,12 +62,18 @@ mysql:
     addr: "localhost:3306"            # Optional, default: localhost:3306
     user: root                        # Optional, default: root
     pass: pass                        # Optional, default: pass
+#    logger:
+#      entry: ""
+#      level: info
+#      encoding: json
+#      outputPaths: [ "stdout", "log/db.log" ]
+#      slowThresholdMs: 5000
+#      ignoreRecordNotFoundError: false
     database:
       - name: user                    # Required
         autoCreate: true              # Optional, default: false
 #        dryRun: false                # Optional, default: false
 #        params: []                   # Optional, default: ["charset=utf8mb4","parseTime=True","loc=Local"]
-#    loggerEntry: ""                  # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -254,24 +279,31 @@ $ curl -X DELETE localhost:8080/v1/user/2
 success
 ```
 
+![image](docs/img/mysql.png)
+
 ## YAML Options
 User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the same time. Please make sure use different names.
 
-| name                      | Required | description                        | type     | default value                                    |
-|---------------------------|----------|------------------------------------|----------|--------------------------------------------------|
-| mysql.name                | Required | The name of entry                  | string   | MySql                                            |
-| mysql.enabled             | Required | Enable entry or not                | bool     | false                                            |
-| mysql.domain              | Required | See domain description bellow      | string   | ""                                               |
-| mysql.description         | Optional | Description of echo entry.         | string   | ""                                               |
-| mysql.user                | Optional | MySQL username                     | string   | root                                             |
-| mysql.pass                | Optional | MySQL password                     | string   | pass                                             |
-| mysql.protocol            | Optional | Connection protocol to MySQL       | string   | tcp                                              |
-| mysql.addr                | Optional | MySQL remote address               | string   | localhost:3306                                   |
-| mysql.database.name       | Required | Name of database                   | string   | ""                                               |
-| mysql.database.autoCreate | Optional | Create DB if missing               | bool     | false                                            |
-| mysql.database.dryRun     | Optional | Run gorm.DB with dry run mode      | bool     | false                                            |
-| mysql.database.params     | Optional | Connection params                  | []string | ["charset=utf8mb4","parseTime=True","loc=Local"] |
-| mysql.loggerEntry         | Optional | Reference of zap logger entry name | string   | ""                                               |
+| name                                   | Required | description                                | type     | default value                                    |
+|----------------------------------------|----------|--------------------------------------------|----------|--------------------------------------------------|
+| mysql.name                             | Required | The name of entry                          | string   | MySql                                            |
+| mysql.enabled                          | Required | Enable entry or not                        | bool     | false                                            |
+| mysql.domain                           | Optional | See locale description bellow              | string   | "*"                                              |
+| mysql.description                      | Optional | Description of echo entry.                 | string   | ""                                               |
+| mysql.user                             | Optional | MySQL username                             | string   | root                                             |
+| mysql.pass                             | Optional | MySQL password                             | string   | pass                                             |
+| mysql.protocol                         | Optional | Connection protocol to MySQL               | string   | tcp                                              |
+| mysql.addr                             | Optional | MySQL remote address                       | string   | localhost:3306                                   |
+| mysql.database.name                    | Required | Name of database                           | string   | ""                                               |
+| mysql.database.autoCreate              | Optional | Create DB if missing                       | bool     | false                                            |
+| mysql.database.dryRun                  | Optional | Run gorm.DB with dry run mode              | bool     | false                                            |
+| mysql.database.params                  | Optional | Connection params                          | []string | ["charset=utf8mb4","parseTime=True","loc=Local"] |
+| mysql.logger.entry                     | Optional | Reference of zap logger entry name         | string   | ""                                               |
+| mysql.logger.level                     | Optional | Logging level, [info, warn, error, silent] | string   | warn                                             |
+| mysql.logger.encoding                  | Optional | log encoding, [console, json]              | string   | console                                          |
+| mysql.logger.outputPaths               | Optional | log output paths                           | []string | ["stdout"]                                       |
+| mysql.logger.slowThresholdMs           | Optional | Slow SQL threshold                         | int      | 5000                                             |
+| mysql.logger.ignoreRecordNotFoundError | Optional | As name described                          | bool     | false                                            |
 
 ### Usage of domain
 

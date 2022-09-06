@@ -4,10 +4,27 @@ Init [go-redis](https://github.com/go-redis/redis) from YAML config.
 
 This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We suggest use this lib from [rk-boot](https://github.com/rookie-ninja/rk-boot).
 
+## Supported bootstrap
+| Bootstrap  | Description                                                   |
+|------------|---------------------------------------------------------------|
+| YAML based | Start [go-redis](https://github.com/go-redis/redis) from YAML |
+| Code based | Start [go-redis](https://github.com/go-redis/redis) from code |
+
+## Supported Instances
+All instances could be configured via YAML or Code.
+
+**User can enable anyone of those as needed! No mandatory binding!**
+
+| Instance              | Description                                                                              |
+|-----------------------|------------------------------------------------------------------------------------------|
+| redis.UniversalClient | Compatible with original [go-redis](https://github.com/go-redis/redis)                   |
+| Logger                | Implementation of logger wrapped by [uber-go/zap](https://github.com/uber-go/zap) logger |
+| Tracing               | Automatically record tracing                                                             |
+
 ## Installation
 - rk-boot: Bootstrapper base
 - rk-gin: Bootstrapper for [gin-gonic/gin](https://github.com/gin-gonic/gin) Web Framework for API
-- rk-db/redis: Bootstrapper for [gorm](https://github.com/go-gorm/gorm) of redis
+- rk-db/redis: Bootstrapper for [go-redis](https://github.com/go-redis/redis) of redis
 
 ```
 go get github.com/rookie-ninja/rk-boot/v2
@@ -21,8 +38,10 @@ In the bellow example, we will run Redis locally and implement API of Get/Set of
 - GET /v1/get, get value
 - POST /v1/set, set value
 
+Please refer example at [example](.).
+
 ### 1.Create boot.yaml
-[boot.yaml](boot.yaml)
+[boot.yaml](example/boot.yaml)
 
 - Create web server with Gin framework at port 8080
 - Create Redis entry which connects Redis at localhost:6379
@@ -111,7 +130,11 @@ func Get(ctx *gin.Context) {
 	cmd := redisClient.Get(ctx.Request.Context(), key)
 
 	if cmd.Err() != nil {
-		ctx.JSON(http.StatusInternalServerError, cmd.Err())
+		if cmd.Err() == redis.Nil {
+			ctx.JSON(http.StatusNotFound, "Key not found!")
+		} else {
+			ctx.JSON(http.StatusInternalServerError, cmd.Err())
+		}
 		return
 	}
 
@@ -175,7 +198,7 @@ redis:
   - name: redis                      # Required
     enabled: true                    # Required
     addrs: ["localhost:6379"]        # Required, One addr is for single, multiple is for cluster
-#    domain: "*"                     # Optional
+    domain: "*"                      # Optional
 #    description: ""                 # Optional
 #
 #    # For HA

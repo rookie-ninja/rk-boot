@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-grpc/v2 v2.2.5
+	github.com/rookie-ninja/rk-grpc/v2 v2.2.7
 	google.golang.org/grpc v1.46.2
 	google.golang.org/protobuf v1.28.0
 )
@@ -32,7 +32,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.4 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.5 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/soheilhy/cmux v0.1.5 // indirect
