@@ -3,7 +3,7 @@ module github.com/rookie-ninja/rk-boot/v2
 go 1.17
 
 require (
-	github.com/rookie-ninja/rk-entry/v2 v2.2.6
+	github.com/rookie-ninja/rk-entry/v2 v2.2.8
 	github.com/stretchr/testify v1.7.1
 	go.uber.org/zap v1.21.0
 )
@@ -36,6 +36,7 @@ require (
 	github.com/spf13/viper v1.12.0 // indirect
 	github.com/subosito/gotenv v1.3.0 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
+	go.uber.org/goleak v1.1.12 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
 	golang.org/x/text v0.3.7 // indirect
