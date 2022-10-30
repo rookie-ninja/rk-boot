@@ -447,13 +447,13 @@ github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUA
 github.com/rogpeppe/go-internal v1.8.0/go.mod h1:WmiCO8CzOY8rg0OYDC4/i/2WRWAB6poM+XZ2dLUbcbE=
 github.com/rookie-ninja/rk-boot/v2 v2.2.6 h1:BKILNNfSY4Wr0bWWmkoh1QHJembCX/NUqtcDmKMkGkU=
 github.com/rookie-ninja/rk-boot/v2 v2.2.6/go.mod h1:bP6GStlZ23BuWdGlQShAFTSi70/PUFikQbiM3lP9blM=
-github.com/rookie-ninja/rk-db/sqlite v1.2.8 h1:k02PSSPsnJoTakE6aA9b3NYToVX/N0yiiD4nVp+TUcY=
-github.com/rookie-ninja/rk-db/sqlite v1.2.8/go.mod h1:W0/d56HS7twTRr7S8uDI6Qv28BNUwX6jJBZWm383+bE=
+github.com/rookie-ninja/rk-db/sqlite v1.2.9 h1:5ss5vJjYdr+ft7ZdOlIPAPio5mZLXO21MX42FAcz35w=
+github.com/rookie-ninja/rk-db/sqlite v1.2.9/go.mod h1:KdEJ9VZmvUvS7FQkvuneo4CEqqIrSfPe1d6bjBBQdQ4=
 github.com/rookie-ninja/rk-entry/v2 v2.2.6/go.mod h1:karYaqxjd1KI1DL9KVq2EjrVIsrC7+hFMmsVRFsd0xQ=
 github.com/rookie-ninja/rk-entry/v2 v2.2.8 h1:AHPVivh6Gp9RxKsbjzSSC18sSj7DqETmxThF6NAEfOg=
 github.com/rookie-ninja/rk-entry/v2 v2.2.8/go.mod h1:6YFshGlfUk44SWatHmJsZr+2d3/1WPFrU+fYqqFyfbI=
-github.com/rookie-ninja/rk-gin/v2 v2.2.10 h1:wKG2WnJbWY1D74MV/7u2iAY3zOANPJ4E+PkgEzoR3Xw=
-github.com/rookie-ninja/rk-gin/v2 v2.2.10/go.mod h1:+7QqALDN2bzV+NipKvdE69Fj2qazLdaI0ensGffHNV8=
+github.com/rookie-ninja/rk-gin/v2 v2.2.11 h1:9+diJ4L2Up7mXP3aWNAQ07ZJSRnrh0rtpHulrV0U64U=
+github.com/rookie-ninja/rk-gin/v2 v2.2.11/go.mod h1:+7QqALDN2bzV+NipKvdE69Fj2qazLdaI0ensGffHNV8=
 github.com/rookie-ninja/rk-logger v1.2.11 h1:QqfVnTFKVpjFnETB4lAVEzLWm5zSy/ghJpPICz1qo/w=
 github.com/rookie-ninja/rk-logger v1.2.11/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
 github.com/rookie-ninja/rk-query v1.2.14 h1:aYNyMXixpsEYRfEOz9Npt5QG3A6BQlo9vKjYc78x7bc=
