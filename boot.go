@@ -13,9 +13,8 @@ import (
 	"github.com/rookie-ninja/rk-entry/v2/entry"
 	"github.com/rookie-ninja/rk-entry/v2/middleware"
 	"go.uber.org/zap"
-	"io/ioutil"
 	"os"
-	"path"
+	"path/filepath"
 	"runtime/debug"
 )
 
@@ -231,12 +230,12 @@ func (boot *Boot) readYAML() []byte {
 	if len(boot.bootConfigPath) < 1 {
 		boot.bootConfigPath = "boot.yaml"
 	}
-	if !path.IsAbs(boot.bootConfigPath) {
+	if !filepath.IsAbs(boot.bootConfigPath) {
 		wd, _ := os.Getwd()
-		boot.bootConfigPath = path.Join(wd, boot.bootConfigPath)
+		boot.bootConfigPath = filepath.Join(wd, boot.bootConfigPath)
 	}
 
-	res, err := ioutil.ReadFile(boot.bootConfigPath)
+	res, err := os.ReadFile(boot.bootConfigPath)
 	if err != nil {
 		rkentry.ShutdownWithError(err)
 	}

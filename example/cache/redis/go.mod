@@ -3,11 +3,13 @@ module github.com/rookie-ninja/rk-demo
 go 1.17
 
 require (
-	github.com/gin-gonic/gin v1.8.0
+	github.com/gin-gonic/gin v1.8.1
 	github.com/rookie-ninja/rk-boot/v2 v2.2.6
-	github.com/rookie-ninja/rk-cache/redis v1.2.7
-	github.com/rookie-ninja/rk-gin/v2 v2.2.10
+	github.com/rookie-ninja/rk-cache/redis v1.2.8
+	github.com/rookie-ninja/rk-gin/v2 v2.2.13
 )
+
+replace github.com/rookie-ninja/rk-boot/v2 => ../../../
 
 require (
 	github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129 // indirect
@@ -48,9 +50,9 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-db/redis v1.2.7 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.8 // indirect
-	github.com/rookie-ninja/rk-logger v1.2.11 // indirect
+	github.com/rookie-ninja/rk-db/redis v1.2.8 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.10 // indirect
+	github.com/rookie-ninja/rk-logger v1.2.12 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/xid v1.3.0 // indirect
 	github.com/spf13/afero v1.8.2 // indirect

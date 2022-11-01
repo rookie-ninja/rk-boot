@@ -143,8 +143,8 @@ github.com/gin-contrib/pprof v1.3.0/go.mod h1:waMjT1H9b179t3CxuG1cV3DHpga6ybizwf
 github.com/gin-contrib/sse v0.1.0 h1:Y/yl/+YNO8GZSjAhjMsSuLt29uWRFHdHYUb5lYOV9qE=
 github.com/gin-contrib/sse v0.1.0/go.mod h1:RHrZQHXnP2xjPF+u1gW/2HnVO7nvIa9PG3Gm+fLHvGI=
 github.com/gin-gonic/gin v1.6.2/go.mod h1:75u5sXoLsGZoRN5Sgbi1eraJ4GU3++wFwWzhwvtwp4M=
-github.com/gin-gonic/gin v1.8.0 h1:4WFH5yycBMA3za5Hnl425yd9ymdw1XPm4666oab+hv4=
-github.com/gin-gonic/gin v1.8.0/go.mod h1:ji8BvRH1azfM+SYow9zQ6SZMvR8qOMZHmsCuWR9tTTk=
+github.com/gin-gonic/gin v1.8.1 h1:4+fr/el88TOO3ewCmQr8cx/CtZ/umlIRIs5M4NTNjf8=
+github.com/gin-gonic/gin v1.8.1/go.mod h1:ji8BvRH1azfM+SYow9zQ6SZMvR8qOMZHmsCuWR9tTTk=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
@@ -438,11 +438,10 @@ github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFR
 github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTEfhy4qGm1nDQc=
 github.com/rogpeppe/go-internal v1.8.0 h1:FCbCCtXNOY3UtUuHUYaghJg4y7Fd14rXifAYUAtL9R8=
 github.com/rogpeppe/go-internal v1.8.0/go.mod h1:WmiCO8CzOY8rg0OYDC4/i/2WRWAB6poM+XZ2dLUbcbE=
-github.com/rookie-ninja/rk-entry/v2 v2.2.8/go.mod h1:6YFshGlfUk44SWatHmJsZr+2d3/1WPFrU+fYqqFyfbI=
-github.com/rookie-ninja/rk-entry/v2 v2.2.9 h1:dp3ziwWCeNbUAdxmWK7CPSoYCtLxdfEFfqJCOtn46yA=
-github.com/rookie-ninja/rk-entry/v2 v2.2.9/go.mod h1:+gvLV+G0Bnu6xlZsRRN4U8r6OXRPlxEIfxGOxdyFQNY=
-github.com/rookie-ninja/rk-gin/v2 v2.2.11 h1:9+diJ4L2Up7mXP3aWNAQ07ZJSRnrh0rtpHulrV0U64U=
-github.com/rookie-ninja/rk-gin/v2 v2.2.11/go.mod h1:+7QqALDN2bzV+NipKvdE69Fj2qazLdaI0ensGffHNV8=
+github.com/rookie-ninja/rk-entry/v2 v2.2.10 h1:FgHIGoKTSoTsKjD/gc7PfCQCbtF8+4DWRIPuF3ofi9o=
+github.com/rookie-ninja/rk-entry/v2 v2.2.10/go.mod h1:+gvLV+G0Bnu6xlZsRRN4U8r6OXRPlxEIfxGOxdyFQNY=
+github.com/rookie-ninja/rk-gin/v2 v2.2.13 h1:GlEBXlW1EuO1cIiy+2sWF3duJTE/cNAv5sV6UQF66pg=
+github.com/rookie-ninja/rk-gin/v2 v2.2.13/go.mod h1:YW/xorHWTkXJnnxH+sN/orax2kAjmMoA3S5hcb9hZFo=
 github.com/rookie-ninja/rk-logger v1.2.11/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
 github.com/rookie-ninja/rk-logger v1.2.12 h1:eQHP7hDW/zFeDCoGUV3Mu8Ot72+7c+Cy0Tuxauir5a8=
 github.com/rookie-ninja/rk-logger v1.2.12/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
