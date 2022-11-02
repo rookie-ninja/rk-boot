@@ -3,11 +3,11 @@ module github.com/rookie-ninja/rk-demo
 go 1.17
 
 require (
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.3
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.12.0
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-grpc/v2 v2.2.11
-	google.golang.org/grpc v1.46.2
-	google.golang.org/protobuf v1.28.0
+	github.com/rookie-ninja/rk-grpc/v2 v2.2.12
+	google.golang.org/grpc v1.50.1
+	google.golang.org/protobuf v1.28.1
 )
 
 replace github.com/rookie-ninja/rk-boot/v2 => ../../../
@@ -37,7 +37,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.9 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.10 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.12 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/cors v1.7.0 // indirect
@@ -63,10 +63,10 @@ require (
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/ratelimit v0.2.0 // indirect
 	go.uber.org/zap v1.21.0 // indirect
-	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
-	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20220519153652-3a47de7e79bd // indirect
+	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
+	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
+	golang.org/x/text v0.3.8 // indirect
+	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

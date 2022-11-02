@@ -3,12 +3,14 @@ module github.com/rookie-ninja/rk-demo
 go 1.17
 
 require (
-	github.com/gin-gonic/gin v1.8.0
-	github.com/go-redis/redis/v8 v8.11.4
+	github.com/gin-gonic/gin v1.8.1
+	github.com/go-redis/redis/v8 v8.11.5
 	github.com/rookie-ninja/rk-boot/v2 v2.2.6
-	github.com/rookie-ninja/rk-db/redis v1.2.8
-	github.com/rookie-ninja/rk-gin/v2 v2.2.11
+	github.com/rookie-ninja/rk-db/redis v1.2.9
+	github.com/rookie-ninja/rk-gin/v2 v2.2.13
 )
+
+replace github.com/rookie-ninja/rk-boot/v2 => ../../../
 
 require (
 	github.com/andres-erbsen/clock v0.0.0-20160526145045-9e14626cd129 // indirect
@@ -24,7 +26,7 @@ require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
 	github.com/go-playground/validator/v10 v10.10.0 // indirect
-	github.com/go-redis/redis/extra/rediscmd/v8 v8.11.4 // indirect
+	github.com/go-redis/redis/extra/rediscmd/v8 v8.11.5 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -46,7 +48,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.32.1 // indirect
 	github.com/prometheus/procfs v0.7.3 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.9 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.10 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.12 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/xid v1.3.0 // indirect
