@@ -1,13 +1,13 @@
 module github.com/rookie-ninja/rk-demo
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-entry/v2 v2.2.11
-	github.com/rookie-ninja/rk-gin/v2 v2.2.14
+	github.com/rookie-ninja/rk-entry/v2 v2.2.13
+	github.com/rookie-ninja/rk-gin/v2 v2.2.15
 )
 
 require (

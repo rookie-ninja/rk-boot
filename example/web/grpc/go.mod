@@ -1,11 +1,11 @@
 module github.com/rookie-ninja/rk-demo
 
-go 1.17
+go 1.18
 
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.12.0
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-grpc/v2 v2.2.13
+	github.com/rookie-ninja/rk-grpc/v2 v2.2.14
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 )
@@ -35,7 +35,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.11 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.13 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.12 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/cors v1.7.0 // indirect
