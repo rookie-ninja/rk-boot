@@ -1,11 +1,11 @@
 module github.com/rookie-ninja/rk-demo
 
-go 1.17
+go 1.18
 
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/rookie-ninja/rk-boot/v2 v2.1.2
-	github.com/rookie-ninja/rk-gin/v2 v2.2.14
+	github.com/rookie-ninja/rk-gin/v2 v2.2.15
 )
 
 require (
@@ -42,7 +42,7 @@ require (
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
-	github.com/rookie-ninja/rk-entry/v2 v2.2.11 // indirect
+	github.com/rookie-ninja/rk-entry/v2 v2.2.13 // indirect
 	github.com/rookie-ninja/rk-logger v1.2.12 // indirect
 	github.com/rookie-ninja/rk-query v1.2.14 // indirect
 	github.com/rs/xid v1.3.0 // indirect
