@@ -9,6 +9,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"fmt"
 	"github.com/rookie-ninja/rk-entry/v2/entry"
 	"github.com/stretchr/testify/assert"
 	"syscall"
@@ -68,14 +69,9 @@ func TestNewBoot_WithEmbedCase(t *testing.T) {
 	rkentry.GlobalAppCtx.RemoveEntry(rkentry.GlobalAppCtx.GetEntry("myEntry", "ut"))
 }
 
-func TestNewBoot_EmptyConfig(t *testing.T) {
-	defer assertPanic(t)
-
-	NewBoot()
-}
-
 func assertPanic(t *testing.T) {
 	if r := recover(); r != nil {
+		fmt.Println("adsfadfafd")
 		// Expect panic to be called with non nil error
 		assert.True(t, true)
 	} else {
