@@ -269,6 +269,6 @@ func syncLog(eventId string) {
 			event.Sync()
 		}
 
-		panic(r)
+		os.Exit(1)
 	}
 }
