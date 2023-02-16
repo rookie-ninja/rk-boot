@@ -10,12 +10,13 @@ import (
 	"context"
 	"embed"
 	"fmt"
-	"github.com/rookie-ninja/rk-entry/v2/entry"
-	"github.com/rookie-ninja/rk-entry/v2/middleware"
-	"go.uber.org/zap"
 	"os"
 	"path/filepath"
 	"runtime/debug"
+
+	rkentry "github.com/rookie-ninja/rk-entry/v2/entry"
+	rkmid "github.com/rookie-ninja/rk-entry/v2/middleware"
+	"go.uber.org/zap"
 )
 
 type hookFuncM map[string]map[string]func(ctx context.Context)
@@ -80,7 +81,7 @@ func NewBoot(opts ...BootOption) *Boot {
 	defer syncLog("N/A")
 
 	boot := &Boot{
-		EventId:       rkmid.GenerateRequestId(),
+		EventId:       rkmid.GenerateRequestId(nil),
 		beforeHookF:   newHookFuncM(),
 		afterHookF:    newHookFuncM(),
 		pluginEntries: map[string]map[string]rkentry.Entry{},
