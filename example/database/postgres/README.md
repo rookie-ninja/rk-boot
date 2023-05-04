@@ -4,6 +4,23 @@ Init [gorm](https://github.com/go-gorm/gorm) from YAML config.
 
 This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We suggest use this lib from [rk-boot](https://github.com/rookie-ninja/rk-boot).
 
+## Supported bootstrap
+| Bootstrap  | Description                                             |
+|------------|---------------------------------------------------------|
+| YAML based | Start [gorm](https://github.com/go-gorm/gorm) from YAML |
+| Code based | Start [gorm](https://github.com/go-gorm/gorm) from code |
+
+## Supported Instances
+All instances could be configured via YAML or Code.
+
+**User can enable anyone of those as needed! No mandatory binding!**
+
+| Instance     | Description                                                                                                               |
+|--------------|---------------------------------------------------------------------------------------------------------------------------|
+| gorm.DB      | Compatible with original [gorm](https://github.com/go-gorm/gorm)                                                          |
+| Logger       | Implementation of [gorm](https://github.com/go-gorm/gorm) wrapped by [uber-go/zap](https://github.com/uber-go/zap) logger |
+| AutoCreation | Automatically create DB if missing in PostgreSQL                                                                          |
+
 ## Installation
 - rk-boot: Bootstrapper base
 - rk-gin: Bootstrapper for [gin-gonic/gin](https://github.com/gin-gonic/gin) Web Framework for API
@@ -24,8 +41,10 @@ In the bellow example, we will run PostgreSQL locally and implement API of Creat
 - POST /v1/user/:id, Update user
 - DELETE /v1/user/:id, Delete user
 
+Please refer example at [example](example).
+
 ### 1.Create boot.yaml
-[boot.yaml](boot.yaml)
+[boot.yaml](example/boot.yaml)
 
 - Create web server with Gin framework at port 8080
 - Create PostgreSQL entry which connects PostgreSQL at localhost:5432
@@ -43,13 +62,19 @@ postgres:
     addr: "localhost:5432"            # Optional, default: localhost:5432
     user: postgres                    # Optional, default: postgres
     pass: pass                        # Optional, default: pass
+#    logger:
+#      entry: ""
+#      level: info
+#      encoding: json
+#      outputPaths: [ "stdout", "log/db.log" ]
+#      slowThresholdMs: 5000
+#      ignoreRecordNotFoundError: false
     database:
       - name: user                    # Required
         autoCreate: true              # Optional, default: false
 #        dryRun: true                 # Optional, default: false
 #        preferSimpleProtocol: false  # Optional, default: false
 #        params: []                   # Optional, default: ["sslmode=disable","TimeZone=Asia/Shanghai"]
-#    loggerEntry: ""                  # Optional, default: default logger with STDOUT
 ```
 
 ### 2.Create main.go
@@ -267,24 +292,31 @@ $ curl -X DELETE localhost:8080/v1/user/2
 success
 ```
 
+![image](docs/img/pg.png)
+
 ## YAML Options
 User can start multiple [gorm](https://github.com/go-gorm/gorm) instances at the same time. Please make sure use different names.
 
-| name                                   | Required | description                        | type     | default value                                |
-|----------------------------------------|----------|------------------------------------|----------|----------------------------------------------|
-| postgres.name                          | Required | The name of entry                  | string   | PostgreSQL                                   |
-| postgres.enabled                       | Required | Enable entry or not                | bool     | false                                        |
-| postgres.domain                        | Required | See domain description bellow      | string   | ""                                           |
-| postgres.description                   | Optional | Description of echo entry.         | string   | ""                                           |
-| postgres.user                          | Optional | PostgreSQL username                | string   | postgres                                     |
-| postgres.pass                          | Optional | PostgreSQL password                | string   | pass                                         |
-| postgres.addr                          | Optional | PostgreSQL remote address          | string   | localhost:5432                               |
-| postgres.database.name                 | Required | Name of database                   | string   | ""                                           |
-| postgres.database.autoCreate           | Optional | Create DB if missing               | bool     | false                                        |
-| postgres.database.dryRun               | Optional | Run gorm.DB with dry run mode      | bool     | false                                        |
-| postgres.database.preferSimpleProtocol | Optional | Disable prepared statement cache   | bool     | false                                        |
-| postgres.database.params               | Optional | Connection params                  | []string | ["sslmode=disable","TimeZone=Asia/Shanghai"] |
-| postgres.loggerEntry                   | Optional | Reference of zap logger entry name | string   | ""                                           |
+| name                                      | Required | description                                | type     | default value                                |
+|-------------------------------------------|----------|--------------------------------------------|----------|----------------------------------------------|
+| postgres.name                             | Required | The name of entry                          | string   | PostgreSQL                                   |
+| postgres.enabled                          | Required | Enable entry or not                        | bool     | false                                        |
+| postgres.domain                           | Optional | See locale description bellow              | string   | "*"                                          |
+| postgres.description                      | Optional | Description of echo entry.                 | string   | ""                                           |
+| postgres.user                             | Optional | PostgreSQL username                        | string   | postgres                                     |
+| postgres.pass                             | Optional | PostgreSQL password                        | string   | pass                                         |
+| postgres.addr                             | Optional | PostgreSQL remote address                  | string   | localhost:5432                               |
+| postgres.database.name                    | Required | Name of database                           | string   | ""                                           |
+| postgres.database.autoCreate              | Optional | Create DB if missing                       | bool     | false                                        |
+| postgres.database.dryRun                  | Optional | Run gorm.DB with dry run mode              | bool     | false                                        |
+| postgres.database.preferSimpleProtocol    | Optional | Disable prepared statement cache           | bool     | false                                        |
+| postgres.database.params                  | Optional | Connection params                          | []string | ["sslmode=disable","TimeZone=Asia/Shanghai"] |
+| postgres.logger.entry                     | Optional | Reference of zap logger entry name         | string   | ""                                           |
+| postgres.logger.level                     | Optional | Logging level, [info, warn, error, silent] | string   | warn                                         |
+| postgres.logger.encoding                  | Optional | log encoding, [console, json]              | string   | console                                      |
+| postgres.logger.outputPaths               | Optional | log output paths                           | []string | ["stdout"]                                   |
+| postgres.logger.slowThresholdMs           | Optional | Slow SQL threshold                         | int      | 5000                                         |
+| postgres.logger.ignoreRecordNotFoundError | Optional | As name described                          | bool     | false                                        |
 
 ### Usage of domain
 

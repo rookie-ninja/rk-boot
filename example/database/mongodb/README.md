@@ -4,6 +4,22 @@ Init [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) from YAML con
 
 This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We suggest use this lib from [rk-boot](https://github.com/rookie-ninja/rk-boot).
 
+## Supported bootstrap
+| Bootstrap  | Description                                                                   |
+|------------|-------------------------------------------------------------------------------|
+| YAML based | Start [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) from YAML |
+| Code based | Start [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) from code |
+
+## Supported Instances
+All instances could be configured via YAML or Code.
+
+**User can enable anyone of those as needed! No mandatory binding!**
+
+| Instance       | Description                                                                            |
+|----------------|----------------------------------------------------------------------------------------|
+| mongo.Client   | Compatible with original [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) |
+| mongo.Database | Compatible with original [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) |
+
 ## Installation
 - rk-boot: Bootstrapper base
 - rk-gin: Bootstrapper for [gin-gonic/gin](https://github.com/gin-gonic/gin) Web Framework for API
@@ -12,7 +28,7 @@ This belongs to [rk-boot](https://github.com/rookie-ninja/rk-boot) family. We su
 ```
 go get github.com/rookie-ninja/rk-boot/v2
 go get github.com/rookie-ninja/rk-gin/v2
-go get github.com/rookie-ninja/rk-db/mongo
+go get github.com/rookie-ninja/rk-db/mongodb
 ```
 
 ## Quick Start
@@ -24,8 +40,10 @@ In the bellow example, we will run ClickHouse locally and implement API of Creat
 - POST /v1/user/:id, Update user
 - DELETE /v1/user/:id, Delete user
 
+Please refer example at [example](example).
+
 ### 1.Create boot.yaml
-[boot.yaml](boot.yaml)
+[boot.yaml](example/boot.yaml)
 
 - Create web server with Gin framework at port 8080
 - Create MongoDB entry which connects MongoDB at localhost:27017
@@ -185,9 +203,6 @@ func UpdateUser(ctx *gin.Context) {
 		return
 	}
 
-	bytes, _ := json.Marshal(user)
-	fmt.Println(string(bytes))
-
 	ctx.JSON(http.StatusOK, user)
 }
 
@@ -280,54 +295,41 @@ $ curl -X DELETE localhost:8080/v1/user/c7bjufjd0cvqfaenpqjg
 success
 ```
 
+![image](docs/img/mongo.png)
+
 ## YAML Options
 User can start multiple [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) instances at the same time. Please make sure use different names.
 
-```yaml
-mongo:
-  - name: "my-mongo"                            # Required
-    enabled: true                               # Required
-    simpleURI: "mongodb://localhost:27017"      # Required
-    database:
-      - name: "users"                           # Required
-#    description: "description"
-#    certEntry: ""
-#    loggerEntry: ""
-#    # Belongs to mongoDB client options
-#    # Please refer to https://github.com/mongodb/mongo-go-driver/blob/master/mongo/options/clientoptions.go
-#    appName: ""
-#    auth:
-#      mechanism: ""
-#      mechanismProperties:
-#        a: b
-#      source: ""
-#      username: ""
-#      password: ""
-#      passwordSet: false
-#    connectTimeoutMs: 500
-#    compressors: []
-#    direct: false
-#    disableOCSPEndpointCheck: false
-#    heartbeatIntervalMs: 10
-#    hosts: []
-#    loadBalanced: false
-#    localThresholdMs: 1
-#    maxConnIdleTimeMs: 1
-#    maxPoolSize: 1
-#    minPoolSize: 1
-#    maxConnecting: 1
-#    replicaSet: ""
-#    retryReads: false
-#    retryWrites: false
-#    serverAPIOptions:
-#      serverAPIVersion: ""
-#      strict: false
-#      deprecationErrors: false
-#    serverSelectionTimeoutMs: 1
-#    socketTimeout: 1
-#    srvMaxHots: 1
-#    srvServiceName: ""
-#    zlibLevel: 1
-#    zstdLevel: 1
-#    authenticateToAnything: false
+TBD
+
+### Usage of domain
+
+```
+RK use <domain> to distinguish different environment.
+Variable of <locale> could be composed as form of <domain>
+- domain: Stands for different environment, like dev, test, prod and so on, users can define it by themselves.
+          Environment variable: DOMAIN
+          Eg: prod
+          Wildcard: supported
+
+How it works?
+Firstly, get environment variable named as  DOMAIN.
+Secondly, compare every element in locale variable and environment variable.
+If variables in locale represented as wildcard(*), we will ignore comparison step.
+
+Example:
+# let's assuming we are going to define DB address which is different based on environment.
+# Then, user can distinguish DB address based on locale.
+# We recommend to include locale with wildcard.
+---
+DB:
+  - name: redis-default
+    domain: "*"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-test
+    domain: "test"
+    addr: "192.0.0.1:6379"
+  - name: redis-in-prod
+    domain: "prod"
+    addr: "176.0.0.1:6379"
 ```

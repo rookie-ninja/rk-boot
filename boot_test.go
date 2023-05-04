@@ -9,6 +9,7 @@ import (
 	"context"
 	"embed"
 	"encoding/json"
+	"fmt"
 	"github.com/rookie-ninja/rk-entry/v2/entry"
 	"github.com/stretchr/testify/assert"
 	"syscall"
@@ -24,14 +25,25 @@ myEntry:
   enabled: true
 `
 
+	triggerBefore := false
+	triggerAfter := false
+
 	boot := NewBoot(WithBootConfigRaw([]byte(config)))
 	boot.AddShutdownHookFunc("ut-shutdown", func() {
 		// noop
+	})
+	boot.AddHookFuncBeforeBootstrap("myEntry", "ut", func(ctx context.Context) {
+		triggerBefore = true
+	})
+	boot.AddHookFuncAfterBootstrap("myEntry", "ut", func(ctx context.Context) {
+		triggerAfter = true
 	})
 
 	boot.Bootstrap(context.TODO())
 
 	assert.Len(t, rkentry.GlobalAppCtx.ListEntriesByType("myEntry"), 1)
+	assert.True(t, triggerBefore)
+	assert.True(t, triggerAfter)
 
 	go func() {
 		boot.WaitForShutdownSig(context.TODO())
@@ -51,28 +63,15 @@ func TestNewBoot_WithEmbedCase(t *testing.T) {
 	myEntry := rkentry.GlobalAppCtx.GetEntry("myEntry", "ut")
 	assert.NotNil(t, myEntry)
 
-	preCall := false
-
-	boot.AddPreloadFuncBeforeBootstrap(myEntry, func() {
-		preCall = true
-	})
-
 	boot.Bootstrap(context.TODO())
 	boot.interrupt(context.TODO())
-
-	assert.True(t, preCall)
 
 	rkentry.GlobalAppCtx.RemoveEntry(rkentry.GlobalAppCtx.GetEntry("myEntry", "ut"))
 }
 
-func TestNewBoot_EmptyConfig(t *testing.T) {
-	defer assertPanic(t)
-
-	NewBoot()
-}
-
 func assertPanic(t *testing.T) {
 	if r := recover(); r != nil {
+		fmt.Println("adsfadfafd")
 		// Expect panic to be called with non nil error
 		assert.True(t, true)
 	} else {
@@ -83,7 +82,7 @@ func assertPanic(t *testing.T) {
 
 // Register entry, must be in init() function since we need to register entry at beginning
 func init() {
-	rkentry.RegisterEntryRegFunc(RegisterMyEntriesFromConfig)
+	rkentry.RegisterUserEntryRegFunc(RegisterMyEntriesFromConfig)
 }
 
 // A struct which is for unmarshalled YAML

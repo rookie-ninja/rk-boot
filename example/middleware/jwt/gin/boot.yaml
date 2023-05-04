@@ -1,0 +1,13 @@
+---
+gin:
+  - name: greeter
+    port: 8080
+    enabled: true
+    sw:
+      enabled: true
+    middleware:
+      jwt:
+        enabled: true
+        ignore:
+          - "/v1/login"
+          - "/sw"

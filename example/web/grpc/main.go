@@ -19,7 +19,7 @@ func main() {
 	// register grpc
 	entry := rkgrpc.GetGrpcEntry("greeter")
 	entry.AddRegFuncGrpc(registerGreeter)
-	entry.AddRegFuncGw(hello.RegisterGreeterHandlerFromEndpoint)
+	entry.AddRegFuncGw(greeter.RegisterGreeterHandlerFromEndpoint)
 
 	// Bootstrap
 	boot.Bootstrap(context.TODO())
@@ -29,15 +29,15 @@ func main() {
 }
 
 func registerGreeter(server *grpc.Server) {
-	hello.RegisterGreeterServer(server, &GreeterServer{})
+	greeter.RegisterGreeterServer(server, &GreeterServer{})
 }
 
 //GreeterServer GreeterServer struct
 type GreeterServer struct{}
 
 // Hello response with hello message
-func (server *GreeterServer) Hello(_ context.Context, _ *hello.HelloRequest) (*hello.HelloResponse, error) {
-	return &hello.HelloResponse{
-		MyMessage: "hello!",
+func (server *GreeterServer) Hello(_ context.Context, _ *greeter.HelloRequest) (*greeter.HelloResponse, error) {
+	return &greeter.HelloResponse{
+		Message: "hello!",
 	}, nil
 }
