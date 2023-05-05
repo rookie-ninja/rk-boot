@@ -183,6 +183,13 @@ func (boot *Boot) Bootstrap(ctx context.Context) {
 func (boot *Boot) WaitForShutdownSig(ctx context.Context) {
 	rkentry.GlobalAppCtx.WaitForShutdownSig()
 
+	boot.Shutdown(ctx)
+}
+
+// Shutdown shutdown boot. for non-web application
+// 1: Call shutdown hook function added by user.
+// 2: Call interrupt function of entries in rkentry.GlobalAppCtx.
+func (boot *Boot) Shutdown(ctx context.Context) {
 	// Call shutdown hook function
 	for _, f := range rkentry.GlobalAppCtx.ListShutdownHooks() {
 		f()
