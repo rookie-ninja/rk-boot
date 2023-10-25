@@ -104,7 +104,7 @@ zero:
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
-#      jsonPath: ""                                        # Optional
+#      jsonPath: [""]                                      # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
 #    commonService:
 #      enabled: true                                       # Optional, default: false
