@@ -104,7 +104,7 @@ gin:
 #    sw:
 #      enabled: true                                       # Optional, default: false
 #      path: "sw"                                          # Optional, default: "sw"
-#      jsonPath: ""                                        # Optional
+#      jsonPath: [""]                                      # Optional
 #      headers: ["sw:rk"]                                  # Optional, default: []
 #    docs:
 #      enabled: true                                       # Optional, default: false
