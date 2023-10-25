@@ -254,7 +254,8 @@ func (boot *Boot) readYAML() []byte {
 func syncLog(eventId string) {
 	if r := recover(); r != nil {
 		stackTrace := fmt.Sprintf("Panic occured, shutting down... \n%s", string(debug.Stack()))
-		for _, v := range rkentry.GlobalAppCtx.ListEntriesByType(rkentry.LoggerEntryType) {
+		logEntries := rkentry.GlobalAppCtx.ListEntriesByType(rkentry.LoggerEntryType)
+		for _, v := range logEntries {
 			logger, ok := v.(*rkentry.LoggerEntry)
 			if !ok {
 				continue
@@ -266,6 +267,11 @@ func syncLog(eventId string) {
 					zap.Any("RootCause", r))
 			}
 			logger.Sync()
+		}
+
+		if len(logEntries) == 0 {
+			fmt.Printf(stackTrace)
+			fmt.Printf("RootCause: %s", r)
 		}
 
 		for _, v := range rkentry.GlobalAppCtx.ListEntriesByType(rkentry.EventEntryType) {
