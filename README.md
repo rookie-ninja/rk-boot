@@ -229,7 +229,7 @@ issues and pull requests, but you can also report any negative conduct to
 lark@rkdev.info.
 
 ## License
-Released under the [Apache 2.0 License](LICENSE).
+In compliance with open-source standards, this project is released and distributed under the terms of the [Apache 2.0 License](LICENSE)
 
 ## Join discussing channel
 | Channel                 | Code                                             |
