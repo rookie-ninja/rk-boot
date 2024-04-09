@@ -228,7 +228,8 @@ the [code of conduct](CODE_OF_CONDUCT.md). The rk maintainers keep an eye on
 issues and pull requests, but you can also report any negative conduct to
 lark@rkdev.info.
 
-Released under the [Apache 2.0 License](LICENSE).
+## License
+In compliance with open-source standards, this project is released and distributed under the terms of the [Apache 2.0 License](LICENSE)
 
 ## Join discussing channel
 | Channel                 | Code                                             |
