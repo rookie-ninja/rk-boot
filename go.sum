@@ -169,8 +169,8 @@ github.com/prometheus/procfs v0.11.1 h1:xRC8Iq1yyca5ypa9n1EZnWZkt7dwcoRPQwX/5gwa
 github.com/prometheus/procfs v0.11.1/go.mod h1:eesXgaPo1q7lBpVMoMy0ZOFTth9hBn4W/y0/p/ScXhY=
 github.com/rogpeppe/go-internal v1.3.0/go.mod h1:M8bDsm7K2OlrFYOpmOWEs/qY81heoFRclV5y23lUDJ4=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
-github.com/rookie-ninja/rk-entry/v2 v2.2.20 h1:7ovp28PLzJXZukjbHSzTlB9SHWQ4/Tupjfg3osMLIJ0=
-github.com/rookie-ninja/rk-entry/v2 v2.2.20/go.mod h1:ZvSdFFG2HuJDmDuZP2ljh/0RiuMt/hjUs5p+n54W56Q=
+github.com/rookie-ninja/rk-entry/v2 v2.2.22 h1:kYXhLV22APPxd9h6kLtA5Vf/tswPOw2Rth2X3NlUi7E=
+github.com/rookie-ninja/rk-entry/v2 v2.2.22/go.mod h1:ZvSdFFG2HuJDmDuZP2ljh/0RiuMt/hjUs5p+n54W56Q=
 github.com/rookie-ninja/rk-logger v1.2.13 h1:ERxeNZUmszlY4xehHcJRXECPtbjYIXzN8yRIyYyLGsg=
 github.com/rookie-ninja/rk-logger v1.2.13/go.mod h1:0ZiGn1KsHKOmCv+FHMH7k40DWYSJcj5yIR3EYcjlnLs=
 github.com/rookie-ninja/rk-query v1.2.14 h1:aYNyMXixpsEYRfEOz9Npt5QG3A6BQlo9vKjYc78x7bc=
