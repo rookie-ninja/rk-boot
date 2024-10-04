@@ -165,46 +165,46 @@ Swagger UI: [http://localhost:8080/sw](http://localhost:8080/sw)
 ## Supported plugins
 <table>
     <tr>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/gin/" target="_blank"><img src="https://www.rkdev.info/images/grpc.svg" width="110" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/grpc/" target="_blank"><img src="https://www.rkdev.info/images/gin.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/echo/" target="_blank"><img src="https://www.rkdev.info/images/echo.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/gf/" target="_blank"><img src="https://www.rkdev.info/images/goframe.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/fiber/" target="_blank"><img src="https://www.rkdev.info/images/fiber.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/gin/" target="_blank"><img src="https://www.rkdev.info/images/grpc.svg" width="110" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/grpc/" target="_blank"><img src="https://www.rkdev.info/images/gin.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/echo/" target="_blank"><img src="https://www.rkdev.info/images/echo.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/gf/" target="_blank"><img src="https://www.rkdev.info/images/goframe.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/fiber/" target="_blank"><img src="https://www.rkdev.info/images/fiber.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/zero/" target="_blank"><img src="https://www.rkdev.info/images/go-zero.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/mux/" target="_blank"><img src="https://www.rkdev.info/images/mux.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/mysql/" target="_blank"><img src="https://www.rkdev.info/images/mysql.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/sqlite/" target="_blank"><img src="https://www.rkdev.info/images/sqlite.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/sqlserver/" target="_blank"><img src="https://www.rkdev.info/images/sqlserver.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/zero/" target="_blank"><img src="https://www.rkdev.info/images/go-zero.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/mux/" target="_blank"><img src="https://www.rkdev.info/images/mux.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/mysql/" target="_blank"><img src="https://www.rkdev.info/images/mysql.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/sqlite/" target="_blank"><img src="https://www.rkdev.info/images/sqlite.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/sqlserver/" target="_blank"><img src="https://www.rkdev.info/images/sqlserver.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/postgres/" target="_blank"><img src="https://www.rkdev.info/images/postgresql.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/clickhouse/" target="_blank"><img src="https://www.rkdev.info/images/clickhouse.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/mongodb/" target="_blank"><img src="https://www.rkdev.info/images/mongodb.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/getting-started/database/redis/" target="_blank"><img src="https://www.rkdev.info/images/redis.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/postgres/" target="_blank"><img src="https://www.rkdev.info/images/postgresql.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/clickhouse/" target="_blank"><img src="https://www.rkdev.info/images/clickhouse.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/mongodb/" target="_blank"><img src="https://www.rkdev.info/images/mongodb.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/getting-started/database/redis/" target="_blank"><img src="https://www.rkdev.info/images/redis.svg" width="110" height="100" valign="middle" /></a></td>
         <td align="center" valign="middle"><a href="https://github.com/rookie-ninja/rk-cloud" target="_blank"><img src="https://www.rkdev.info/images/aws.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
     <tr>
         <td align="center" valign="middle"><a href="https://github.com/rookie-ninja/rk-cloud" target="_blank"><img src="https://www.rkdev.info/images/tencentcloud.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/swagger-ui/" target="_blank"><img src="https://www.rkdev.info/images/swagger.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/prometheus-client/" target="_blank"><img src="https://www.rkdev.info/images/prom.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/docs-ui/" target="_blank"><img src="https://www.rkdev.info/images/rapi.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/pprof/" target="_blank"><img src="https://www.rkdev.info/images/pprof.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/swagger-ui/" target="_blank"><img src="https://www.rkdev.info/images/swagger.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/prometheus-client/" target="_blank"><img src="https://www.rkdev.info/images/prom.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/docs-ui/" target="_blank"><img src="https://www.rkdev.info/images/rapi.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/pprof/" target="_blank"><img src="https://www.rkdev.info/images/pprof.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/config/" target="_blank"><img src="https://www.rkdev.info/images/viper.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/logging/" target="_blank"><img src="https://www.rkdev.info/images/zap.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/advanced/tls/" target="_blank"><img src="https://www.rkdev.info/images/tls.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-gzip/" target="_blank"><img src="https://www.rkdev.info/images/gzip.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-timeout/" target="_blank"><img src="https://www.rkdev.info/images/timeout.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/advanced/config/" target="_blank"><img src="https://www.rkdev.info/images/viper.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/advanced/logging/" target="_blank"><img src="https://www.rkdev.info/images/zap.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/advanced/tls/" target="_blank"><img src="https://www.rkdev.info/images/tls.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-gzip/" target="_blank"><img src="https://www.rkdev.info/images/gzip.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-timeout/" target="_blank"><img src="https://www.rkdev.info/images/timeout.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
     <tr>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-csrf/" target="_blank"><img src="https://www.rkdev.info/images/csrf.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-cors/" target="_blank"><img src="https://www.rkdev.info/images/cors.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-jwt/" target="_blank"><img src="https://www.rkdev.info/images/jwt.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-auth/" target="_blank"><img src="https://www.rkdev.info/images/auth.svg" width="110" height="100" valign="middle" /></a></td>
-        <td align="center" valign="middle"><a href="https://docs.rkdev.info/docs/rk-boot/user-guide/gin/basic/middleware-tracing/" target="_blank"><img src="https://www.rkdev.info/images/trace.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-csrf/" target="_blank"><img src="https://www.rkdev.info/images/csrf.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-cors/" target="_blank"><img src="https://www.rkdev.info/images/cors.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-jwt/" target="_blank"><img src="https://www.rkdev.info/images/jwt.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-auth/" target="_blank"><img src="https://www.rkdev.info/images/auth.svg" width="110" height="100" valign="middle" /></a></td>
+        <td align="center" valign="middle"><a href="https://rkdocs.mofcloud.com/docs/rk-boot/user-guide/gin/basic/middleware-tracing/" target="_blank"><img src="https://www.rkdev.info/images/trace.svg" width="110" height="100" valign="middle" /></a></td>
     </tr>
 </table>
 
