@@ -253,7 +253,7 @@ func (boot *Boot) readYAML() []byte {
 // sync logs
 func syncLog(eventId string) {
 	if r := recover(); r != nil {
-		stackTrace := fmt.Sprintf("Panic occured, shutting down... \n%s", string(debug.Stack()))
+		stackTrace := fmt.Sprintf("Panic occurred, shutting down... \n%s", string(debug.Stack()))
 		logEntries := rkentry.GlobalAppCtx.ListEntriesByType(rkentry.LoggerEntryType)
 		for _, v := range logEntries {
 			logger, ok := v.(*rkentry.LoggerEntry)
